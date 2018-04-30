@@ -1,0 +1,57 @@
+'use strict';
+
+var icons = require('./icons');
+
+/**
+ * Options for Sortable
+ * @typedef {object} Sortable~DefaultOptions
+ * @property {string} [options.name=sortable] dragging is allowed between Sortables with the same name
+ * @property {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
+ * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
+ * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
+ * @property {boolean} [options.sort=true] allow sorting within list
+ * @property {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
+ * @property {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
+ * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
+ * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+ * @property {string} [options.reverseOrder] reverse sort the orderId
+ * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+ * @property {number} [options.maximum] maximum number of elements allowed in a sortable list
+ * @property {boolean} [options.maximumFIFO] whether to use first-in-first-out (or last-in-first-out) to choose which item to remove when maximum is reached
+ * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
+ * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
+ * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
+ * @property {boolean} [options.useIcons=true] show icons when dragging
+ * @property {object} [options.icons] default set of icons
+ * @property {string} [options.icons.reorder]
+ * @property {string} [options.icons.move]
+ * @property {string} [options.icons.copy]
+ * @property {string} [options.icons.delete]
+ * @property {string} [options.customIcon] source of custom image when over this sortable
+ */
+module.exports = {
+    name: 'sortable',
+    sort: true,
+    drop: true,
+    copy: false,
+    orderId: 'data-order',
+    orderIdIsNumber: true,
+    threshold: 5,
+    dragClass: null,
+    orderClass: null,
+    offList: 'closest',
+    maximum: null,
+    maximumFIFO: true,
+    deepSearch: false,
+    dragStyle: {
+        boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
+        opacity: 0.85,
+        position: 'absolute',
+        pointerEvents: 'none'
+    },
+    cursorHover: ['grab', '-webkit-grab', 'pointer'],
+    cursorDown: ['grabbing', '-webkit-grabbing', 'pointer'],
+    useIcons: true,
+    icons: icons
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9kZWZhdWx0cy5qcyJdLCJuYW1lcyI6WyJpY29ucyIsInJlcXVpcmUiLCJtb2R1bGUiLCJleHBvcnRzIiwibmFtZSIsInNvcnQiLCJkcm9wIiwiY29weSIsIm9yZGVySWQiLCJvcmRlcklkSXNOdW1iZXIiLCJ0aHJlc2hvbGQiLCJkcmFnQ2xhc3MiLCJvcmRlckNsYXNzIiwib2ZmTGlzdCIsIm1heGltdW0iLCJtYXhpbXVtRklGTyIsImRlZXBTZWFyY2giLCJkcmFnU3R5bGUiLCJib3hTaGFkb3ciLCJvcGFjaXR5IiwicG9zaXRpb24iLCJwb2ludGVyRXZlbnRzIiwiY3Vyc29ySG92ZXIiLCJjdXJzb3JEb3duIiwidXNlSWNvbnMiXSwibWFwcGluZ3MiOiI7O0FBQUEsSUFBTUEsUUFBUUMsUUFBUSxTQUFSLENBQWQ7O0FBRUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQTJCQUMsT0FBT0MsT0FBUCxHQUFpQjtBQUNiQyxVQUFNLFVBRE87QUFFYkMsVUFBTSxJQUZPO0FBR2JDLFVBQU0sSUFITztBQUliQyxVQUFNLEtBSk87QUFLYkMsYUFBUyxZQUxJO0FBTWJDLHFCQUFpQixJQU5KO0FBT2JDLGVBQVcsQ0FQRTtBQVFiQyxlQUFXLElBUkU7QUFTYkMsZ0JBQVksSUFUQztBQVViQyxhQUFTLFNBVkk7QUFXYkMsYUFBUyxJQVhJO0FBWWJDLGlCQUFhLElBWkE7QUFhYkMsZ0JBQVksS0FiQztBQWNiQyxlQUFXO0FBQ1BDLG1CQUFXLDhCQURKO0FBRVBDLGlCQUFTLElBRkY7QUFHUEMsa0JBQVUsVUFISDtBQUlQQyx1QkFBZTtBQUpSLEtBZEU7QUFvQmJDLGlCQUFhLENBQUMsTUFBRCxFQUFTLGNBQVQsRUFBeUIsU0FBekIsQ0FwQkE7QUFxQmJDLGdCQUFZLENBQUMsVUFBRCxFQUFhLGtCQUFiLEVBQWlDLFNBQWpDLENBckJDO0FBc0JiQyxjQUFVLElBdEJHO0FBdUJieEI7QUF2QmEsQ0FBakIiLCJmaWxlIjoiZGVmYXVsdHMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBpY29ucyA9IHJlcXVpcmUoJy4vaWNvbnMnKVxyXG5cclxuLyoqXHJcbiAqIE9wdGlvbnMgZm9yIFNvcnRhYmxlXHJcbiAqIEB0eXBlZGVmIHtvYmplY3R9IFNvcnRhYmxlfkRlZmF1bHRPcHRpb25zXHJcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbb3B0aW9ucy5uYW1lPXNvcnRhYmxlXSBkcmFnZ2luZyBpcyBhbGxvd2VkIGJldHdlZW4gU29ydGFibGVzIHdpdGggdGhlIHNhbWUgbmFtZVxyXG4gKiBAcHJvcGVydHkge3N0cmluZ30gW29wdGlvbnMuZHJhZ0NsYXNzXSBpZiBzZXQgdGhlbiBkcmFnIG9ubHkgaXRlbXMgd2l0aCB0aGlzIGNsYXNzTmFtZSB1bmRlciBlbGVtZW50OyBvdGhlcndpc2UgZHJhZyBhbGwgY2hpbGRyZW5cclxuICogQHByb3BlcnR5IHtzdHJpbmd9IFtvcHRpb25zLm9yZGVyQ2xhc3NdIHVzZSB0aGlzIGNsYXNzIHRvIGluY2x1ZGUgZWxlbWVudHMgaW4gb3JkZXJpbmcgYnV0IG5vdCBkcmFnZ2luZzsgb3RoZXJ3aXNlIGFsbCBjaGlsZHJlbiBlbGVtZW50cyBhcmUgaW5jbHVkZWQgaW4gd2hlbiBzb3J0aW5nIGFuZCBvcmRlcmluZ1xyXG4gKiBAcHJvcGVydHkge2Jvb2xlYW59IFtvcHRpb25zLmRlZXBTZWFyY2hdIGlmIGRyYWdDbGFzcyBhbmQgZGVlcFNlYXJjaCB0aGVuIHNlYXJjaCBhbGwgZGVzY2VuZGVudHMgb2YgZWxlbWVudCBmb3IgZHJhZ0NsYXNzXHJcbiAqIEBwcm9wZXJ0eSB7Ym9vbGVhbn0gW29wdGlvbnMuc29ydD10cnVlXSBhbGxvdyBzb3J0aW5nIHdpdGhpbiBsaXN0XHJcbiAqIEBwcm9wZXJ0eSB7Ym9vbGVhbn0gW29wdGlvbnMuZHJvcD10cnVlXSBhbGxvdyBkcm9wIGZyb20gcmVsYXRlZCBzb3J0YWJsZXMgKGRvZXNuJ3QgaW1wYWN0IHJlb3JkZXJpbmcgdGhpcyBzb3J0YWJsZSdzIGNoaWxkcmVuIHVudGlsIHRoZSBjaGlsZHJlbiBhcmUgbW92ZWQgdG8gYSBkaWZmZXJlbiBzb3J0YWJsZSlcclxuICogQHByb3BlcnR5IHtib29sZWFufSBbb3B0aW9ucy5jb3B5PWZhbHNlXSBjcmVhdGUgY29weSB3aGVuIGRyYWdnaW5nIGFuIGl0ZW0gKHRoaXMgZGlzYWJsZXMgc29ydD10cnVlIGZvciB0aGlzIHNvcnRhYmxlKVxyXG4gKiBAcHJvcGVydHkge3N0cmluZ30gW29wdGlvbnMub3JkZXJJZD1kYXRhLW9yZGVyXSBmb3Igb3JkZXJlZCBsaXN0cywgdXNlIHRoaXMgZGF0YSBpZCB0byBmaWd1cmUgb3V0IHNvcnQgb3JkZXJcclxuICogQHByb3BlcnR5IHtib29sZWFufSBbb3B0aW9ucy5vcmRlcklkSXNOdW1iZXI9dHJ1ZV0gdXNlIHBhcnNlSW50IG9uIG9wdGlvbnMuc29ydElkIHRvIHByb3Blcmx5IHNvcnQgbnVtYmVyc1xyXG4gKiBAcHJvcGVydHkge3N0cmluZ30gW29wdGlvbnMucmV2ZXJzZU9yZGVyXSByZXZlcnNlIHNvcnQgdGhlIG9yZGVySWRcclxuICogQHByb3BlcnR5IHtzdHJpbmd9IFtvcHRpb25zLm9mZkxpc3Q9Y2xvc2VzdF0gaG93IHRvIGhhbmRsZSB3aGVuIGFuIGVsZW1lbnQgaXMgZHJvcHBlZCBvdXRzaWRlIGEgc29ydGFibGU6IGNsb3Nlc3Q9ZHJvcCBpbiBjbG9zZXN0IHNvcnRhYmxlOyBjYW5jZWw9cmV0dXJuIHRvIHN0YXJ0aW5nIHNvcnRhYmxlOyBkZWxldGU9cmVtb3ZlIGZyb20gYWxsIHNvcnRhYmxlc1xyXG4gKiBAcHJvcGVydHkge251bWJlcn0gW29wdGlvbnMubWF4aW11bV0gbWF4aW11bSBudW1iZXIgb2YgZWxlbWVudHMgYWxsb3dlZCBpbiBhIHNvcnRhYmxlIGxpc3RcclxuICogQHByb3BlcnR5IHtib29sZWFufSBbb3B0aW9ucy5tYXhpbXVtRklGT10gd2hldGhlciB0byB1c2UgZmlyc3QtaW4tZmlyc3Qtb3V0IChvciBsYXN0LWluLWZpcnN0LW91dCkgdG8gY2hvb3NlIHdoaWNoIGl0ZW0gdG8gcmVtb3ZlIHdoZW4gbWF4aW11bSBpcyByZWFjaGVkXHJcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbb3B0aW9ucy5jdXJzb3JIb3Zlcj1ncmFiIC13ZWJraXQtZ3JhYiBwb2ludGVyXSB1c2UgdGhpcyBjdXJzb3IgbGlzdCB0byBzZXQgY3Vyc29yIHdoZW4gaG92ZXJpbmcgb3ZlciBhIHNvcnRhYmxlIGVsZW1lbnRcclxuICogQHByb3BlcnR5IHtzdHJpbmd9IFtvcHRpb25zLmN1cnNvckRvd249Z3JhYmJpbmcgLXdlYmtpdC1ncmFiYmluZyBwb2ludGVyXSB1c2UgdGhpcyBjdXJzb3IgbGlzdCB0byBzZXQgY3Vyc29yIHdoZW4gbW91c2Vkb3duL3RvdWNoZG93biBvdmVyIGEgc29ydGFibGUgZWxlbWVudFxyXG4gKiBAcHJvcGVydHkge251bWJlcn0gW29wdGlvbnMudGhyZXNob2xkPTEwXSBtaW5pbXVtIG1vdmVtZW50IGRpc3RhbmNlIGluIHBpeGVscyBiZWZvcmUgY2FsY3VsYXRpbmcgYSBtb3ZlbWVudFxyXG4gKiBAcHJvcGVydHkge2Jvb2xlYW59IFtvcHRpb25zLnVzZUljb25zPXRydWVdIHNob3cgaWNvbnMgd2hlbiBkcmFnZ2luZ1xyXG4gKiBAcHJvcGVydHkge29iamVjdH0gW29wdGlvbnMuaWNvbnNdIGRlZmF1bHQgc2V0IG9mIGljb25zXHJcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbb3B0aW9ucy5pY29ucy5yZW9yZGVyXVxyXG4gKiBAcHJvcGVydHkge3N0cmluZ30gW29wdGlvbnMuaWNvbnMubW92ZV1cclxuICogQHByb3BlcnR5IHtzdHJpbmd9IFtvcHRpb25zLmljb25zLmNvcHldXHJcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbb3B0aW9ucy5pY29ucy5kZWxldGVdXHJcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbb3B0aW9ucy5jdXN0b21JY29uXSBzb3VyY2Ugb2YgY3VzdG9tIGltYWdlIHdoZW4gb3ZlciB0aGlzIHNvcnRhYmxlXHJcbiAqL1xyXG5tb2R1bGUuZXhwb3J0cyA9IHtcclxuICAgIG5hbWU6ICdzb3J0YWJsZScsXHJcbiAgICBzb3J0OiB0cnVlLFxyXG4gICAgZHJvcDogdHJ1ZSxcclxuICAgIGNvcHk6IGZhbHNlLFxyXG4gICAgb3JkZXJJZDogJ2RhdGEtb3JkZXInLFxyXG4gICAgb3JkZXJJZElzTnVtYmVyOiB0cnVlLFxyXG4gICAgdGhyZXNob2xkOiA1LFxyXG4gICAgZHJhZ0NsYXNzOiBudWxsLFxyXG4gICAgb3JkZXJDbGFzczogbnVsbCxcclxuICAgIG9mZkxpc3Q6ICdjbG9zZXN0JyxcclxuICAgIG1heGltdW06IG51bGwsXHJcbiAgICBtYXhpbXVtRklGTzogdHJ1ZSxcclxuICAgIGRlZXBTZWFyY2g6IGZhbHNlLFxyXG4gICAgZHJhZ1N0eWxlOiB7XHJcbiAgICAgICAgYm94U2hhZG93OiAnM3B4IDNweCA1cHggcmdiYSgwLDAsMCwwLjI1KScsXHJcbiAgICAgICAgb3BhY2l0eTogMC44NSxcclxuICAgICAgICBwb3NpdGlvbjogJ2Fic29sdXRlJyxcclxuICAgICAgICBwb2ludGVyRXZlbnRzOiAnbm9uZSdcclxuICAgIH0sXHJcbiAgICBjdXJzb3JIb3ZlcjogWydncmFiJywgJy13ZWJraXQtZ3JhYicsICdwb2ludGVyJ10sXHJcbiAgICBjdXJzb3JEb3duOiBbJ2dyYWJiaW5nJywgJy13ZWJraXQtZ3JhYmJpbmcnLCAncG9pbnRlciddLFxyXG4gICAgdXNlSWNvbnM6IHRydWUsXHJcbiAgICBpY29uc1xyXG59Il19

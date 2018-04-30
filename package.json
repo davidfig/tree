@@ -1,0 +1,33 @@
+{
+  "name": "yy-tree",
+  "version": "0.1.0",
+  "description": "vanilla-javascript drag-and-drop UI tree",
+  "main": "dist/tree.js",
+  "scripts": {
+    "test": "./node_modules/.bin/budo docs/code.js:index.js --dir docs --live --",
+    "build-demo": "./node_modules/.bin/browserify docs/code.js -o docs/index.js -t babelify",
+    "docs": "rm -rf ./docs/jsdoc && ./node_modules/.bin/jsdoc -c .jsdoc.json",
+    "transpile": "./node_modules/.bin/babel src --out-dir dist --source-maps inline",
+    "icons": "node scripts/images.js",
+    "prepublishOnly": "npm run icons && npm run transpile && npm run build-demo && npm run docs"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "clicked": "^2.0.0",
+    "eventemitter3": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.0",
+    "budo": "^11.2.0",
+    "canvas": "^1.6.10",
+    "fork-me-github": "^1.1.0",
+    "fs-extra": "^5.0.0",
+    "highlight.js": "^9.12.0",
+    "jsdoc": "^3.5.5",
+    "yy-jsdoc-template": "^1.3.0"
+  }
+}
