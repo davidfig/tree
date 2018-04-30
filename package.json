@@ -1,7 +1,7 @@
 {
   "name": "yy-tree",
   "version": "0.1.0",
-  "description": "vanilla-javascript drag-and-drop UI tree",
+  "description": "vanilla drag-and-drop UI tree",
   "main": "dist/tree.js",
   "scripts": {
     "test": "./node_modules/.bin/budo docs/code.js:index.js --dir docs --live --",

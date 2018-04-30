@@ -1,5 +1,5 @@
 {
-    "applicationName": "yy-sortable",
+    "applicationName": "yy-tree",
     "disqus": "",
     "openGraph": {
         "title": "",
@@ -9,14 +9,14 @@
         "url": ""
     },
     "meta": {
-        "title": "DomEase",
+        "title": "yy-tree",
         "description": "",
         "keyword": ""
     },
     "linenums": true,
     "source": {
         "include": [
-            "./src/sortable.js",
+            "./src/tree.js",
             "./src/defaults.js"
         ],
         "includePattern": ".+\\.js(doc)?$",
@@ -35,22 +35,18 @@
         "./node_modules/yy-jsdoc-template/plugins/skip-node_modules",
         "plugins/markdown"
     ],
-    "readmeShowNav": "Sortable",
+    "readmeShowNav": "Tree",
     "templates": {
         "default": {
             "outputSourceFiles": true
         },
-        "applicationName": "yy-sortable",
+        "applicationName": "yy-tree",
         "footer"        : "by YOPEY YOPEY LLC (yopeyopey.com)",
         "copyright"     : "Copyright © 2018 YOPEY YOPEY LLC.",
         "meta": {
-            "title": "yy-sortable API Documentation",
-            "description": "Documentation for yy-sortable library",
-            "keyword": "html5, javascript, drag-and-drop, sortable, ordered, list"
-        },
-        "matomo": {
-            "url": "https://analytics.yopeyopey.com/piwik/",
-            "id": 13
+            "title": "yy-tree API Documentation",
+            "description": "Documentation for yy-tree library",
+            "keyword": "html5, javascript, drag-and-drop, tree, UI"
         }
     }
 }

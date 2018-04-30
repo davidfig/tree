@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>yy-sortable API Documentation</title>
+    <title>yy-tree API Documentation</title>
     
-    <meta name="description" content="Documentation for yy-sortable library" />
+    <meta name="description" content="Documentation for yy-tree library" />
     
-        <meta name="keywords" content="html5, javascript, drag-and-drop, sortable, ordered, list" />
-        <meta name="keyword" content="html5, javascript, drag-and-drop, sortable, ordered, list" />
+        <meta name="keywords" content="html5, javascript, drag-and-drop, tree, UI" />
+        <meta name="keyword" content="html5, javascript, drag-and-drop, tree, UI" />
     
     
     
@@ -25,30 +25,17 @@
 
     
     <script>
-    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"yy-sortable","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"yy-sortable API Documentation","description":"Documentation for yy-sortable library","keyword":"html5, javascript, drag-and-drop, sortable, ordered, list"},"matomo":{"url":"https://analytics.yopeyopey.com/piwik/","id":13}};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"yy-tree","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"yy-tree API Documentation","description":"Documentation for yy-tree library","keyword":"html5, javascript, drag-and-drop, tree, UI"}};
     </script>
     
 
-    
-    <script type="text/javascript">
-    var _paq = _paq || [];
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-        var u="https://analytics.yopeyopey.com/piwik/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', '13']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-    })();
-    </script>
     
 </head>
 <body>
 <div id="wrap" class="clearfix">
     
 <div class="navigation">
-    <h3 class="applicationName"><a href="index.html">yy-sortable</a></h3>
+    <h3 class="applicationName"><a href="index.html">yy-tree</a></h3>
     <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
         <span class="glyphicon glyphicon-menu-hamburger"></span>
     </button>
@@ -58,23 +45,21 @@
     <ul class="list">
     
         
-        <li class="item" data-name="Sortable">
+        <li class="item" data-name="Tree">
             <span class="title  ">
                 
-                <a href="Sortable.html">Sortable</a>
+                <a href="Tree.html">Tree</a>
             </span>
             <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li class="parent " data-name="Sortable.defaults"><a href="Sortable.html#.defaults">defaults</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
             
             <span class="subtitle">Typedefs</span>
             
-                <li class="parent" data-name="Sortable~DefaultOptions"><a href="Sortable.html#~DefaultOptions">DefaultOptions</a></li>
+                <li class="parent" data-name="Tree~TreeData"><a href="Tree.html#~TreeData">TreeData</a></li>
+            
+                <li class="parent" data-name="Tree~TreeOptions"><a href="Tree.html#~TreeOptions">TreeOptions</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -84,54 +69,18 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="Sortable.create"><a href="Sortable.html#.create">create</a></li>
-            
-                <li class="parent  " data-name="Sortable#add"><a href="Sortable.html#add">add</a></li>
-            
-                <li class="parent  " data-name="Sortable#attachElement"><a href="Sortable.html#attachElement">attachElement</a></li>
-            
-                <li class="parent  " data-name="Sortable#destroy"><a href="Sortable.html#destroy">destroy</a></li>
-            
-                <li class="parent  " data-name="Sortable#removeElement"><a href="Sortable.html#removeElement">removeElement</a></li>
+                <li class="parent  " data-name="Tree#update"><a href="Tree.html#update">update</a></li>
             
             </ul>
             <ul class="events itemMembers">
             
             <span class="subtitle">Events</span>
             
-                <li class="parent" data-name="Sortable#event:add"><a href="Sortable.html#event:add">add</a></li>
+                <li class="parent" data-name="Tree~event:collapse"><a href="Tree.html#~event:collapse">collapse</a></li>
             
-                <li class="parent" data-name="Sortable#event:add-pending"><a href="Sortable.html#event:add-pending">add-pending</a></li>
+                <li class="parent" data-name="Tree~event:expand"><a href="Tree.html#~event:expand">expand</a></li>
             
-                <li class="parent" data-name="Sortable#event:add-remove-pending"><a href="Sortable.html#event:add-remove-pending">add-remove-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:clicked"><a href="Sortable.html#event:clicked">clicked</a></li>
-            
-                <li class="parent" data-name="Sortable#event:copy"><a href="Sortable.html#event:copy">copy</a></li>
-            
-                <li class="parent" data-name="Sortable#event:copy-pending"><a href="Sortable.html#event:copy-pending">copy-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:delete"><a href="Sortable.html#event:delete">delete</a></li>
-            
-                <li class="parent" data-name="Sortable#event:delete-pending"><a href="Sortable.html#event:delete-pending">delete-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:maximum-remove"><a href="Sortable.html#event:maximum-remove">maximum-remove</a></li>
-            
-                <li class="parent" data-name="Sortable#event:maximum-remove-pending"><a href="Sortable.html#event:maximum-remove-pending">maximum-remove-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:order"><a href="Sortable.html#event:order">order</a></li>
-            
-                <li class="parent" data-name="Sortable#event:order-pending"><a href="Sortable.html#event:order-pending">order-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:pickup"><a href="Sortable.html#event:pickup">pickup</a></li>
-            
-                <li class="parent" data-name="Sortable#event:remove"><a href="Sortable.html#event:remove">remove</a></li>
-            
-                <li class="parent" data-name="Sortable#event:remove-pending"><a href="Sortable.html#event:remove-pending">remove-pending</a></li>
-            
-                <li class="parent" data-name="Sortable#event:update"><a href="Sortable.html#event:update">update</a></li>
-            
-                <li class="parent" data-name="Sortable#event:update-pending"><a href="Sortable.html#event:update-pending">update-pending</a></li>
+                <li class="parent" data-name="Tree~event:name-change"><a href="Tree.html#~event:name-change">name-change</a></li>
             
             </ul>
         </li>
@@ -140,7 +89,7 @@
 </div>
     <div class="main">
         
-        <h1 class="page-title" data-filename="Sortable">Index</h1>
+        <h1 class="page-title" data-filename="Tree">Index</h1>
         
         
 
@@ -163,30 +112,8 @@
 
 
     <section>
-        <article class="readme content-size"><h1>yy-sortable</h1><p>Vanilla drag-and-drop sortable list(s)</p>
-<p>Features include:</p>
-<ul>
-<li>dragging and dropping between sortable and/or ordered lists (options.sort)</li>
-<li>three ways to handle dragging off lists:<ol>
-<li>closest - find closest list</li>
-<li>cancel - return to original position before dragging</li>
-<li>delete - remove element from all lists</li>
-</ol>
-</li>
-<li>lists that are copy-only or no-drop (options.copy and options.drop) </li>
-<li>custom ghost image and icon support so dragging looks nicer and isn't limited by browser</li>
-<li>search descendents for a className when determining where to sort or how to order (options.deepSearch)</li>
-<li>limit the number of elements in a sortable (options.maximum)</li>
-<li>robust event system based on eventemitter3 (i.e., add, remove, order, update, delete, and -pending versions of these events)</li>
-<li>ordered lists may be reverse ordered and ordered by a data-? setting</li>
-<li>dynamically add elements</li>
-<li>uses built in drag and drop API</li>
-</ul>
-<h2>Rationale</h2><p>I tried many of the existing drag-and-drop libraries but could not find all the features I wanted in one neat package.</p>
-<h2>Super Simple Example</h2><pre class="prettyprint source lang-js"><code>new Sortable(document.getElementById('sortme'))</code></pre><h2>Examples Showing Features</h2><p><a target="_blank" href="https://davidfig.github.io/sortable/">davidfig.github.io/sortable/</a></p>
-<h2>API Documentation</h2><p><a target="_blank" href="https://davidfig.github.io/sortable/jsdoc/">davidfig.github.io/sortable/jsdoc/</a></p>
-<h2>Installation</h2><pre class="prettyprint source"><code>npm i yy-sortable</code></pre><h2>Influences</h2><p>I was greatly influenced by the design of <a target="_blank" href="https://github.com/RubaXa/Sortable">sortablejs</a>, which was <em>almost</em> perfect.</p>
-<h2>license</h2><p>MIT License<br>(c) 2018 <a target="_blank" href="https://yopeyopey.com/">YOPEY YOPEY LLC</a> by <a target="_blank" href="https://twitter.com/yopey_yopey/">David Figatner</a></p></article>
+        <article class="readme content-size"><h1>tree</h1><p>Vanilla drag-and-drop UI tree</p>
+<h2>Rationale</h2><h2>Super Simple Example</h2><pre class="prettyprint source lang-js"><code></code></pre><h2>Examples Showing Features</h2><h2>API Documentation</h2><h2>Installation</h2><pre class="prettyprint source"><code>npm i yy-tree</code></pre><h2>license</h2><p>MIT License<br>(c) 2018 <a target="_blank" href="https://yopeyopey.com/">YOPEY YOPEY LLC</a> by <a target="_blank" href="https://twitter.com/yopey_yopey/">David Figatner</a></p></article>
     </section>
 
 
@@ -198,7 +125,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Apr 18 2018 12:02:30 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 30 2018 12:20:28 GMT+0800 (DST)
             </div>
         </footer>
     </div>

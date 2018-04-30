@@ -1,4 +1,108 @@
-const Events = require('eventemitter3')
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>yy-tree API Documentation</title>
+    
+    <meta name="description" content="Documentation for yy-tree library" />
+    
+        <meta name="keywords" content="html5, javascript, drag-and-drop, tree, UI" />
+        <meta name="keyword" content="html5, javascript, drag-and-drop, tree, UI" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"yy-tree","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"yy-tree API Documentation","description":"Documentation for yy-tree library","keyword":"html5, javascript, drag-and-drop, tree, UI"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">yy-tree</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        
+        <li class="item" data-name="Tree">
+            <span class="title  ">
+                
+                <a href="Tree.html">Tree</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Tree~TreeData"><a href="Tree.html#~TreeData">TreeData</a></li>
+            
+                <li class="parent" data-name="Tree~TreeOptions"><a href="Tree.html#~TreeOptions">TreeOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Tree#update"><a href="Tree.html#update">update</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Tree~event:collapse"><a href="Tree.html#~event:collapse">collapse</a></li>
+            
+                <li class="parent" data-name="Tree~event:expand"><a href="Tree.html#~event:expand">expand</a></li>
+            
+                <li class="parent" data-name="Tree~event:name-change"><a href="Tree.html#~event:name-change">name-change</a></li>
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        
+        <h1 class="page-title" data-filename="Tree">Source: tree.js</h1>
+        
+        
+
+
+    
+    <section>
+        <header>
+            <div class="header content-size">
+                <h2>tree.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>const Events = require('eventemitter3')
 const clicked = require('clicked')
 
 const defaults = require('./defaults')
@@ -14,17 +118,15 @@ class Tree extends Events
      * @param {TreeOptions} [options]
      * @param {string} [options.children=children] name of tree parameter containing the children
      * @param {string} [options.parent=parent] name of tree parameter containing the parent link
-     * @param {number} [options.indentation=20] number of pixels to indent for each level
+     * @param {number} [options.indentation=15] number of pixels to indent for each level
      * @param {number} [options.threshold=10] number of pixels to move to start a drag
      * @param {number} [options.holdTime=2000] number of milliseconds before name can be edited (set to 0 to disable)
      * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag
-     * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item
      * @param {string[]} [options.nameStyles]
      * @param {string[]} [options.indicatorStyles]
      * @fires expand
      * @fires collapse
      * @fires name-change
-     * @fires move-pending
      */
     constructor(element, tree, options)
     {
@@ -46,9 +148,9 @@ class Tree extends Events
         this.indicator = utils.html()
         const content = utils.html({ parent: this.indicator, styles: { display: 'flex' } })
         this.indicator.indentation = utils.html({ parent: content })
-        this.indicator.icon = utils.html({ parent: content, defaultStyles: this.options.expandStyles, styles: { height: 0 } })
         this.indicator.line = utils.html({
             parent: content,
+            defaultStyles: this.options.nameStyles,
             styles: this.options.indicatorStyles
         })
     }
@@ -56,12 +158,12 @@ class Tree extends Events
     leaf(data, level)
     {
         const leaf = utils.html()
-        leaf.isLeaf = true
         leaf.data = data
         const content = utils.html({ parent: leaf, styles: { display: 'flex', alignItems: 'center' } })
         leaf.indentation = utils.html({ parent: content, styles: { width: level * this.options.indentation + 'px' } })
         leaf.icon = utils.html({ parent: content, html: data[this.options.expanded] ? icons.open : icons.closed, styles: this.options.expandStyles })
         leaf.name = utils.html({ parent: content, html: data[this.options.name], styles: this.options.nameStyles })
+        leaf.descendents = []
 
         leaf.name.addEventListener('mousedown', (e) => this._down(e))
         leaf.name.addEventListener('touchstart', (e) => this._down(e))
@@ -69,31 +171,18 @@ class Tree extends Events
         {
             const add = this.leaf(child, level + 1)
             leaf.appendChild(add)
+            leaf.descendents.push(add)
             if (!data[this.options.expanded])
             {
                 add.style.display = 'none'
             }
         }
-        if (this._getChildren(leaf).length === 0)
+        if (leaf.descendents.length === 0)
         {
             this._hideIcon(leaf)
         }
         clicked(leaf.icon, () => this.toggleExpand(leaf))
         return leaf
-    }
-
-    _getChildren(leaf)
-    {
-        leaf = leaf || this.element
-        const children = []
-        for (let child of leaf.children)
-        {
-            if (child.isLeaf)
-            {
-                children.push(child)
-            }
-        }
-        return children
     }
 
     _hideIcon(leaf)
@@ -110,12 +199,12 @@ class Tree extends Events
 
     expandAll()
     {
-        this._expandChildren(this.element)
+        this._expandChildren(this)
     }
 
     _expandChildren(leaf)
     {
-        for (let child of this._getChildren(leaf))
+        for (let child of leaf.descendents)
         {
             this.expand(child)
             this._expandChildren(child)
@@ -129,7 +218,7 @@ class Tree extends Events
 
     _collapseChildren(leaf)
     {
-        for (let child of this._getChildren(leaf))
+        for (let child of leaf.descendents)
         {
             this.collapse(child)
             this._collapseChildren(child)
@@ -153,11 +242,10 @@ class Tree extends Events
 
     expand(leaf)
     {
-        const children = this._getChildren(leaf)
-        if (children.length)
+        if (leaf.descendents.length)
         {
             this.emit('expand', leaf, this)
-            for (let child of children)
+            for (let child of leaf.descendents)
             {
                 child.style.display = 'block'
             }
@@ -168,11 +256,10 @@ class Tree extends Events
 
     collapse(leaf)
     {
-        const children = this._getChildren(leaf)
-        if (children.length)
+        if (leaf.descendents.length)
         {
             this.emit('collapse', leaf, this)
-            for (let child of children)
+            for (let child of leaf.descendents)
             {
                 child.style.display = 'none'
             }
@@ -188,10 +275,12 @@ class Tree extends Events
     {
         const scroll = this.element.scrollTop
         utils.removeChildren(this.element)
+        this.descendents = []
         for (let leaf of this.tree[this.options.children])
         {
             const add = this.leaf(leaf, 0)
             this.element.appendChild(add)
+            this.descendents.push(add)
         }
         this.element.scrollTop = scroll + 'px'
     }
@@ -260,16 +349,11 @@ class Tree extends Events
         this.emit('name-change', this.edit, this.input.value, this)
     }
 
-    _setIndicator()
+    _setIndicator(parent)
     {
-        let level = 0
-        let traverse = this.indicator.parentNode
-        while (traverse !== this.element)
-        {
-            level++
-            traverse = traverse.parentNode
-        }
-        this.indicator.indentation.style.width = level * this.options.indentation + 'px'
+        this.indicator.style.width = parent.name.offsetWidth + 'px'
+        this.indicator.indentation.style.width = parent.indentation.offsetWidth + 'px'
+        this.target.parentNode.insertBefore(this.indicator, parent)
     }
 
     _pickup()
@@ -279,14 +363,11 @@ class Tree extends Events
             window.clearTimeout(this.holdTimeout)
             this.holdTimeout = null
         }
-        this.emit('move-pending', this.target, this)
-        const parent = this.target.parentNode
-        parent.insertBefore(this.indicator, this.target)
         this._setIndicator(this.target)
+        this.target.parentNode.insertBefore(this.indicator, this.target)
         const pos = utils.toGlobal(this.target)
         document.body.appendChild(this.target)
         this.old = {
-            opacity: this.target.style.opacity || 'unset',
             position: this.target.style.position || 'unset',
             boxShadow: this.target.name.style.boxShadow || 'unset'
         }
@@ -294,7 +375,6 @@ class Tree extends Events
         this.target.name.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.25)'
         this.target.style.left = pos.x + 'px'
         this.target.style.top = pos.y + 'px'
-        this.target.style.opacity = this.options.dragOpacity
     }
 
     _checkThreshold(e)
@@ -320,122 +400,47 @@ class Tree extends Events
 
     _findClosest(e, entry)
     {
-        if (this.closest.found)
+        if (entry !== this.target)
         {
-            return
-        }
-        if (utils.inside(e.pageX, e.pageY, entry.name))
-        {
-            this.closest.found = true
-            this.closest.leaf = entry
-            return
-        }
-        const distance = utils.distanceToClosestCorner(e.pageX, e.pageY, entry.name)
-        if (distance < this.closest.distance)
-        {
-            this.closest.distance = distance
-            this.closest.leaf = entry
-        }
-        for (let child of this._getChildren(entry))
-        {
-            this._findClosest(e, child)
-        }
-    }
-
-    _firstChild(leaf)
-    {
-        const children = this._getChildren(leaf)
-        {
-            if (children.length)
+            const distance = utils.distanceToClosestCorner(e.pageX, e.pageY, entry)
+            if (distance &lt; this.closest.distance)
             {
-                return children[0]
+                this.closest.distance = distance
+                this.closest.leaf = entry
             }
-            else
+            for (let child of entry.descendents)
             {
-                return null
+                this._findClosest(e, child)
             }
         }
-    }
-
-    _hasPreviousSibling(leaf)
-    {
-        const children = this._getChildren(leaf.parentNode)
-        return children.indexOf(leaf) !== 0
-    }
-
-    _isLastElement(leaf)
-    {
-        if (leaf.nextElementSibling || this._getChildren(leaf).length)
-        {
-            return false
-        }
-        let parent = leaf.parentNode
-        while (parent !== this.element)
-        {
-            if (parent.nextElementSibling)
-            {
-                return false
-            }
-            parent = parent.parentNode
-        }
-        return true
     }
 
     _move(e)
     {
-        if (this.target && this._checkThreshold(e))
+        function insertAfter(newNode, referenceNode)
+        {
+            referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+        }
+
+        if (this.target &amp;&amp; this._checkThreshold(e))
         {
             this.indicator.remove()
             this.target.style.left = e.pageX - this.offset.x + 'px'
             this.target.style.top = e.pageY - this.offset.y + 'px'
             this.closest = { distance: Infinity }
-            for (let child of this._getChildren())
+            for (let child of this.descendents)
             {
                 this._findClosest(e, child)
             }
-            let pos = utils.toGlobal(this.closest.leaf.name)
-            const target = utils.toGlobal(this.target.name)
-            let append, under = true
-            if (e.pageY > pos.y + this.closest.leaf.name.offsetHeight / 2)
-            {
-                const firstChild = this._firstChild(this.closest.leaf)
-                if (firstChild)
-                {
-                    this.closest.leaf = firstChild
-                }
-                else
-                {
-                    under = false
-                    if (this.closest.leaf.nextElementSibling)
-                    {
-                        this.closest.leaf = this.closest.leaf.nextElementSibling
-                        pos = utils.toGlobal(this.closest.leaf.name)
-                    }
-                    else
-                    {
-                        append = true
-                    }
-                }
-            }
-            if (append)
-            {
-                let test = this.closest.leaf.parentNode
-                while (test && target.x < pos.x - this.options.indentation)
-                {
-                    pos = utils.toGlobal(test)
-                    test = test.parentNode
-                }
-                test.parentNode.appendChild(this.indicator)
-            }
-            else if (this._hasPreviousSibling(this.closest.leaf) && target.x > pos.x + this.options.indentation)
-            {
-                this.closest.leaf.insertBefore(this.indicator, under ? this.closest.leaf.firstChild : this.closest.leaf.lastChild)
-            }
-            else
+            const pos = utils.toGlobal(this.closest.leaf)
+            if (e.pageY &lt; pos.y + this.closest.leaf.offsetHeight / 2)
             {
                 this.closest.leaf.parentNode.insertBefore(this.indicator, this.closest.leaf)
             }
-            this._setIndicator()
+            else
+            {
+                insertAfter(this.indicator, this.closest.leaf)
+            }
         }
     }
 
@@ -443,19 +448,9 @@ class Tree extends Events
     {
         if (this.target)
         {
-            if (!this.moving && this.options.expandOnClick)
+            if (!this.moving &amp;&amp; this.options.expandOnClick)
             {
                 this.toggleExpand(this.target)
-            }
-            else if (this.moving)
-            {
-                this.indicator.parentNode.insertBefore(this.target, this.indicator)
-                this.target.style.position = this.old.position === 'unset' ? '' : this.old.position
-                this.target.name.style.boxShadow = this.old.boxShadow === 'unset' ? '' : this.old.boxShadow
-                this.target.style.opacity = this.old.opacity === 'unset' ? '' : this.old.opacity
-                this.target.indentation.style.width = this.indicator.indentation.offsetWidth + 'px'
-                this.indicator.remove()
-                this.emit('move', this.target, this)
             }
             if (this.holdTimeout)
             {
@@ -477,7 +472,6 @@ module.exports = Tree
  */
 
 /**
-  * trigger when expand is called either through UI interaction or Tree.expand()
   * @event Tree~expand
   * @type {object}
   * @property {HTMLElement} tree element
@@ -485,7 +479,6 @@ module.exports = Tree
   */
 
 /**
-  * trigger when collapse is called either through UI interaction or Tree.expand()
   * @event Tree~collapse
   * @type {object}
   * @property {HTMLElement} tree element
@@ -493,18 +486,30 @@ module.exports = Tree
   */
 
 /**
-  * trigger when name is change either through UI interaction or Tree.nameChange()
   * @event Tree~name-change
   * @type {object}
   * @property {HTMLElement} tree element
   * @property {string} name
   * @property {Tree} Tree
-  */
+  */</code></pre>
+        </article>
+    </section>
 
-/**
-  * trigger when a leaf is picked up through UI interaction
-  * @event Tree~move-pending
-  * @type {object}
-  * @property {HTMLElement} tree element
-  * @property {Tree} Tree
-  */
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 30 2018 12:20:28 GMT+0800 (DST)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

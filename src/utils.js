@@ -26,7 +26,6 @@ function distanceToClosestCorner(x, y, element)
     return Math.min(topLeft, topRight, bottomLeft, bottomRight)
 }
 
-
 /**
  * determine whether the mouse is inside an element
  * @param {HTMLElement} dragging
