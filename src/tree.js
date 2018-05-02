@@ -327,6 +327,10 @@ class Tree extends Events
         this.target.style.left = pos.x + 'px'
         this.target.style.top = pos.y + 'px'
         this.target.style.opacity = this.options.dragOpacity
+        if (this._getChildren(parent, true).length === 0)
+        {
+            this._hideIcon(parent)
+        }
     }
 
     _checkThreshold(e)
@@ -469,7 +473,7 @@ class Tree extends Events
                         if (parent !== this.element)
                         {
                             pos = utils.toGlobal(parent.name)
-                            }
+                        }
                     }
                     parent.appendChild(this.indicator)
                 }
@@ -537,6 +541,7 @@ class Tree extends Events
             {
                 this.indicator.parentNode.insertBefore(this.target, this.indicator)
                 this.expand(this.indicator.parentNode)
+                this._showIcon(this.indicator.parentNode)
                 this.target.style.position = this.old.position === 'unset' ? '' : this.old.position
                 this.target.name.style.boxShadow = this.old.boxShadow === 'unset' ? '' : this.old.boxShadow
                 this.target.style.opacity = this.old.opacity === 'unset' ? '' : this.old.opacity
