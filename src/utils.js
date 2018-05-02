@@ -11,19 +11,22 @@ function distance(x1, y1, x2, y2)
 }
 
 /**
- * find closest distance from UIEvent to a corner of an element
+ * find shortest distance from point to HTMLElement's bounding box
+ * from: https://gamedev.stackexchange.com/questions/44483/how-do-i-calculate-distance-between-a-point-and-an-axis-aligned-rectangle
  * @param {number} x
  * @param {number} y
  * @param {HTMLElement} element
  */
-function distanceToClosestCorner(x, y, element)
+function distancePointElement(px, py, element)
 {
     const pos = toGlobal(element)
-    const topLeft = distance(x, y, pos.x, pos.y)
-    const topRight = distance(x, y, pos.x + element.offsetWidth, pos.y)
-    const bottomLeft = distance(x, y, pos.x, pos.y + element.offsetHeight)
-    const bottomRight = distance(x, y, pos.x + element.offsetWidth, pos.y + element.offsetHeight)
-    return Math.min(topLeft, topRight, bottomLeft, bottomRight)
+    const width = element.offsetWidth
+    const height = element.offsetHeight
+    const x = pos.x + width / 2
+    const y = pos.y + height / 2
+    const dx = Math.max(Math.abs(px - x) - width / 2, 0)
+    const dy = Math.max(Math.abs(py - y) - height / 2, 0)
+    return dx * dx + dy * dy
 }
 
 /**
@@ -38,7 +41,8 @@ function inside(x, y, element)
     const y1 = pos.y
     const w1 = element.offsetWidth
     const h1 = element.offsetHeight
-    return x >= x1 && x <= x1 + w1 && y >= y1 && y <= y1 + h1}
+    return x >= x1 && x <= x1 + w1 && y >= y1 && y <= y1 + h1
+}
 
 /**
  * determines global location of a div
@@ -197,15 +201,30 @@ function styles(object, styles)
     }
 }
 
+function getChildIndex(parent, child)
+{
+    let index = 0
+    for (let entry of parent.children)
+    {
+        if (entry === child)
+        {
+            return index
+        }
+        index++
+    }
+    return -1
+}
+
 module.exports = {
     removeChildren,
     distance,
-    distanceToClosestCorner,
+    distancePointElement,
     inside,
     toGlobal,
     options,
     style,
     percentage,
     html,
-    styles
+    styles,
+    getChildIndex
 }

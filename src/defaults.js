@@ -1,22 +1,10 @@
-/**
- * Options for Tree
- * @typedef {object} Tree~TreeOptions
- * @property {string} [TreeOptions.children=children] name of tree parameter containing the children
- * @property {string} [TreeOptions.parent=parent] name of tree parameter containing the parent link
- * @property {number} [TreeOptions.name=name] name of tree parameter containing the text for a leaf
- * @property {number} [TreeOptions.expanded=expanded] name of tree parameter containing whether the leaf is expanded
- * @property {number} [TreeOptions.indentation=20] number of pixels to indent for each level
- * @property {number} [TreeOptions.nameStyles]
- * @property {number} [TreeOptions.threshold=10] number of pixels to move to start a drag
- * @property {number} [TreeOptions.dragOpacity=0.75] opacity setting for dragged item
- * @property {boolean} [options.expandOnClick=true] expand and collapse node on click without drag
- * @property {string[]} [TreeOptions.indicatorStyles]
- */
 module.exports = {
     children: 'children',
     parent: 'parent',
     name: 'name',
+    data: 'data',
     expanded: 'expanded',
+    move: true,
     indentation: 20,
     nameStyles: {
         padding: '0.5em 1em',
