@@ -17982,10 +17982,58 @@ var Tree = function (_Events) {
     }, {
         key: '_hold',
         value: function _hold() {
+            this.holdTimeout = null;
+            this._edit(this.target);
+        }
+
+        /**
+         * edit the name entry using the data
+         * @param {object} data element of leaf
+         */
+
+    }, {
+        key: 'editData',
+        value: function editData(data) {
+            var children = this._getChildren(null, true);
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+                for (var _iterator8 = children[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var child = _step8.value;
+
+                    if (child.data === data) {
+                        this.edit(child);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError8 = true;
+                _iteratorError8 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                        _iterator8.return();
+                    }
+                } finally {
+                    if (_didIteratorError8) {
+                        throw _iteratorError8;
+                    }
+                }
+            }
+        }
+
+        /**
+         * edit the name entry using the created element
+         * @param {HTMLElement} leaf
+         */
+
+    }, {
+        key: 'edit',
+        value: function edit(leaf) {
             var _this4 = this;
 
-            this.holdTimeout = null;
-            this.edit = this.target;
+            this.edit = leaf;
             this.input = utils.html({ parent: this.edit.name.parentNode, type: 'input', styles: this.options.nameStyles });
             var computed = window.getComputedStyle(this.edit.name);
             this.input.style.boxSizing = 'content-box';
@@ -18111,27 +18159,27 @@ var Tree = function (_Events) {
                     }
                 }
             }
-            var _iteratorNormalCompletion8 = true;
-            var _didIteratorError8 = false;
-            var _iteratorError8 = undefined;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator8 = this._getChildren(entry)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                    var child = _step8.value;
+                for (var _iterator9 = this._getChildren(entry)[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var child = _step9.value;
 
                     this._findClosest(e, child);
                 }
             } catch (err) {
-                _didIteratorError8 = true;
-                _iteratorError8 = err;
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                        _iterator8.return();
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
                     }
                 } finally {
-                    if (_didIteratorError8) {
-                        throw _iteratorError8;
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
                     }
                 }
             }
@@ -18170,27 +18218,27 @@ var Tree = function (_Events) {
                 this.target.style.top = e.pageY - this.offset.y + 'px';
                 var x = utils.toGlobal(this.target.name).x;
                 this.closest = { distanceAbove: Infinity, distanceBelow: Infinity };
-                var _iteratorNormalCompletion9 = true;
-                var _didIteratorError9 = false;
-                var _iteratorError9 = undefined;
+                var _iteratorNormalCompletion10 = true;
+                var _didIteratorError10 = false;
+                var _iteratorError10 = undefined;
 
                 try {
-                    for (var _iterator9 = this._getChildren()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                        var child = _step9.value;
+                    for (var _iterator10 = this._getChildren()[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                        var child = _step10.value;
 
                         this._findClosest(e, child);
                     }
                 } catch (err) {
-                    _didIteratorError9 = true;
-                    _iteratorError9 = err;
+                    _didIteratorError10 = true;
+                    _iteratorError10 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                            _iterator9.return();
+                        if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                            _iterator10.return();
                         }
                     } finally {
-                        if (_didIteratorError9) {
-                            throw _iteratorError9;
+                        if (_didIteratorError10) {
+                            throw _iteratorError10;
                         }
                     }
                 }

@@ -250,7 +250,32 @@ class Tree extends Events
     _hold()
     {
         this.holdTimeout = null
-        this.edit = this.target
+        this._edit(this.target)
+    }
+
+    /**
+     * edit the name entry using the data
+     * @param {object} data element of leaf
+     */
+    editData(data)
+    {
+        const children = this._getChildren(null, true)
+        for (let child of children)
+        {
+            if (child.data === data)
+            {
+                this.edit(child)
+            }
+        }
+    }
+
+    /**
+     * edit the name entry using the created element
+     * @param {HTMLElement} leaf
+     */
+    edit(leaf)
+    {
+        this.edit = leaf
         this.input = utils.html({ parent: this.edit.name.parentNode, type: 'input', styles: this.options.nameStyles })
         const computed = window.getComputedStyle(this.edit.name)
         this.input.style.boxSizing = 'content-box'
