@@ -120,14 +120,20 @@ class Tree extends Events
 
     _hideIcon(leaf)
     {
-        leaf.icon.style.opacity = 0
-        leaf.icon.style.cursor = 'unset'
+        if (leaf.isLeaf)
+        {
+            leaf.icon.style.opacity = 0
+            leaf.icon.style.cursor = 'unset'
+        }
     }
 
     _showIcon(leaf)
     {
-        leaf.icon.style.opacity = 1
-        leaf.icon.style.cursor = this.options.expandStyles.cursor
+        if (leaf.isLeaf)
+        {
+            leaf.icon.style.opacity = 1
+            leaf.icon.style.cursor = this.options.expandStyles.cursor
+        }
     }
 
     expandAll()

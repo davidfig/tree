@@ -17755,14 +17755,18 @@ var Tree = function (_Events) {
     }, {
         key: '_hideIcon',
         value: function _hideIcon(leaf) {
-            leaf.icon.style.opacity = 0;
-            leaf.icon.style.cursor = 'unset';
+            if (leaf.isLeaf) {
+                leaf.icon.style.opacity = 0;
+                leaf.icon.style.cursor = 'unset';
+            }
         }
     }, {
         key: '_showIcon',
         value: function _showIcon(leaf) {
-            leaf.icon.style.opacity = 1;
-            leaf.icon.style.cursor = this.options.expandStyles.cursor;
+            if (leaf.isLeaf) {
+                leaf.icon.style.opacity = 1;
+                leaf.icon.style.cursor = this.options.expandStyles.cursor;
+            }
         }
     }, {
         key: 'expandAll',
