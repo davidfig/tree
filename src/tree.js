@@ -250,7 +250,7 @@ class Tree extends Events
     _hold()
     {
         this.holdTimeout = null
-        this._edit(this.target)
+        this.edit(this.target)
     }
 
     /**
