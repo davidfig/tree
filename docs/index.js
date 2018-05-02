@@ -1,110 +1,18 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
-var Sortable = require('../src/sortable');
 var Highlight = require('./highlight');
+var Tree = require('../src/tree');
+var utils = require('../src/utils');
+
+var data = {
+    children: [{ name: 'fruits', children: [{ name: 'apples', children: [] }, { name: 'oranges', children: [{ name: 'tangerines', children: [] }, { name: 'mandarins', children: [] }, { name: 'pomelo', children: [] }, { name: 'blood orange', children: [] }] }] }, { name: 'vegetables', children: [{ name: 'brocolli', children: [] }] }]
+};
 
 function test() {
-    var one = document.getElementById('example-1');
-    var a1 = new Sortable(one);
-    events(one, [a1]);
-
-    var two = document.getElementById('example-2');
-    var a2 = new Sortable(two.children[0], { name: 'list-2' });
-    var b2 = new Sortable(two.children[1], { name: 'list-2' });
-    var c2 = new Sortable(two.children[2], { name: 'list-2' });
-    events(two, [a2, b2, c2]);
-
-    var three = document.getElementById('example-3');
-    var a3 = new Sortable(three.children[0], { name: 'list-3' });
-    var b3 = new Sortable(three.children[1], { name: 'list-3', sort: false });
-    events(three, [a3, b3]);
-
-    var four = document.getElementById('example-4');
-    var a4 = new Sortable(four.children[0], { name: 'list-4' });
-    var b4 = new Sortable(four.children[1], { name: 'list-4' });
-    events(four, [a4, b4]);
-
-    var five = document.getElementById('example-5');
-    var a5 = new Sortable(five.children[0], { name: 'list-5', dragClass: 'entry' });
-    var b5 = new Sortable(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' });
-    events(five, [a5, b5]);
-
-    var six = document.getElementById('example-6');
-    var a6 = new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' });
-    var b6 = new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false });
-    events(six, [a6, b6]);
-
-    var seven = document.getElementById('example-7');
-    var a7 = new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' });
-    var b7 = new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true });
-    events(seven, [a7, b7]);
-
-    var eight = document.getElementById('example-8');
-    var a8 = new Sortable(eight.children[0], { name: 'list-8', offList: 'cancel' });
-    var b8 = new Sortable(eight.children[1], { name: 'list-8', offList: 'cancel' });
-    events(eight, [a8, b8]);
-
-    var nine = document.getElementById('example-9');
-    var a9 = new Sortable(nine, { name: 'list-9', offList: 'delete' });
-    events(nine, [a9]);
-
-    var ten = document.getElementById('example-10');
-    var a10 = new Sortable(ten.children[0], { name: 'list-10' });
-    var b10 = new Sortable(ten.children[1], { name: 'list-10', drop: false });
-    events(ten, [a10, b10]);
-
-    var eleven = document.getElementById('example-11');
-    var a11 = new Sortable(eleven.children[0], { name: 'list-11' });
-    var b11 = new Sortable(eleven.children[1], { name: 'list-11', copy: true });
-    events(eleven, [a11, b11]);
-
-    var twelve = document.getElementById('example-12');
-    var a12 = new Sortable(twelve.children[0], { name: 'list-12', dragClass: 'entry', offList: 'delete' });
-    var b12 = new Sortable(twelve.children[1], { name: 'list-12', dragClass: 'entry', offList: 'delete' });
-    events(twelve, [a12, b12]);
-
-    var thirteen = document.getElementById('example-13');
-    var a13 = new Sortable(thirteen.children[0], { name: 'list-13', dragClass: 'entry' });
-    var b13 = new Sortable(thirteen.children[1], { name: 'list-13', dragClass: 'entry', maximum: 3 });
-    var c13 = new Sortable(thirteen.children[2], { name: 'list-13', dragClass: 'entry', maximum: 1 });
-    events(thirteen, [a13, b13, c13]);
-}
-
-/**
- * show events
- * @param {HTMLElement} div
- * @param {Sortable[]} sortables
- */
-function events(div, sortables) {
-    function on(name, i) {
-        var letters = 'ABCDEF';
-        sortables[i].on(name, function () {
-            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>\n';
-            events.scrollTop = events.scrollHeight;
-        });
-    }
-
-    var events = document.getElementById(div.id + '-events');
-    events.innerHTML = '<div style="font-weight:bold">events listed here...</div>';
-    for (var i = 0; i < sortables.length; i++) {
-        on('add-pending', i);
-        on('remove-pending', i);
-        on('delete-pending', i);
-        on('order-pending', i);
-        on('update-pending', i);
-        on('copy-pending', i);
-        on('add-remove-pending', i);
-        on('maximum-remove-pending', i);
-        on('add', i);
-        on('remove', i);
-        on('delete', i);
-        on('order', i);
-        on('update', i);
-        on('copy', i);
-        on('maximum-remove', i);
-        on('clicked', i);
-    }
+    var div = utils.html({ parent: document.body });
+    var tree = new Tree(div, data);
+    tree.expandAll();
 }
 
 window.onload = function () {
@@ -112,7 +20,7 @@ window.onload = function () {
     Highlight();
 };
 
-},{"../src/sortable":185,"./highlight":2}],2:[function(require,module,exports){
+},{"../src/tree":186,"../src/utils":187,"./highlight":2}],2:[function(require,module,exports){
 'use strict';
 
 var highlight = require('highlight.js');
@@ -131,7 +39,145 @@ module.exports = function () {
     ForkMe();
 };
 
-},{"fork-me-github":4,"highlight.js":6}],3:[function(require,module,exports){
+},{"fork-me-github":5,"highlight.js":7}],3:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Javascript: create click event for both mouse and touch
+ * @example
+ *
+ * const clicked = require('clicked')
+ *
+ * function handleClick()
+ * {
+ *    console.log('I was clicked.')
+ * }
+ *
+ * const div = document.getElementById('clickme')
+ * const c = clicked(div, handleClick, {thresshold: 15})
+ *
+ * // change callback
+ * c.callback = () => console.log('different clicker')
+ *
+ */
+
+/**
+ * @param {HTMLElement} element
+ * @param {function} callback called after click: callback(event, options.args)
+ * @param {object} [options]
+ * @param {number} [options.thresshold=10] if touch moves threshhold-pixels then the touch-click is cancelled
+ * @param {*} [options.args] arguments for callback function
+ * @returns {Clicked}
+ */
+function clicked(element, callback, options) {
+    return new Clicked(element, callback, options);
+}
+
+var Clicked = function () {
+    function Clicked(element, callback, options) {
+        var _this = this;
+
+        _classCallCheck(this, Clicked);
+
+        this.options = options || {};
+        this.threshhold = this.options.thresshold || 10;
+        this.events = {
+            mouseclick: function mouseclick(e) {
+                return _this.mouseclick(e);
+            },
+            touchstart: function touchstart(e) {
+                return _this.touchstart(e);
+            },
+            touchmove: function touchmove(e) {
+                return _this.touchmove(e);
+            },
+            touchcancel: function touchcancel(e) {
+                return _this.touchcancel(e);
+            },
+            touchend: function touchend(e) {
+                return _this.touchend(e);
+            }
+        };
+        element.addEventListener('click', this.events.mouseclick);
+        element.addEventListener('touchstart', this.events.touchstart, { passive: true });
+        element.addEventListener('touchmove', this.events.touchmove, { passive: true });
+        element.addEventListener('touchcancel', this.events.touchcancel);
+        element.addEventListener('touchend', this.events.touchend);
+        this.element = element;
+        this.callback = callback;
+    }
+
+    /**
+     * removes event listeners added by Clicked
+     */
+
+
+    _createClass(Clicked, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.element.removeEventListener('click', this.events.mouseclick);
+            this.element.removeEventListener('touchstart', this.events.touchstart, { passive: true });
+            this.element.removeEventListener('touchmove', this.events.touchmove, { passive: true });
+            this.element.removeEventListener('touchcancel', this.events.touchcancel);
+            this.element.removeEventListener('touchend', this.events.touchend);
+        }
+    }, {
+        key: 'touchstart',
+        value: function touchstart(e) {
+            if (e.touches.length === 1) {
+                this.lastX = e.changedTouches[0].screenX;
+                this.lastY = e.changedTouches[0].screenY;
+                this.down = true;
+            }
+        }
+    }, {
+        key: 'pastThreshhold',
+        value: function pastThreshhold(x, y) {
+            return Math.abs(this.lastX - x) > this.threshhold || Math.abs(this.lastY - y) > this.threshhold;
+        }
+    }, {
+        key: 'touchmove',
+        value: function touchmove(e) {
+            if (!this.down || e.touches.length !== 1) {
+                this.touchcancel();
+                return;
+            }
+            var x = e.changedTouches[0].screenX;
+            var y = e.changedTouches[0].screenY;
+            if (this.pastThreshhold(x, y)) {
+                this.touchcancel();
+            }
+        }
+    }, {
+        key: 'touchcancel',
+        value: function touchcancel() {
+            this.down = false;
+        }
+    }, {
+        key: 'touchend',
+        value: function touchend(e) {
+            if (this.down) {
+                e.preventDefault();
+                this.callback(e, this.options.args);
+            }
+        }
+    }, {
+        key: 'mouseclick',
+        value: function mouseclick(e) {
+            this.callback(e, this.options.args);
+        }
+    }]);
+
+    return Clicked;
+}();
+
+module.exports = clicked;
+
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -469,7 +515,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -648,7 +694,7 @@ function forkMe(url, options) {
     sheet.insertRule('.' + a.className + '::after' + after + '}');
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /*
 Syntax highlighting with language autodetection.
 https://highlightjs.org/
@@ -1466,7 +1512,7 @@ https://highlightjs.org/
   return hljs;
 }));
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var hljs = require('./highlight');
 
 hljs.registerLanguage('1c', require('./languages/1c'));
@@ -1647,7 +1693,7 @@ hljs.registerLanguage('xquery', require('./languages/xquery'));
 hljs.registerLanguage('zephir', require('./languages/zephir'));
 
 module.exports = hljs;
-},{"./highlight":5,"./languages/1c":7,"./languages/abnf":8,"./languages/accesslog":9,"./languages/actionscript":10,"./languages/ada":11,"./languages/apache":12,"./languages/applescript":13,"./languages/arduino":14,"./languages/armasm":15,"./languages/asciidoc":16,"./languages/aspectj":17,"./languages/autohotkey":18,"./languages/autoit":19,"./languages/avrasm":20,"./languages/awk":21,"./languages/axapta":22,"./languages/bash":23,"./languages/basic":24,"./languages/bnf":25,"./languages/brainfuck":26,"./languages/cal":27,"./languages/capnproto":28,"./languages/ceylon":29,"./languages/clean":30,"./languages/clojure":32,"./languages/clojure-repl":31,"./languages/cmake":33,"./languages/coffeescript":34,"./languages/coq":35,"./languages/cos":36,"./languages/cpp":37,"./languages/crmsh":38,"./languages/crystal":39,"./languages/cs":40,"./languages/csp":41,"./languages/css":42,"./languages/d":43,"./languages/dart":44,"./languages/delphi":45,"./languages/diff":46,"./languages/django":47,"./languages/dns":48,"./languages/dockerfile":49,"./languages/dos":50,"./languages/dsconfig":51,"./languages/dts":52,"./languages/dust":53,"./languages/ebnf":54,"./languages/elixir":55,"./languages/elm":56,"./languages/erb":57,"./languages/erlang":59,"./languages/erlang-repl":58,"./languages/excel":60,"./languages/fix":61,"./languages/flix":62,"./languages/fortran":63,"./languages/fsharp":64,"./languages/gams":65,"./languages/gauss":66,"./languages/gcode":67,"./languages/gherkin":68,"./languages/glsl":69,"./languages/go":70,"./languages/golo":71,"./languages/gradle":72,"./languages/groovy":73,"./languages/haml":74,"./languages/handlebars":75,"./languages/haskell":76,"./languages/haxe":77,"./languages/hsp":78,"./languages/htmlbars":79,"./languages/http":80,"./languages/hy":81,"./languages/inform7":82,"./languages/ini":83,"./languages/irpf90":84,"./languages/java":85,"./languages/javascript":86,"./languages/jboss-cli":87,"./languages/json":88,"./languages/julia":90,"./languages/julia-repl":89,"./languages/kotlin":91,"./languages/lasso":92,"./languages/ldif":93,"./languages/leaf":94,"./languages/less":95,"./languages/lisp":96,"./languages/livecodeserver":97,"./languages/livescript":98,"./languages/llvm":99,"./languages/lsl":100,"./languages/lua":101,"./languages/makefile":102,"./languages/markdown":103,"./languages/mathematica":104,"./languages/matlab":105,"./languages/maxima":106,"./languages/mel":107,"./languages/mercury":108,"./languages/mipsasm":109,"./languages/mizar":110,"./languages/mojolicious":111,"./languages/monkey":112,"./languages/moonscript":113,"./languages/n1ql":114,"./languages/nginx":115,"./languages/nimrod":116,"./languages/nix":117,"./languages/nsis":118,"./languages/objectivec":119,"./languages/ocaml":120,"./languages/openscad":121,"./languages/oxygene":122,"./languages/parser3":123,"./languages/perl":124,"./languages/pf":125,"./languages/php":126,"./languages/pony":127,"./languages/powershell":128,"./languages/processing":129,"./languages/profile":130,"./languages/prolog":131,"./languages/protobuf":132,"./languages/puppet":133,"./languages/purebasic":134,"./languages/python":135,"./languages/q":136,"./languages/qml":137,"./languages/r":138,"./languages/rib":139,"./languages/roboconf":140,"./languages/routeros":141,"./languages/rsl":142,"./languages/ruby":143,"./languages/ruleslanguage":144,"./languages/rust":145,"./languages/scala":146,"./languages/scheme":147,"./languages/scilab":148,"./languages/scss":149,"./languages/shell":150,"./languages/smali":151,"./languages/smalltalk":152,"./languages/sml":153,"./languages/sqf":154,"./languages/sql":155,"./languages/stan":156,"./languages/stata":157,"./languages/step21":158,"./languages/stylus":159,"./languages/subunit":160,"./languages/swift":161,"./languages/taggerscript":162,"./languages/tap":163,"./languages/tcl":164,"./languages/tex":165,"./languages/thrift":166,"./languages/tp":167,"./languages/twig":168,"./languages/typescript":169,"./languages/vala":170,"./languages/vbnet":171,"./languages/vbscript":173,"./languages/vbscript-html":172,"./languages/verilog":174,"./languages/vhdl":175,"./languages/vim":176,"./languages/x86asm":177,"./languages/xl":178,"./languages/xml":179,"./languages/xquery":180,"./languages/yaml":181,"./languages/zephir":182}],7:[function(require,module,exports){
+},{"./highlight":6,"./languages/1c":8,"./languages/abnf":9,"./languages/accesslog":10,"./languages/actionscript":11,"./languages/ada":12,"./languages/apache":13,"./languages/applescript":14,"./languages/arduino":15,"./languages/armasm":16,"./languages/asciidoc":17,"./languages/aspectj":18,"./languages/autohotkey":19,"./languages/autoit":20,"./languages/avrasm":21,"./languages/awk":22,"./languages/axapta":23,"./languages/bash":24,"./languages/basic":25,"./languages/bnf":26,"./languages/brainfuck":27,"./languages/cal":28,"./languages/capnproto":29,"./languages/ceylon":30,"./languages/clean":31,"./languages/clojure":33,"./languages/clojure-repl":32,"./languages/cmake":34,"./languages/coffeescript":35,"./languages/coq":36,"./languages/cos":37,"./languages/cpp":38,"./languages/crmsh":39,"./languages/crystal":40,"./languages/cs":41,"./languages/csp":42,"./languages/css":43,"./languages/d":44,"./languages/dart":45,"./languages/delphi":46,"./languages/diff":47,"./languages/django":48,"./languages/dns":49,"./languages/dockerfile":50,"./languages/dos":51,"./languages/dsconfig":52,"./languages/dts":53,"./languages/dust":54,"./languages/ebnf":55,"./languages/elixir":56,"./languages/elm":57,"./languages/erb":58,"./languages/erlang":60,"./languages/erlang-repl":59,"./languages/excel":61,"./languages/fix":62,"./languages/flix":63,"./languages/fortran":64,"./languages/fsharp":65,"./languages/gams":66,"./languages/gauss":67,"./languages/gcode":68,"./languages/gherkin":69,"./languages/glsl":70,"./languages/go":71,"./languages/golo":72,"./languages/gradle":73,"./languages/groovy":74,"./languages/haml":75,"./languages/handlebars":76,"./languages/haskell":77,"./languages/haxe":78,"./languages/hsp":79,"./languages/htmlbars":80,"./languages/http":81,"./languages/hy":82,"./languages/inform7":83,"./languages/ini":84,"./languages/irpf90":85,"./languages/java":86,"./languages/javascript":87,"./languages/jboss-cli":88,"./languages/json":89,"./languages/julia":91,"./languages/julia-repl":90,"./languages/kotlin":92,"./languages/lasso":93,"./languages/ldif":94,"./languages/leaf":95,"./languages/less":96,"./languages/lisp":97,"./languages/livecodeserver":98,"./languages/livescript":99,"./languages/llvm":100,"./languages/lsl":101,"./languages/lua":102,"./languages/makefile":103,"./languages/markdown":104,"./languages/mathematica":105,"./languages/matlab":106,"./languages/maxima":107,"./languages/mel":108,"./languages/mercury":109,"./languages/mipsasm":110,"./languages/mizar":111,"./languages/mojolicious":112,"./languages/monkey":113,"./languages/moonscript":114,"./languages/n1ql":115,"./languages/nginx":116,"./languages/nimrod":117,"./languages/nix":118,"./languages/nsis":119,"./languages/objectivec":120,"./languages/ocaml":121,"./languages/openscad":122,"./languages/oxygene":123,"./languages/parser3":124,"./languages/perl":125,"./languages/pf":126,"./languages/php":127,"./languages/pony":128,"./languages/powershell":129,"./languages/processing":130,"./languages/profile":131,"./languages/prolog":132,"./languages/protobuf":133,"./languages/puppet":134,"./languages/purebasic":135,"./languages/python":136,"./languages/q":137,"./languages/qml":138,"./languages/r":139,"./languages/rib":140,"./languages/roboconf":141,"./languages/routeros":142,"./languages/rsl":143,"./languages/ruby":144,"./languages/ruleslanguage":145,"./languages/rust":146,"./languages/scala":147,"./languages/scheme":148,"./languages/scilab":149,"./languages/scss":150,"./languages/shell":151,"./languages/smali":152,"./languages/smalltalk":153,"./languages/sml":154,"./languages/sqf":155,"./languages/sql":156,"./languages/stan":157,"./languages/stata":158,"./languages/step21":159,"./languages/stylus":160,"./languages/subunit":161,"./languages/swift":162,"./languages/taggerscript":163,"./languages/tap":164,"./languages/tcl":165,"./languages/tex":166,"./languages/thrift":167,"./languages/tp":168,"./languages/twig":169,"./languages/typescript":170,"./languages/vala":171,"./languages/vbnet":172,"./languages/vbscript":174,"./languages/vbscript-html":173,"./languages/verilog":175,"./languages/vhdl":176,"./languages/vim":177,"./languages/x86asm":178,"./languages/xl":179,"./languages/xml":180,"./languages/xquery":181,"./languages/yaml":182,"./languages/zephir":183}],8:[function(require,module,exports){
 module.exports = function(hljs){
 
   // общий паттерн для определения идентификаторов
@@ -2157,7 +2203,7 @@ module.exports = function(hljs){
     ]  
   }
 };
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = function(hljs) {
     var regexes = {
         ruleDeclaration: "^[a-zA-Z][a-zA-Z0-9-]*",
@@ -2228,7 +2274,7 @@ module.exports = function(hljs) {
       ]
     };
 };
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -2266,7 +2312,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '[a-zA-Z_$][a-zA-Z0-9_$]*';
   var IDENT_FUNC_RETURN_TYPE_RE = '([*]|[a-zA-Z_$][a-zA-Z0-9_$]*)';
@@ -2340,7 +2386,7 @@ module.exports = function(hljs) {
     illegal: /#/
   };
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = // We try to support full Ada2012
 //
 // We highlight all appearances of types, keywords, literals (string, char, number, bool)
@@ -2513,7 +2559,7 @@ function(hljs) {
         ]
     };
 };
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function(hljs) {
   var NUMBER = {className: 'number', begin: '[\\$%]\\d+'};
   return {
@@ -2559,7 +2605,7 @@ module.exports = function(hljs) {
     illegal: /\S/
   };
 };
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function(hljs) {
   var STRING = hljs.inherit(hljs.QUOTE_STRING_MODE, {illegal: ''});
   var PARAMS = {
@@ -2645,7 +2691,7 @@ module.exports = function(hljs) {
     illegal: '//|->|=>|\\[\\['
   };
 };
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function(hljs) {
   var CPP = hljs.getLanguage('cpp').exports;
 	return {
@@ -2745,7 +2791,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function(hljs) {
     //local labels: %?[FB]?[AT]?\d{1,2}\w+
   return {
@@ -2837,7 +2883,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['adoc'],
@@ -3025,7 +3071,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = function (hljs) {
   var KEYWORDS =
     'false synchronized int abstract float private char boolean static null if const ' +
@@ -3170,7 +3216,7 @@ module.exports = function (hljs) {
     ]
   };
 };
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = function(hljs) {
   var BACKTICK_ESCAPE = {
     begin: '`[\\s\\S]'
@@ -3229,7 +3275,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 module.exports = function(hljs) {
     var KEYWORDS = 'ByRef Case Const ContinueCase ContinueLoop ' +
         'Default Dim Do Else ElseIf EndFunc EndIf EndSelect ' +
@@ -3365,7 +3411,7 @@ module.exports = function(hljs) {
         ]
     }
 };
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -3427,7 +3473,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports = function(hljs) {
   var VARIABLE = {
     className: 'variable',
@@ -3480,7 +3526,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: 'false int abstract private char boolean static null if for true ' +
@@ -3511,7 +3557,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = function(hljs) {
   var VAR = {
     className: 'variable',
@@ -3586,7 +3632,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -3637,7 +3683,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 module.exports = function(hljs){
   return {
     contains: [
@@ -3666,7 +3712,7 @@ module.exports = function(hljs){
     ]
   };
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = function(hljs){
   var LITERAL = {
     className: 'literal',
@@ -3703,7 +3749,7 @@ module.exports = function(hljs){
     ]
   };
 };
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS =
     'div mod in and or not xor asserterror begin case do downto else end exit for if of repeat then to ' +
@@ -3783,7 +3829,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['capnp'],
@@ -3832,7 +3878,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = function(hljs) {
   // 2.3. Identifiers and keywords
   var KEYWORDS =
@@ -3899,7 +3945,7 @@ module.exports = function(hljs) {
     ].concat(EXPRESSIONS)
   };
 };
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['clean','icl','dcl'],
@@ -3924,7 +3970,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -3939,7 +3985,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 module.exports = function(hljs) {
   var keywords = {
     'builtin-name':
@@ -4035,7 +4081,7 @@ module.exports = function(hljs) {
     contains: [LIST, STRING, HINT, HINT_COL, COMMENT, KEY, COLLECTION, NUMBER, LITERAL]
   }
 };
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['cmake.in'],
@@ -4073,7 +4119,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -4219,7 +4265,7 @@ module.exports = function(hljs) {
     ])
   };
 };
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -4286,7 +4332,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 module.exports = function cos (hljs) {
 
   var STRINGS = {
@@ -4410,7 +4456,7 @@ module.exports = function cos (hljs) {
     ]
   };
 };
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 module.exports = function(hljs) {
   var CPP_PRIMITIVE_TYPES = {
     className: 'keyword',
@@ -4585,7 +4631,7 @@ module.exports = function(hljs) {
     }
   };
 };
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 module.exports = function(hljs) {
   var RESOURCES = 'primitive rsc_template';
 
@@ -4679,7 +4725,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 module.exports = function(hljs) {
   var NUM_SUFFIX = '(_[uif](8|16|32|64))?';
   var CRYSTAL_IDENT_RE = '[a-zA-Z_]\\w*[!?=]?';
@@ -4873,7 +4919,7 @@ module.exports = function(hljs) {
     contains: CRYSTAL_DEFAULT_CONTAINS
   };
 };
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -5050,7 +5096,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: false,
@@ -5072,7 +5118,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '[a-zA-Z-][a-zA-Z0-9_-]*';
   var RULE = {
@@ -5177,7 +5223,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = /**
  * Known issues:
  *
@@ -5435,7 +5481,7 @@ function(hljs) {
     ]
   };
 };
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = function (hljs) {
   var SUBST = {
     className: 'subst',
@@ -5536,7 +5582,7 @@ module.exports = function (hljs) {
     ]
   }
 };
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS =
     'exports register file shl array record property for mod while set ally label uses raise not ' +
@@ -5605,7 +5651,7 @@ module.exports = function(hljs) {
     ].concat(COMMENT_MODES)
   };
 };
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['patch'],
@@ -5645,7 +5691,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 module.exports = function(hljs) {
   var FILTER = {
     begin: /\|[A-Za-z]+:?/,
@@ -5709,7 +5755,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['bind', 'zone'],
@@ -5738,7 +5784,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['docker'],
@@ -5760,7 +5806,7 @@ module.exports = function(hljs) {
     illegal: '</'
   }
 };
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMENT = hljs.COMMENT(
     /^\s*@?rem\b/, /$/,
@@ -5812,7 +5858,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 module.exports = function(hljs) {
   var QUOTED_PROPERTY = {
     className: 'string',
@@ -5859,7 +5905,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 module.exports = function(hljs) {
   var STRINGS = {
     className: 'string',
@@ -5983,7 +6029,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 module.exports = function(hljs) {
   var EXPRESSION_KEYWORDS = 'if eq ne lt lte gt gte select default math sep';
   return {
@@ -6015,7 +6061,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 module.exports = function(hljs) {
     var commentMode = hljs.COMMENT(/\(\*/, /\*\)/);
 
@@ -6048,7 +6094,7 @@ module.exports = function(hljs) {
         ]
     };
 };
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 module.exports = function(hljs) {
   var ELIXIR_IDENT_RE = '[a-zA-Z_][a-zA-Z0-9_]*(\\!|\\?)?';
   var ELIXIR_METHOD_RE = '[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~`|]|\\[\\]=?';
@@ -6145,7 +6191,7 @@ module.exports = function(hljs) {
     contains: ELIXIR_DEFAULT_CONTAINS
   };
 };
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMENT = {
     variants: [
@@ -6229,7 +6275,7 @@ module.exports = function(hljs) {
     illegal: /;/
   };
 };
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     subLanguage: 'xml',
@@ -6244,7 +6290,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -6290,7 +6336,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 module.exports = function(hljs) {
   var BASIC_ATOM_RE = '[a-z\'][a-zA-Z0-9_\']*';
   var FUNCTION_NAME_RE = '(' + BASIC_ATOM_RE + ':' + BASIC_ATOM_RE + '|' + BASIC_ATOM_RE + ')';
@@ -6436,7 +6482,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['xlsx', 'xls'],
@@ -6484,7 +6530,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -6513,7 +6559,7 @@ module.exports = function(hljs) {
     case_insensitive: true
   };
 };
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 module.exports = function (hljs) {
 
     var CHAR = {
@@ -6558,7 +6604,7 @@ module.exports = function (hljs) {
         ]
     };
 };
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 module.exports = function(hljs) {
   var PARAMS = {
     className: 'params',
@@ -6629,7 +6675,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 module.exports = function(hljs) {
   var TYPEPARAM = {
     begin: '<', end: '>',
@@ -6688,7 +6734,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 module.exports = function (hljs) {
   var KEYWORDS = {
     'keyword':
@@ -6842,7 +6888,7 @@ module.exports = function (hljs) {
     ]
   };
 };
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword: 'and bool break call callexe checkinterrupt clear clearg closeall cls comlog compile ' +
@@ -7066,7 +7112,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 module.exports = function(hljs) {
     var GCODE_IDENT_RE = '[A-Z_][A-Z0-9_.]*';
     var GCODE_CLOSE_RE = '\\%';
@@ -7133,7 +7179,7 @@ module.exports = function(hljs) {
         ].concat(GCODE_CODE)
     };
 };
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 module.exports = function (hljs) {
   return {
     aliases: ['feature'],
@@ -7170,7 +7216,7 @@ module.exports = function (hljs) {
     ]
   };
 };
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -7287,7 +7333,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 module.exports = function(hljs) {
   var GO_KEYWORDS = {
     keyword:
@@ -7341,7 +7387,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 module.exports = function(hljs) {
     return {
       keywords: {
@@ -7364,7 +7410,7 @@ module.exports = function(hljs) {
       ]
     }
 };
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -7399,7 +7445,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 module.exports = function(hljs) {
     return {
         keywords: {
@@ -7493,7 +7539,7 @@ module.exports = function(hljs) {
         illegal: /#|<\//
     }
 };
-},{}],74:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 module.exports = // TODO support filter tags like :javascript, support inline HTML
 function(hljs) {
   return {
@@ -7600,7 +7646,7 @@ function(hljs) {
     ]
   };
 };
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 module.exports = function(hljs) {
   var BUILT_INS = {'builtin-name': 'each in with if else unless bindattr action collection debugger log outlet template unbound view yield'};
   return {
@@ -7634,7 +7680,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMENT = {
     variants: [
@@ -7756,7 +7802,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],77:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '[a-zA-Z_$][a-zA-Z0-9_$]*';
   var IDENT_FUNC_RETURN_TYPE_RE = '([*]|[a-zA-Z_$][a-zA-Z0-9_$]*)';
@@ -7868,7 +7914,7 @@ module.exports = function(hljs) {
     illegal: /<\//
   };
 };
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -7914,7 +7960,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 module.exports = function(hljs) {
   var BUILT_INS = 'action collection component concat debugger each each-in else get hash if input link-to loc log mut outlet partial query-params render textarea unbound unless with yield view';
 
@@ -7985,7 +8031,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 module.exports = function(hljs) {
   var VERSION = 'HTTP/[0-9\\.]+';
   return {
@@ -8026,7 +8072,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 module.exports = function(hljs) {
   var keywords = {
     'builtin-name':
@@ -8128,7 +8174,7 @@ module.exports = function(hljs) {
     contains: [SHEBANG, LIST, STRING, HINT, HINT_COL, COMMENT, KEY, COLLECTION, NUMBER, LITERAL]
   }
 };
-},{}],82:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 module.exports = function(hljs) {
   var START_BRACKET = '\\[';
   var END_BRACKET = '\\]';
@@ -8185,7 +8231,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 module.exports = function(hljs) {
   var STRING = {
     className: "string",
@@ -8251,7 +8297,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 module.exports = function(hljs) {
   var PARAMS = {
     className: 'params',
@@ -8327,7 +8373,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 module.exports = function(hljs) {
   var JAVA_IDENT_RE = '[\u00C0-\u02B8a-zA-Z_$][\u00C0-\u02B8a-zA-Z_$0-9]*';
   var GENERIC_IDENT_RE = JAVA_IDENT_RE + '(<' + JAVA_IDENT_RE + '(\\s*,\\s*' + JAVA_IDENT_RE + ')*>)?';
@@ -8435,7 +8481,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
   var KEYWORDS = {
@@ -8606,7 +8652,7 @@ module.exports = function(hljs) {
     illegal: /#(?!!)/
   };
 };
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 module.exports = function (hljs) {
   var PARAM = {
     begin: /[\w-]+ *=/, returnBegin: true,
@@ -8653,7 +8699,7 @@ module.exports = function (hljs) {
     ]
   }
 };
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 module.exports = function(hljs) {
   var LITERALS = {literal: 'true false null'};
   var TYPES = [
@@ -8690,7 +8736,7 @@ module.exports = function(hljs) {
     illegal: '\\S'
   };
 };
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -8714,7 +8760,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 module.exports = function(hljs) {
   // Since there are numerous special names in Julia, it is too much trouble
   // to maintain them by hand. Hence these names (i.e. keywords, literals and
@@ -8876,7 +8922,7 @@ module.exports = function(hljs) {
 
   return DEFAULT;
 };
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -9050,7 +9096,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 module.exports = function(hljs) {
   var LASSO_IDENT_RE = '[a-zA-Z_][\\w.]*';
   var LASSO_ANGLE_RE = '<\\?(lasso(script)?|=)';
@@ -9213,7 +9259,7 @@ module.exports = function(hljs) {
     ].concat(LASSO_CODE)
   };
 };
-},{}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -9236,7 +9282,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 module.exports = function (hljs) {
   return {
     contains: [
@@ -9276,7 +9322,7 @@ module.exports = function (hljs) {
     ]
   };
 };
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE        = '[\\w-]+'; // yes, Less identifiers may begin with a digit
   var INTERP_IDENT_RE = '(' + IDENT_RE + '|@{' + IDENT_RE + '})';
@@ -9416,7 +9462,7 @@ module.exports = function(hljs) {
     contains: RULES
   };
 };
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 module.exports = function(hljs) {
   var LISP_IDENT_RE = '[a-zA-Z_\\-\\+\\*\\/\\<\\=\\>\\&\\#][a-zA-Z0-9_\\-\\+\\*\\/\\<\\=\\>\\&\\#!]*';
   var MEC_RE = '\\|[^]*?\\|';
@@ -9519,7 +9565,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 module.exports = function(hljs) {
   var VARIABLE = {
     begin: '\\b[gtps][A-Z]+[A-Za-z0-9_\\-]*\\b|\\$_[A-Z]+',
@@ -9676,7 +9722,7 @@ module.exports = function(hljs) {
     illegal: ';$|^\\[|^=|&|{'
   };
 };
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -9825,7 +9871,7 @@ module.exports = function(hljs) {
     ])
   };
 };
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 module.exports = function(hljs) {
   var identifier = '([-a-zA-Z$._][\\w\\-$.]*)';
   return {
@@ -9914,7 +9960,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = function(hljs) {
 
     var LSL_STRING_ESCAPE_CHARS = {
@@ -9997,7 +10043,7 @@ module.exports = function(hljs) {
         ]
     };
 };
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 module.exports = function(hljs) {
   var OPENING_LONG_BRACKET = '\\[=*\\[';
   var CLOSING_LONG_BRACKET = '\\]=*\\]';
@@ -10063,7 +10109,7 @@ module.exports = function(hljs) {
     ])
   };
 };
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 module.exports = function(hljs) {
   /* Variables: simple (eg $(var)) and special (eg $@) */
   var VARIABLE = {
@@ -10144,7 +10190,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],103:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['md', 'mkdown', 'mkd'],
@@ -10252,7 +10298,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],104:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['mma'],
@@ -10310,7 +10356,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMON_CONTAINS = [
     hljs.C_NUMBER_MODE,
@@ -10398,7 +10444,7 @@ module.exports = function(hljs) {
     ].concat(COMMON_CONTAINS)
   };
 };
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = 'if then else elseif for thru do while unless step in and or not';
   var LITERALS = 'true false unknown inf minf ind und %e %i %pi %phi %gamma';
@@ -10804,7 +10850,7 @@ module.exports = function(hljs) {
     illegal: /@/
   }
 };
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords:
@@ -11029,7 +11075,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -11111,7 +11157,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 module.exports = function(hljs) {
     //local labels: %?[FB]?[AT]?\d{1,2}\w+
   return {
@@ -11197,7 +11243,7 @@ module.exports = function(hljs) {
     illegal: '\/'
   };
 };
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords:
@@ -11216,7 +11262,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     subLanguage: 'xml',
@@ -11241,7 +11287,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],112:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 module.exports = function(hljs) {
   var NUMBER = {
     className: 'number', relevance: 0,
@@ -11316,7 +11362,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -11428,7 +11474,7 @@ module.exports = function(hljs) {
     ])
   };
 };
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -11497,7 +11543,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],115:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 module.exports = function(hljs) {
   var VAR = {
     className: 'variable',
@@ -11590,7 +11636,7 @@ module.exports = function(hljs) {
     illegal: '[^\\s\\}]'
   };
 };
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['nim'],
@@ -11645,7 +11691,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 module.exports = function(hljs) {
   var NIX_KEYWORDS = {
     keyword:
@@ -11694,7 +11740,7 @@ module.exports = function(hljs) {
     contains: EXPRESSIONS
   };
 };
-},{}],118:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 module.exports = function(hljs) {
   var CONSTANTS = {
     className: 'variable',
@@ -11800,7 +11846,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],119:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 module.exports = function(hljs) {
   var API_CLASS = {
     className: 'built_in',
@@ -11891,7 +11937,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],120:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 module.exports = function(hljs) {
   /* missing support for heredoc-like string (OCaml 4.0.2+) */
   return {
@@ -11962,7 +12008,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 module.exports = function(hljs) {
 	var SPECIAL_VARS = {
 		className: 'keyword',
@@ -12019,7 +12065,7 @@ module.exports = function(hljs) {
 		]
 	}
 };
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 module.exports = function(hljs) {
   var OXYGENE_KEYWORDS = 'abstract add and array as asc aspect assembly async begin break block by case class concat const copy constructor continue '+
     'create default delegate desc distinct div do downto dynamic each else empty end ensure enum equals event except exit extension external false '+
@@ -12089,7 +12135,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],123:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 module.exports = function(hljs) {
   var CURLY_SUBCOMMENT = hljs.COMMENT(
     '{',
@@ -12137,7 +12183,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 module.exports = function(hljs) {
   var PERL_KEYWORDS = 'getpwent getservent quotemeta msgrcv scalar kill dbmclose undef lc ' +
     'ma syswrite tr send umask sysopen shmwrite vec qx utime local oct semctl localtime ' +
@@ -12294,7 +12340,7 @@ module.exports = function(hljs) {
     contains: PERL_DEFAULT_CONTAINS
   };
 };
-},{}],125:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 module.exports = function(hljs) {
   var MACRO = {
     className: 'variable',
@@ -12346,7 +12392,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],126:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 module.exports = function(hljs) {
   var VARIABLE = {
     begin: '\\$+[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
@@ -12473,7 +12519,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],127:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -12564,7 +12610,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],128:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 module.exports = function(hljs) {
   var BACKTICK_ESCAPE = {
     begin: '`[\\s\\S]',
@@ -12645,7 +12691,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],129:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -12693,7 +12739,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],130:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -12723,7 +12769,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var ATOM = {
@@ -12811,7 +12857,7 @@ module.exports = function(hljs) {
     ])
   };
 };
-},{}],132:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -12847,7 +12893,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],133:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var PUPPET_KEYWORDS = {
@@ -12962,7 +13008,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],134:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 module.exports = // Base deafult colors in PB IDE: background: #FFFFDF; foreground: #000000;
 
 function(hljs) {
@@ -13020,7 +13066,7 @@ function(hljs) {
     ]
   };
 };
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -13136,7 +13182,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],136:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 module.exports = function(hljs) {
   var Q_KEYWORDS = {
   keyword:
@@ -13159,7 +13205,7 @@ module.exports = function(hljs) {
      ]
   };
 };
-},{}],137:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
       keyword:
@@ -13328,7 +13374,7 @@ module.exports = function(hljs) {
     illegal: /#/
   };
 };
-},{}],138:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*';
 
@@ -13398,7 +13444,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],139:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords:
@@ -13425,7 +13471,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],140:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENTIFIER = '[a-zA-Z-_][^\\n{]+\\{';
 
@@ -13492,7 +13538,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 module.exports = // Colors from RouterOS terminal:
 //   green        - #0E9A00
 //   teal         - #0C9A9A
@@ -13651,7 +13697,7 @@ function(hljs) {
     ]
   };
 };
-},{}],142:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -13687,7 +13733,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],143:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 module.exports = function(hljs) {
   var RUBY_METHOD_RE = '[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~`|]|\\[\\]=?';
   var RUBY_KEYWORDS = {
@@ -13864,7 +13910,7 @@ module.exports = function(hljs) {
     contains: COMMENT_MODES.concat(IRB_DEFAULT).concat(RUBY_DEFAULT_CONTAINS)
   };
 };
-},{}],144:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -13925,7 +13971,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],145:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 module.exports = function(hljs) {
   var NUM_SUFFIX = '([ui](8|16|32|64|128|size)|f(32|64))\?';
   var KEYWORDS =
@@ -14033,7 +14079,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],146:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var ANNOTATION = { className: 'meta', begin: '@[A-Za-z]+' };
@@ -14148,7 +14194,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],147:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 module.exports = function(hljs) {
   var SCHEME_IDENT_RE = '[^\\(\\)\\[\\]\\{\\}",\'`;#|\\\\\\s]+';
   var SCHEME_SIMPLE_NUMBER_RE = '(\\-|\\+)?\\d+([./]\\d+)?';
@@ -14292,7 +14338,7 @@ module.exports = function(hljs) {
     contains: [SHEBANG, NUMBER, STRING, QUOTED_IDENT, QUOTED_LIST, LIST].concat(COMMENT_MODES)
   };
 };
-},{}],148:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var COMMON_CONTAINS = [
@@ -14346,7 +14392,7 @@ module.exports = function(hljs) {
     ].concat(COMMON_CONTAINS)
   };
 };
-},{}],149:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 module.exports = function(hljs) {
   var IDENT_RE = '[a-zA-Z-][a-zA-Z0-9_-]*';
   var VARIABLE = {
@@ -14444,7 +14490,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],150:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['console'],
@@ -14459,7 +14505,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],151:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 module.exports = function(hljs) {
   var smali_instr_low_prio = ['add', 'and', 'cmp', 'cmpg', 'cmpl', 'const', 'div', 'double', 'float', 'goto', 'if', 'int', 'long', 'move', 'mul', 'neg', 'new', 'nop', 'not', 'or', 'rem', 'return', 'shl', 'shr', 'sput', 'sub', 'throw', 'ushr', 'xor'];
   var smali_instr_high_prio = ['aget', 'aput', 'array', 'check', 'execute', 'fill', 'filled', 'goto/16', 'goto/32', 'iget', 'instance', 'invoke', 'iput', 'monitor', 'packed', 'sget', 'sparse'];
@@ -14515,7 +14561,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],152:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 module.exports = function(hljs) {
   var VAR_IDENT_RE = '[a-z][a-zA-Z0-9_]*';
   var CHAR = {
@@ -14565,7 +14611,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['ml'],
@@ -14631,7 +14677,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],154:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 module.exports = function(hljs) {
   var CPP = hljs.getLanguage('cpp').exports;
 
@@ -15002,7 +15048,7 @@ module.exports = function(hljs) {
     illegal: /#/
   };
 };
-},{}],155:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMENT_MODE = hljs.COMMENT('--', '$');
   return {
@@ -15162,7 +15208,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],156:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     contains: [
@@ -15245,7 +15291,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],157:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['do', 'ado'],
@@ -15283,7 +15329,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],158:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 module.exports = function(hljs) {
   var STEP21_IDENT_RE = '[A-Z_][A-Z0-9_.]*';
   var STEP21_KEYWORDS = {
@@ -15330,7 +15376,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],159:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var VARIABLE = {
@@ -15784,7 +15830,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],160:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 module.exports = function(hljs) {
   var DETAILS = {
     className: 'string',
@@ -15818,7 +15864,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],161:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 module.exports = function(hljs) {
   var SWIFT_KEYWORDS = {
       keyword: '__COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
@@ -15935,7 +15981,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],162:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 module.exports = function(hljs) {
 
   var COMMENT = {
@@ -15979,7 +16025,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],163:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -16015,7 +16061,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],164:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['tk'],
@@ -16076,7 +16122,7 @@ module.exports = function(hljs) {
     ]
   }
 };
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 module.exports = function(hljs) {
   var COMMAND = {
     className: 'tag',
@@ -16138,7 +16184,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 module.exports = function(hljs) {
   var BUILT_IN_TYPES = 'bool byte i16 i32 i64 double string binary';
   return {
@@ -16173,7 +16219,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],167:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 module.exports = function(hljs) {
   var TPID = {
     className: 'number',
@@ -16257,7 +16303,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],168:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 module.exports = function(hljs) {
   var PARAMS = {
     className: 'params',
@@ -16323,7 +16369,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],169:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = {
     keyword:
@@ -16479,7 +16525,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],170:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     keywords: {
@@ -16529,7 +16575,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],171:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['vb'],
@@ -16585,7 +16631,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],172:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     subLanguage: 'xml',
@@ -16597,7 +16643,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],173:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     aliases: ['vbs'],
@@ -16636,7 +16682,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],174:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 module.exports = function(hljs) {
   var SV_KEYWORDS = {
     keyword:
@@ -16735,7 +16781,7 @@ module.exports = function(hljs) {
     ]
   }; // return
 };
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 module.exports = function(hljs) {
   // Regular expression for VHDL numeric literals.
 
@@ -16796,7 +16842,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     lexemes: /[!#@\w]+/,
@@ -16902,7 +16948,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],177:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 module.exports = function(hljs) {
   return {
     case_insensitive: true,
@@ -17038,7 +17084,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],178:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 module.exports = function(hljs) {
   var BUILTIN_MODULES =
     'ObjectLoader Animate MovieCredits Slides Filters Shading Materials LensFlare Mapping VLCAudioVideo ' +
@@ -17111,7 +17157,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 module.exports = function(hljs) {
   var XML_IDENT_RE = '[A-Za-z0-9\\._:-]+';
   var TAG_INTERNALS = {
@@ -17214,7 +17260,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 module.exports = function(hljs) {
   var KEYWORDS = 'for let if while then else return where group by xquery encoding version' +
     'module namespace boundary-space preserve strip default collation base-uri ordering' +
@@ -17285,7 +17331,7 @@ module.exports = function(hljs) {
     contains: CONTAINS
   };
 };
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 module.exports = function(hljs) {
   var LITERALS = 'true false yes no null';
 
@@ -17373,7 +17419,7 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],182:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 module.exports = function(hljs) {
   var STRING = {
     className: 'string',
@@ -17480,70 +17526,48 @@ module.exports = function(hljs) {
     ]
   };
 };
-},{}],183:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 'use strict';
 
-var icons = require('./icons');
-
-/**
- * Options for Sortable
- * @typedef {object} Sortable~DefaultOptions
- * @property {string} [options.name=sortable] dragging is allowed between Sortables with the same name
- * @property {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
- * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
- * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
- * @property {boolean} [options.sort=true] allow sorting within list
- * @property {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
- * @property {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
- * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
- * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
- * @property {string} [options.reverseOrder] reverse sort the orderId
- * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
- * @property {number} [options.maximum] maximum number of elements allowed in a sortable list
- * @property {boolean} [options.maximumFIFO] whether to use first-in-first-out (or last-in-first-out) to choose which item to remove when maximum is reached
- * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
- * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
- * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
- * @property {boolean} [options.useIcons=true] show icons when dragging
- * @property {object} [options.icons] default set of icons
- * @property {string} [options.icons.reorder]
- * @property {string} [options.icons.move]
- * @property {string} [options.icons.copy]
- * @property {string} [options.icons.delete]
- * @property {string} [options.customIcon] source of custom image when over this sortable
- */
 module.exports = {
-    name: 'sortable',
-    sort: true,
-    drop: true,
-    copy: false,
-    orderId: 'data-order',
-    orderIdIsNumber: true,
-    threshold: 5,
-    dragClass: null,
-    orderClass: null,
-    offList: 'closest',
-    maximum: null,
-    maximumFIFO: true,
-    deepSearch: false,
-    dragStyle: {
-        boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
-        opacity: 0.85,
-        position: 'absolute',
-        pointerEvents: 'none'
+    children: 'children',
+    parent: 'parent',
+    name: 'name',
+    data: 'data',
+    expanded: 'expanded',
+    move: true,
+    indentation: 20,
+    nameStyles: {
+        padding: '0.5em 1em',
+        margin: '0.1em',
+        background: 'rgba(230,230,230)',
+        userSelect: 'none',
+        cursor: ['grab', '-webkit-grab', 'pointer'],
+        width: '100px'
     },
-    cursorHover: ['grab', '-webkit-grab', 'pointer'],
-    cursorDown: ['grabbing', '-webkit-grabbing', 'pointer'],
-    useIcons: true,
-    icons: icons
+    threshold: 10,
+    indicatorStyles: {
+        background: 'rgb(150,150,255)',
+        height: '5px',
+        width: '100px',
+        padding: '0 1em'
+    },
+    expandStyles: {
+        width: '15px',
+        height: '15px',
+        cursor: 'pointer'
+    },
+    holdTime: 1000,
+    expandOnClick: true,
+    dragOpacity: 0.75
 };
 
-},{"./icons":184}],184:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 'use strict';
 
-module.exports = { copy: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABXklEQVQ4ja2VPWsCQRCGHw8hlVjbm2C6BMTmigR/hySQwP4gyyvSJdjYna29EEhjEU0tln4cp0Y4NoW7ybq3Z87EF6bY2eGZWZiZhXwqK/uzioAAXoAxIJWNlU+omFy6BAYGJMsGKvag7oFNDpi2DXBnAgpWZW/Ame/7VCqVVLb1ek2v17Pdn8AV8G46i+YzwzCULk2n00PPL2oQwAPQsFNPJhO63e73eblcpqpWaihGoIG3rqgwDAmCgGazCYCUEiEEAJ1Ox05wYwLrWal936fdbqf8/X7fBtYBPHYNe54FPEIXQNk7AWhPHrAAPk7AGgMLXeGreRNFEbPZjNVqhZQyL3CPIciYhlar5ezJarVqxwr46cMn4BFHL87nc4bDYaqc7XZrHgeK4R49M7JUKlEomGE7JUlCHMewm+drrNHT+vdycKlG/vVV+w2mpRfsMzAyICPlO2rBupT7C/gC9G7LXmZLz0YAAAAASUVORK5CYII=', move: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABDUlEQVQ4ja2VMW6DMBSGP9IsTCxcoWo6IJZMHCaIhQv0HlwBMcRjb8BeRsYgbpGhmaCLX+VS45o0n/SE8LN/vd/YD/Aj0nE3e6AEFDAAs45Bj5V6jhevQGeIrEWn5zrJgZuHmMQNOLkq2yJmih6WYntPmy77P/a09FmYpqkrXwI8acE3IFnbC0EpRRAE9H1vS1+BdynzaGayLCMMw18r4jimrmsAmqZZpr81omX54zjOLqZpmvM8t9mOdn/Z3EqgnwPwLINrlquqIkkSiqKwWR6AF3lReHzltm3XrM7A2VR/2LER/nuwP7A0i3uv3ieWqyc8tDkIB0/7nauyJdJgz8DFELnosU0N1ob3L+ALRMrs/Hdy9wQAAAAASUVORK5CYII=', delete: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAB40lEQVQ4jaWVwU4TURSGv3OnQp1CJgMxbEkmEN1p0rBxAV2AxPgOmC58CRY8BpEFUZ/BRE0XwsIESRNhVS1h4RICNJXOpFPbOS5oh1LaodJ/d2/O/eb/T3LOwBAquK5TcF1nmFrpd/kVUnXbziOypJAV1TkAFTkSKKK6kw6C7Rw07wR+nJh4YkXRO2DhDjP7LWNev6rVSgOBnzKZNVTfAuPXFcLY1BQAjYsLUO1+EqrIm5e+/+EWsO3sRwc2PjMTA3PHx1et8LwYGJ6cxFBjWU9fXF7+jIHtnn3rjrnq+4l5P2cyN+Kng+B5DpopgLpt5+np2e/NzURgjxbqtp0nCLZS7VhLPb3h0cpKIqHUc1bVRWDLAChkex/Ynkd5Y4OHs7PUSiUqe3vYnsev9XVsz7v1ATEmC5AquK7TDMO5fi7+HB5CFBGentI4OwOgenDQ37LqfMF1HZOY6x4yy5VKVUWORiaJlJcrlaoBECiOytMoKgJcRVbdGRUoIrsxMB0E28D+vWHwvc0YPHqrvs/fapUHjkMUhqCKSafju65JqRvLenZj9DrqXg5j09OJrhrn55C0HDr6Mjn5OGq13jPE+jKWtdZxNhAI1wtWVRfFmCyq81fVUtYoKorI7qAFO5T+5xfwD0HCxifvFsyRAAAAAElFTkSuQmCC', reorder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABWklEQVQ4ja2VMW7CQBBFn5BdIcElnIg07lwnPQUNddJYPoMLbuDaHS3pKHyDpAsSFwhxyQVAQqEA/RTxWhvHYIP40i92NPr7Z3dnFtqhX/BqOEAEvAIrQAVXRSwqclrhAVhYIqe4KHLP4gXYtxAz3APP55xdImaLDqpiTrVMz/OUpqlc1y1jvu8rz3PFcVxX/p8zjapi6/VakjSfz0vRIAgkSUmS1DmNADqF4FNp1XEIw5DtdgtAt9tlNBqdOiYbj/bCfhoClCSJJCkIgjLW4PDTOOwDd20sNOAe6Hca0y5EB9gAXzfQWgEbc9VLGsoej8eEYQjAcDjkeDwymUw4HA4mZWkcArw1bZ9lGbvdDoBer8d0OrXFAN7txb+HHcex8jyX7/tlzHVdpWkqz/OqN/xBzbC4tvW+qWk9g5sOB4NBtfwTXJxzVoUZsDN+O8DuhhkXDtg6tP4CfgAjHd1NvsCHcAAAAABJRU5ErkJggg==', cancel: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAACH0lEQVQ4jZWVPUsjURSGnzMmMYWQcdQiSRfYZQMWFmK1GAMW/oCggrAGGyt/jf2yFoIRS/skwha7BLQQZlGwzMDKjglYmA9ztpgkTGZmNft2c86d9z733DlnYAq557mUe55LTbNWooJaJeY8pg9Q2UBZRfjgJbhHaCBaSy85X6VI/13D5lk6j/ANZO1tFv2JUs7sOrY/avgfnEp2H5Hr980AZA2Ra+cs+yWS0COTa2D2fbMJdZhhJVNq/hoTapWYd8ygWVSJQ7FZXvVEq8TGhs5j+iB4zGR2i8XNS4yEOY4ZCZPFzUuS2a3gJmuex6iGKhtBirn8EXFrBatQwUiYGAkTq1Ahbq0wlz8Kkw6kAHiYw0/DJ8W92vMM5pdZKF6gCnEzT+/pFvdqD9AgwyqAuOe51Iu+tCKKhZEwWSheEEvlAei1bNxaiUE3cjlJSZpGZMbP6gORyDYIQFjbD22U+yg6q1Dxjtmy6bdtYqn8uKYRurO2H9oeodCYzAnW+inx+WWvZrUSf6olek+3xOeXsdZPCV2Keh5DQ60Fs8/2MT33Bre+w6DbYtBt4dZ36Lk3PNvHhC7F0DqjbbRKzPmd/h5uOQm/GBUTfqSXmp+lSN8AkCJ9lDLQCZKGFYq9YFAeTZ7xLWd2HVuQw7Dpm+qIyuGoj0f8E2peZD7xqidTja8Z2febRRqCb8AOpDDsgI/D1B1KA0Pr/xqwU+l/fgF/AWTUxfGGLxBJAAAAAElFTkSuQmCC' };
+module.exports = { closed: '<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"><rect id="closed" x="0" y="0" width="100" height="100" style="fill:none;"/><rect x="10" y="10" width="80" height="80" style="fill:none;stroke:#000;stroke-width:2px;"/><path d="M25,50l50,0" style="fill:none;stroke:#000;stroke-width:2px;"/><path d="M50,75l0,-50" style="fill:none;stroke:#000;stroke-width:2px;"/></svg>', open: '<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"><rect id="open" x="0" y="0" width="100" height="100" style="fill:none;"/><rect x="10" y="10" width="80" height="80" style="fill:none;stroke:#000;stroke-width:2px;"/><path d="M25,50l50,0" style="fill:none;stroke:#000;stroke-width:2px;"/></svg>' };
 
-},{}],185:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -17555,133 +17579,161 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Events = require('eventemitter3');
+var clicked = require('clicked');
 
 var defaults = require('./defaults');
 var utils = require('./utils');
+var icons = require('./icons');
 
-var Sortable = function (_Events) {
-    _inherits(Sortable, _Events);
+var Tree = function (_Events) {
+    _inherits(Tree, _Events);
 
     /**
-     * Create sortable list
+     * Create Tree
      * @param {HTMLElement} element
-     * @param {object} [options]
-     * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
-     * @param {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
-     * @param {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
-     * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {boolean} [options.sort=true] allow sorting within list
-     * @param {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
-     * @param {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
-     * @param {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
-     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
-     * @param {string} [options.reverseOrder] reverse sort the orderId
-     * @param {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
-     * @param {number} [options.maximum] maximum number of elements allowed in a sortable list
-     * @param {boolean} [options.maximumFIFO] direction of search to choose which item to remove when maximum is reached
-     * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
-     * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
-     * @param {boolean} [options.useIcons=true] show icons when dragging
-     * @param {object} [options.icons] default set of icons
-     * @param {string} [options.icons.reorder]
-     * @param {string} [options.icons.move]
-     * @param {string} [options.icons.copy]
-     * @param {string} [options.icons.delete]
-     * @param {string} [options.customIcon] source of custom image when over this sortable
-     * @fires pickup
-     * @fires order
-     * @fires add
-     * @fires remove
-     * @fires update
-     * @fires delete
-     * @fires copy
-     * @fires maximum-remove
-     * @fires order-pending
-     * @fires add-pending
-     * @fires remove-pending
-     * @fires add-remove-pending
-     * @fires update-pending
-     * @fires delete-pending
-     * @fires copy-pending
-     * @fires maximum-remove-pending
+     * @param {TreeData} tree - data for tree
+     * @param {TreeOptions} [options]
+     * @param {string} [options.children=children] name of tree parameter containing the children
+     * @param {string} [options[this.options.data]=data] name of tree parameter containing the data
+     * @param {string} [options.parent=parent] name of tree parameter containing the parent link in data
+     * @param {string} [options.name=name] name of tree parameter containing the name in data
+     * @param {boolean} [options.move=true] allow tree to be rearranged
+     * @param {number} [options.indentation=20] number of pixels to indent for each level
+     * @param {number} [options.threshold=10] number of pixels to move to start a drag
+     * @param {number} [options.holdTime=2000] number of milliseconds before name can be edited (set to 0 to disable)
+     * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag
+     * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item
+     * @param {string[]} [options.nameStyles]
+     * @param {string[]} [options.indicatorStyles]
+     * @fires render
      * @fires clicked
+     * @fires expand
+     * @fires collapse
+     * @fires name-change
+     * @fires move
+     * @fires move-pending
+     * @fires update
      */
-    function Sortable(element, options) {
-        _classCallCheck(this, Sortable);
+    function Tree(element, tree, options) {
+        _classCallCheck(this, Tree);
 
-        var _this = _possibleConstructorReturn(this, (Sortable.__proto__ || Object.getPrototypeOf(Sortable)).call(this));
+        var _this = _possibleConstructorReturn(this, (Tree.__proto__ || Object.getPrototypeOf(Tree)).call(this));
 
         _this.options = utils.options(options, defaults);
         _this.element = element;
-        _this._addToGlobalTracker();
-        var elements = _this._getChildren();
-        _this.events = {
-            dragStart: function dragStart(e) {
-                return _this._dragStart(e);
-            },
-            dragEnd: function dragEnd(e) {
-                return _this._dragEnd(e);
-            },
-            dragOver: function dragOver(e) {
-                return _this._dragOver(e);
-            },
-            drop: function drop(e) {
-                return _this._drop(e);
-            },
-            dragLeave: function dragLeave(e) {
-                return _this._dragLeave(e);
-            },
-            mouseDown: function mouseDown(e) {
-                return _this._mouseDown(e);
-            },
-            mouseUp: function mouseUp(e) {
-                return _this._mouseUp(e);
-            }
-        };
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        _this.element[_this.options.data] = tree;
+        document.body.addEventListener('mousemove', function (e) {
+            return _this._move(e);
+        });
+        document.body.addEventListener('touchmove', function (e) {
+            return _this._move(e);
+        });
+        document.body.addEventListener('mouseup', function (e) {
+            return _this._up(e);
+        });
+        document.body.addEventListener('touchend', function (e) {
+            return _this._up(e);
+        });
+        document.body.addEventListener('mouseleave', function (e) {
+            return _this._up(e);
+        });
+        _this._createIndicator();
+        _this.update();
+        return _this;
+    }
 
-        try {
-            for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var child = _step.value;
+    /**
+     * allow tree to be rearranged
+     * @type {booleans}
+     */
 
-                if (!_this.options.dragClass || utils.containsClassName(child, _this.options.dragClass)) {
-                    _this.attachElement(child);
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
+
+    _createClass(Tree, [{
+        key: '_createIndicator',
+        value: function _createIndicator() {
+            this.indicator = utils.html();
+            var content = utils.html({ parent: this.indicator, styles: { display: 'flex' } });
+            this.indicator.indentation = utils.html({ parent: content });
+            this.indicator.icon = utils.html({ parent: content, defaultStyles: this.options.expandStyles, styles: { height: 0 } });
+            this.indicator.line = utils.html({
+                parent: content,
+                styles: this.options.indicatorStyles
+            });
         }
+    }, {
+        key: 'leaf',
+        value: function leaf(data, level) {
+            var _this2 = this;
 
-        element.addEventListener('dragover', _this.events.dragOver);
-        element.addEventListener('drop', _this.events.drop);
-        element.addEventListener('dragleave', _this.events.dragLeave);
-        if (_this.options.cursorHover) {
+            var leaf = utils.html();
+            leaf.isLeaf = true;
+            leaf[this.options.data] = data;
+            leaf.content = utils.html({ parent: leaf, styles: { display: 'flex', alignItems: 'center' } });
+            leaf.indentation = utils.html({ parent: leaf.content, styles: { width: level * this.options.indentation + 'px' } });
+            leaf.icon = utils.html({ parent: leaf.content, html: data[this.options.expanded] ? icons.open : icons.closed, styles: this.options.expandStyles });
+            leaf.name = utils.html({ parent: leaf.content, html: data[this.options.name], styles: this.options.nameStyles });
+
+            leaf.name.addEventListener('mousedown', function (e) {
+                return _this2._down(e);
+            });
+            leaf.name.addEventListener('touchstart', function (e) {
+                return _this2._down(e);
+            });
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = data[this.options.children][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var child = _step.value;
+
+                    var add = this.leaf(child, level + 1);
+                    add[this.options.data].parent = data;
+                    leaf.appendChild(add);
+                    if (!data[this.options.expanded]) {
+                        add.style.display = 'none';
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            if (this._getChildren(leaf, true).length === 0) {
+                this._hideIcon(leaf);
+            }
+            clicked(leaf.icon, function () {
+                return _this2.toggleExpand(leaf);
+            });
+            this.emit('render', leaf, this);
+            return leaf;
+        }
+    }, {
+        key: '_getChildren',
+        value: function _getChildren(leaf, all) {
+            leaf = leaf || this.element;
+            var children = [];
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator2 = _this._getChildren()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _child = _step2.value;
+                for (var _iterator2 = leaf.children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var child = _step2.value;
 
-                    utils.style(_child, 'cursor', _this.options.cursorHover);
-                    if (_this.options.cursorDown) {
-                        _child.addEventListener('mousedown', _this.events.mouseDown);
+                    if (child.isLeaf && (all || child.style.display !== 'none')) {
+                        children.push(child);
                     }
-                    _child.addEventListener('mouseup', _this.events.mouseUp);
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -17697,32 +17749,40 @@ var Sortable = function (_Events) {
                     }
                 }
             }
+
+            return children;
         }
-        return _this;
-    }
-
-    /**
-     * removes all event handlers from this.element and children
-     */
-
-
-    _createClass(Sortable, [{
-        key: 'destroy',
-        value: function destroy() {
-            this.element.removeEventListener('dragover', this.events.dragOver);
-            this.element.removeEventListener('drop', this.events.drop);
-            var elements = this._getChildren();
+    }, {
+        key: '_hideIcon',
+        value: function _hideIcon(leaf) {
+            leaf.icon.style.opacity = 0;
+            leaf.icon.style.cursor = 'unset';
+        }
+    }, {
+        key: '_showIcon',
+        value: function _showIcon(leaf) {
+            leaf.icon.style.opacity = 1;
+            leaf.icon.style.cursor = this.options.expandStyles.cursor;
+        }
+    }, {
+        key: 'expandAll',
+        value: function expandAll() {
+            this._expandChildren(this.element);
+        }
+    }, {
+        key: '_expandChildren',
+        value: function _expandChildren(leaf) {
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                for (var _iterator3 = this._getChildren(leaf, true)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                     var child = _step3.value;
 
-                    this.removeElement(child);
+                    this.expand(child);
+                    this._expandChildren(child);
                 }
-                // todo: remove Sortable.tracker and related event handlers if no more sortables
             } catch (err) {
                 _didIteratorError3 = true;
                 _iteratorError3 = err;
@@ -17738,1391 +17798,574 @@ var Sortable = function (_Events) {
                 }
             }
         }
-
-        /**
-         * the global defaults for new Sortable objects
-         * @type {DefaultOptions}
-         */
-
     }, {
-        key: 'add',
+        key: 'collapseAll',
+        value: function collapseAll() {
+            this._collapseChildren(this);
+        }
+    }, {
+        key: '_collapseChildren',
+        value: function _collapseChildren(leaf) {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
+            try {
+                for (var _iterator4 = this._getChildren(leaf, true)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var child = _step4.value;
 
-        /**
-         * add an element as a child of the sortable element; can also be used to swap between sortables
-         * NOTE: this may not work with deepSearch non-ordered elements; use attachElement instead
-         * @param {HTMLElement} element
-         * @param {number} index
-         */
-        value: function add(element, index) {
-            this.attachElement(element);
-            if (this.options.sort) {
-                if (typeof index === 'undefined' || index >= this.element.children.length) {
-                    this.element.appendChild(element);
-                } else {
-                    this.element.insertBefore(element, this.element.children[index + 1]);
+                    this.collapse(child);
+                    this._collapseChildren(child);
                 }
-            } else {
-                var id = this.options.orderId;
-                var dragOrder = element.getAttribute(id);
-                dragOrder = this.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder;
-                var found = void 0;
-                var children = this._getChildren(true);
-                if (this.options.reverseOrder) {
-                    for (var i = children.length - 1; i >= 0; i--) {
-                        var child = children[i];
-                        var childDragOrder = child.getAttribute(id);
-                        childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder;
-                        if (dragOrder > childDragOrder) {
-                            child.parentNode.insertBefore(element, child);
-                            found = true;
-                            break;
-                        }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
                     }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'toggleExpand',
+        value: function toggleExpand(leaf) {
+            if (leaf.icon.style.opacity !== '0') {
+                if (leaf[this.options.data][this.options.expanded]) {
+                    this.collapse(leaf);
                 } else {
-                    var _iteratorNormalCompletion4 = true;
-                    var _didIteratorError4 = false;
-                    var _iteratorError4 = undefined;
+                    this.expand(leaf);
+                }
+            }
+        }
+    }, {
+        key: 'expand',
+        value: function expand(leaf) {
+            if (leaf.isLeaf) {
+                var children = this._getChildren(leaf, true);
+                if (children.length) {
+                    var _iteratorNormalCompletion5 = true;
+                    var _didIteratorError5 = false;
+                    var _iteratorError5 = undefined;
 
                     try {
-                        for (var _iterator4 = children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                            var _child2 = _step4.value;
+                        for (var _iterator5 = children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                            var child = _step5.value;
 
-                            var _childDragOrder = _child2.getAttribute(id);
-                            _childDragOrder = this.options.orderIsNumber ? parseFloat(_childDragOrder) : _childDragOrder;
-                            if (dragOrder < _childDragOrder) {
-                                _child2.parentNode.insertBefore(element, _child2);
-                                found = true;
-                                break;
-                            }
+                            child.style.display = 'block';
                         }
                     } catch (err) {
-                        _didIteratorError4 = true;
-                        _iteratorError4 = err;
+                        _didIteratorError5 = true;
+                        _iteratorError5 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                                _iterator4.return();
+                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                _iterator5.return();
                             }
                         } finally {
-                            if (_didIteratorError4) {
-                                throw _iteratorError4;
+                            if (_didIteratorError5) {
+                                throw _iteratorError5;
                             }
                         }
                     }
-                }
-                if (!found) {
-                    this.element.appendChild(element);
+
+                    leaf[this.options.data][this.options.expanded] = true;
+                    leaf.icon.innerHTML = icons.open;
+                    this.emit('expand', leaf, this);
+                    this.emit('update', leaf, this);
                 }
             }
         }
-
-        /**
-         * attaches an HTML element to the sortable; can also be used to swap between sortables
-         * NOTE: you need to manually insert the element into this.element (this is useful when you have a deep structure)
-         * @param {HTMLElement} element
-         */
-
     }, {
-        key: 'attachElement',
-        value: function attachElement(element) {
-            if (element.__sortable) {
-                element.__sortable.original = this;
-            } else {
-                element.__sortable = {
-                    sortable: this,
-                    original: this
+        key: 'collapse',
+        value: function collapse(leaf) {
+            if (leaf.isLeaf) {
+                var children = this._getChildren(leaf, true);
+                if (children.length) {
+                    var _iteratorNormalCompletion6 = true;
+                    var _didIteratorError6 = false;
+                    var _iteratorError6 = undefined;
 
-                    // add a counter for maximum
-                };this._maximumCounter(element, this);
+                    try {
+                        for (var _iterator6 = children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                            var child = _step6.value;
 
-                // ensure every element has an id
-                if (!element.id) {
-                    element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter;
-                    Sortable.tracker[this.options.name].counter++;
-                }
-                if (this.options.copy) {
-                    element.__sortable.copy = 0;
-                }
-                element.addEventListener('dragstart', this.events.dragStart);
-                element.addEventListener('dragend', this.events.dragEnd);
-                element.setAttribute('draggable', true);
-            }
-        }
-
-        /**
-         * removes all events from an HTML element
-         * NOTE: does not remove the element from its parent
-         * @param {HTMLElement} element
-         */
-
-    }, {
-        key: 'removeElement',
-        value: function removeElement(element) {
-            element.removeEventListener('dragstart', this.events.dragStart);
-            element.removeEventListener('dragend', this.events.dragEnd);
-            element.setAttribute('draggable', false);
-        }
-
-        /**
-         * add sortable to global list that tracks all sortables
-         * @private
-         */
-
-    }, {
-        key: '_addToGlobalTracker',
-        value: function _addToGlobalTracker() {
-            var _this2 = this;
-
-            if (!Sortable.tracker) {
-                Sortable.dragImage = document.createElement('div');
-                Sortable.dragImage.style.background = 'transparent';
-                Sortable.dragImage.style.position = 'fixed';
-                Sortable.dragImage.style.left = -10;
-                Sortable.dragImage.style.top = -10;
-                Sortable.dragImage.style.width = Sortable.dragImage.style.height = '5px';
-                Sortable.dragImage.style.zIndex = -1;
-                Sortable.dragImage.id = 'sortable-dragImage';
-                document.body.appendChild(Sortable.dragImage);
-                Sortable.tracker = {};
-                document.body.addEventListener('dragover', function (e) {
-                    return _this2._bodyDragOver(e);
-                });
-                document.body.addEventListener('drop', function (e) {
-                    return _this2._bodyDrop(e);
-                });
-            }
-            if (Sortable.tracker[this.options.name]) {
-                Sortable.tracker[this.options.name].list.push(this);
-            } else {
-                Sortable.tracker[this.options.name] = { list: [this], counter: 0 };
-            }
-        }
-
-        /**
-         * default drag over for the body
-         * @param {DragEvent} e
-         * @private
-         */
-
-    }, {
-        key: '_bodyDragOver',
-        value: function _bodyDragOver(e) {
-            var name = e.dataTransfer.types[0];
-            if (Sortable.tracker[name]) {
-                var id = e.dataTransfer.types[1];
-                var element = document.getElementById(id);
-                var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
-                if (element) {
-                    if (sortable) {
-                        if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold) {
-                            sortable._updateDragging(e, element);
-                            e.preventDefault();
-                            e.stopPropagation();
-                            return;
+                            child.style.display = 'none';
                         }
-                        sortable.last = { x: e.pageX, y: e.pageY };
-                        sortable._placeInList(sortable, e.pageX, e.pageY, element);
-                        e.dataTransfer.dropEffect = 'move';
-                        sortable._updateDragging(e, element);
-                    } else {
-                        this._noDrop(e);
-                    }
-                    e.preventDefault();
-                }
-            }
-        }
-
-        /**
-         * handle no drop
-         * @param {UIEvent} e
-         * @param {boolean} [cancel] force cancel (for options.copy)
-         * @private
-         */
-
-    }, {
-        key: '_noDrop',
-        value: function _noDrop(e, cancel) {
-            e.dataTransfer.dropEffect = 'move';
-            var id = e.dataTransfer.types[1];
-            var element = document.getElementById(id);
-            if (element) {
-                this._updateDragging(e, element);
-                this._setIcon(element, null, cancel);
-                if (!cancel) {
-                    if (element.__sortable.original.options.offList === 'delete') {
-                        if (!element.__sortable.display) {
-                            element.__sortable.display = element.style.display || 'unset';
-                            element.style.display = 'none';
-                            element.__sortable.original.emit('delete-pending', element, element.__sortable.original);
+                    } catch (err) {
+                        _didIteratorError6 = true;
+                        _iteratorError6 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                                _iterator6.return();
+                            }
+                        } finally {
+                            if (_didIteratorError6) {
+                                throw _iteratorError6;
+                            }
                         }
-                    } else if (!element.__sortable.original.options.copy) {
-                        this._replaceInList(element.__sortable.original, element);
+                    }
+
+                    leaf[this.options.data][this.options.expanded] = false;
+                    leaf.icon.innerHTML = icons.closed;
+                    this.emit('collapse', leaf, this);
+                    this.emit('update', leaf, this);
+                }
+            }
+        }
+
+        /**
+         * call this after tree's data has been updated outside of this library
+         */
+
+    }, {
+        key: 'update',
+        value: function update() {
+            var scroll = this.element.scrollTop;
+            utils.removeChildren(this.element);
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
+
+            try {
+                for (var _iterator7 = this.element[this.options.data][this.options.children][Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var leaf = _step7.value;
+
+                    var add = this.leaf(leaf, 0);
+                    add[this.options.data].parent = this.element[this.options.data];
+                    this.element.appendChild(add);
+                }
+            } catch (err) {
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
+                    }
+                } finally {
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
-                if (element.__sortable.current) {
-                    this._clearMaximumPending(element.__sortable.current);
-                    element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current);
-                    element.__sortable.current.emit('update-pending', element, element.__sortable.current);
-                    element.__sortable.current = null;
+            }
+
+            this.element.scrollTop = scroll + 'px';
+        }
+    }, {
+        key: '_down',
+        value: function _down(e) {
+            var _this3 = this;
+
+            this.target = e.currentTarget.parentNode.parentNode;
+            this.down = { x: e.pageX, y: e.pageY };
+            var pos = utils.toGlobal(this.target);
+            this.offset = { x: e.pageX - pos.x, y: e.pageY - pos.y };
+            if (this.options.holdTime) {
+                this.holdTimeout = window.setTimeout(function () {
+                    return _this3._hold();
+                }, this.options.holdTime);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, {
+        key: '_hold',
+        value: function _hold() {
+            var _this4 = this;
+
+            this.holdTimeout = null;
+            this.edit = this.target;
+            this.input = utils.html({ parent: this.edit.name.parentNode, type: 'input', styles: this.options.nameStyles });
+            var computed = window.getComputedStyle(this.edit.name);
+            this.input.style.boxSizing = 'content-box';
+            this.input.style.fontFamily = computed.getPropertyValue('font-family');
+            this.input.style.fontSize = computed.getPropertyValue('font-size');
+            this.input.value = this.edit.name.innerText;
+            this.input.setSelectionRange(0, this.input.value.length);
+            this.input.focus();
+            this.input.addEventListener('update', function () {
+                _this4.nameChange(_this4.edit, _this4.input.value);
+                _this4._holdClose();
+            });
+            this.input.addEventListener('keyup', function (e) {
+                if (e.code === 'Escape') {
+                    _this4._holdClose();
                 }
+                if (e.code === 'Enter') {
+                    _this4.nameChange(_this4.edit, _this4.input.value);
+                    _this4._holdClose();
+                }
+            });
+            this.edit.name.style.display = 'none';
+            this.target = null;
+        }
+    }, {
+        key: '_holdClose',
+        value: function _holdClose() {
+            if (this.edit) {
+                this.input.remove();
+                this.edit.name.style.display = 'block';
+                this.edit = this.input = null;
             }
         }
-
-        /**
-         * default drop for the body
-         * @param {DragEvent} e
-         * @private
-         */
-
     }, {
-        key: '_bodyDrop',
-        value: function _bodyDrop(e) {
-            var name = e.dataTransfer.types[0];
-            if (Sortable.tracker[name]) {
-                var id = e.dataTransfer.types[1];
-                var element = document.getElementById(id);
-                var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
-                if (element) {
-                    if (sortable) {
-                        e.preventDefault();
-                    }
-                    this._removeDragging(element);
-                    if (element.__sortable.display) {
-                        element.remove();
-                        element.style.display = element.__sortable.display;
-                        element.__sortable.display = null;
-                        element.__sortable.original.emit('delete', element, element.__sortable.original);
-                        element.__sortable.original = null;
-                    }
-                }
-            }
+        key: 'nameChange',
+        value: function nameChange(leaf, name) {
+            leaf[this.options.data].name = this.input.value;
+            leaf.name.innerHTML = name;
+            this.emit('name-change', leaf, this.input.value, this);
+            this.emit('update', leaf, this);
         }
-
-        /**
-         * end drag
-         * @param {UIEvent} e
-         * @private
-         */
-
     }, {
-        key: '_dragEnd',
-        value: function _dragEnd(e) {
-            var element = e.currentTarget;
-            var dragging = element.__sortable.dragging;
-            if (dragging) {
-                dragging.remove();
-                if (dragging.icon) {
-                    dragging.icon.remove();
-                }
-                element.__sortable.dragging = null;
+        key: '_setIndicator',
+        value: function _setIndicator() {
+            var level = 0;
+            var traverse = this.indicator.parentNode;
+            while (traverse !== this.element) {
+                level++;
+                traverse = traverse.parentNode;
             }
-            if (this.options.cursorHover) {
-                utils.style(e.currentTarget, 'cursor', this.options.cursorHover);
-            }
+            this.indicator.indentation.style.width = level * this.options.indentation + 'px';
         }
-
-        /**
-         * start drag
-         * @param {UIEvent} e
-         * @private
-         */
-
     }, {
-        key: '_dragStart',
-        value: function _dragStart(e) {
-            var sortable = e.currentTarget.__sortable.original;
-            var dragging = e.currentTarget.cloneNode(true);
-            for (var style in sortable.options.dragStyle) {
-                dragging.style[style] = sortable.options.dragStyle[style];
+        key: '_pickup',
+        value: function _pickup() {
+            if (this.holdTimeout) {
+                window.clearTimeout(this.holdTimeout);
+                this.holdTimeout = null;
             }
-            var pos = utils.toGlobal(e.currentTarget);
-            dragging.style.left = pos.x + 'px';
-            dragging.style.top = pos.y + 'px';
-            var offset = { x: pos.x - e.pageX, y: pos.y - e.pageY };
-            document.body.appendChild(dragging);
-            if (sortable.options.useIcons) {
-                var image = new Image();
-                image.src = sortable.options.icons.reorder;
-                image.style.position = 'absolute';
-                image.style.transform = 'translate(-50%, -50%)';
-                image.style.left = dragging.offsetLeft + dragging.offsetWidth + 'px';
-                image.style.top = dragging.offsetTop + dragging.offsetHeight + 'px';
-                document.body.appendChild(image);
-                dragging.icon = image;
-            }
-            if (sortable.options.cursorHover) {
-                utils.style(e.currentTarget, 'cursor', sortable.options.cursorHover);
-            }
-            var target = e.currentTarget;
-            if (sortable.options.copy) {
-                target = e.currentTarget.cloneNode(true);
-                target.id = e.currentTarget.id + '-copy-' + e.currentTarget.__sortable.copy;
-                e.currentTarget.__sortable.copy++;
-                sortable.attachElement(target);
-                target.__sortable.isCopy = true;
-                target.__sortable.original = this;
-                target.__sortable.display = target.style.display || 'unset';
-                target.style.display = 'none';
-                document.body.appendChild(target);
-            }
-            e.dataTransfer.clearData();
-            e.dataTransfer.setData(sortable.options.name, sortable.options.name);
-            e.dataTransfer.setData(target.id, target.id);
-            e.dataTransfer.setDragImage(Sortable.dragImage, 0, 0);
-            target.__sortable.current = this;
-            target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target);
-            target.__sortable.dragging = dragging;
-            target.__sortable.offset = offset;
+            this.emit('move-pending', this.target, this);
+            var parent = this.target.parentNode;
+            parent.insertBefore(this.indicator, this.target);
+            this._setIndicator();
+            var pos = utils.toGlobal(this.target);
+            document.body.appendChild(this.target);
+            this.old = {
+                opacity: this.target.style.opacity || 'unset',
+                position: this.target.style.position || 'unset',
+                boxShadow: this.target.name.style.boxShadow || 'unset'
+            };
+            this.target.style.position = 'absolute';
+            this.target.name.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.25)';
+            this.target.style.left = pos.x + 'px';
+            this.target.style.top = pos.y + 'px';
+            this.target.style.opacity = this.options.dragOpacity;
         }
-
-        /**
-         * handle drag leave events for sortable element
-         * @param {DragEvent} e
-         * @private
-         */
-
     }, {
-        key: '_dragLeave',
-        value: function _dragLeave(e) {}
-        // const id = e.dataTransfer.types[1]
-        // if (id)
-        // {
-        //     const element = document.getElementById(id)
-        //     if (element)
-        //     {
-        //         const sortable = element.__sortable.current
-        //         sortable._maximumPending(element, sortable)
-        //     }
-        // }
-
-
-        /**
-         * handle drag over events for sortable element
-         * @param {DragEvent} e
-         * @private
-         */
-
-    }, {
-        key: '_dragOver',
-        value: function _dragOver(e) {
-            var sortable = e.dataTransfer.types[0];
-            if (sortable && sortable === this.options.name) {
-                var id = e.dataTransfer.types[1];
-                var element = document.getElementById(id);
-                if (this.last && Math.abs(this.last.x - e.pageX) < this.options.threshold && Math.abs(this.last.y - e.pageY) < this.options.threshold) {
-                    this._updateDragging(e, element);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                }
-                this.last = { x: e.pageX, y: e.pageY };
-                if (element.__sortable.isCopy && element.__sortable.original === this) {
-                    this._noDrop(e, true);
-                } else if (this.options.drop || element.__sortable.original === this) {
-                    this._placeInList(this, e.pageX, e.pageY, element);
-                    e.dataTransfer.dropEffect = element.__sortable.isCopy ? 'copy' : 'move';
-                    this._updateDragging(e, element);
+        key: '_checkThreshold',
+        value: function _checkThreshold(e) {
+            if (!this.options.move) {
+                return false;
+            } else if (this.moving) {
+                return true;
+            } else {
+                if (utils.distance(this.down.x, this.down.y, e.pageX, e.pageY)) {
+                    this.moving = true;
+                    this._pickup();
+                    return true;
                 } else {
-                    this._noDrop(e);
-                }
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }
-
-        /**
-         * update the dragging element
-         * @param {UIEvent} e
-         * @param {HTMLElement} element
-         * @private
-         */
-
-    }, {
-        key: '_updateDragging',
-        value: function _updateDragging(e, element) {
-            var dragging = element.__sortable.dragging;
-            var offset = element.__sortable.offset;
-            if (dragging) {
-                dragging.style.left = e.pageX + offset.x + 'px';
-                dragging.style.top = e.pageY + offset.y + 'px';
-                if (dragging.icon) {
-                    dragging.icon.style.left = dragging.offsetLeft + dragging.offsetWidth + 'px';
-                    dragging.icon.style.top = dragging.offsetTop + dragging.offsetHeight + 'px';
+                    return false;
                 }
             }
         }
-
-        /**
-         * remove the dragging element
-         * @param {HTMLElement} element
-         * @private
-         */
-
-    }, {
-        key: '_removeDragging',
-        value: function _removeDragging(element) {
-            var dragging = element.__sortable.dragging;
-            if (dragging) {
-                dragging.remove();
-                if (dragging.icon) {
-                    dragging.icon.remove();
-                }
-                element.__sortable.dragging = null;
-            }
-            element.__sortable.isCopy = false;
-        }
-
-        /**
-         * drop the element into a sortable
-         * @param {HTMLElement} e
-         * @private
-         */
-
-    }, {
-        key: '_drop',
-        value: function _drop(e) {
-            var name = e.dataTransfer.types[0];
-            if (Sortable.tracker[name] && name === this.options.name) {
-                var id = e.dataTransfer.types[1];
-                var element = document.getElementById(id);
-                if (element.__sortable.current) {
-                    if (element.__sortable.original !== this) {
-                        element.__sortable.original.emit('remove', element, element.__sortable.original);
-                        this.emit('add', element, this);
-                        element.__sortable.original = this;
-                        if (this.options.sort) {
-                            this.emit('order', element, this);
-                        }
-                        if (element.__sortable.isCopy) {
-                            this.emit('copy', element, this);
-                        }
-                        this._maximum(element, this);
-                        this.emit('update', element, this);
-                    } else {
-                        if (element.__sortable.index !== this._getIndex(e.currentTarget)) {
-                            this.emit('order', element, this);
-                            this.emit('update', element, this);
-                        }
-                    }
-                }
-                this._removeDragging(element);
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }
-
-        /**
-         * find closest Sortable to screen location
-         * @param {UIEvent} e
-         * @param {Sortable[]} list of related Sortables
-         * @param {HTMLElement} element
-         * @private
-         */
-
     }, {
         key: '_findClosest',
-        value: function _findClosest(e, list, element) {
-            var min = Infinity,
-                found = void 0;
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
-
-            try {
-                for (var _iterator5 = list[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var related = _step5.value;
-
-                    if (!related.options.drop && element.__sortable.original !== related || element.__sortable.isCopy && element.__sortable.original === related) {
-                        continue;
-                    }
-                    if (utils.inside(e.pageX, e.pageY, related.element)) {
-                        return related;
-                    } else if (related.options.offList === 'closest') {
-                        var calculate = utils.distanceToClosestCorner(e.pageX, e.pageY, related.element);
-                        if (calculate < min) {
-                            min = calculate;
-                            found = related;
+        value: function _findClosest(e, entry) {
+            var pos = utils.toGlobal(entry.name);
+            if (pos.y + entry.name.offsetHeight / 2 <= e.pageY) {
+                if (!this.closest.foundAbove) {
+                    if (utils.inside(e.pageX, e.pageY, entry.name)) {
+                        this.closest.foundAbove = true;
+                        this.closest.above = entry;
+                    } else {
+                        var distance = utils.distancePointElement(e.pageX, e.pageY, entry.name);
+                        if (distance < this.closest.distanceAbove) {
+                            this.closest.distanceAbove = distance;
+                            this.closest.above = entry;
                         }
                     }
                 }
-            } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
-                    }
-                } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+            } else if (!this.closest.foundBelow) {
+                if (utils.inside(e.pageX, e.pageY, entry.name)) {
+                    this.closest.foundBelow = true;
+                    this.closest.below = entry;
+                } else {
+                    var _distance = utils.distancePointElement(e.pageX, e.pageY, entry.name);
+                    if (_distance < this.closest.distanceBelow) {
+                        this.closest.distanceBelow = _distance;
+                        this.closest.below = entry;
                     }
                 }
             }
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
 
-            return found;
-        }
+            try {
+                for (var _iterator8 = this._getChildren(entry)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var child = _step8.value;
 
-        /**
-         * place indicator in the sortable list according to options.sort
-         * @param {number} x
-         * @param {number} y
-         * @param {Sortable} sortable
-         * @param {HTMLElement} element
-         * @private
-         */
-
-    }, {
-        key: '_placeInList',
-        value: function _placeInList(sortable, x, y, element) {
-            if (this.options.sort) {
-                this._placeInSortableList(sortable, x, y, element);
-            } else {
-                this._placeInOrderedList(sortable, element);
-            }
-            this._setIcon(element, sortable);
-            if (element.__sortable.display) {
-                element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display;
-                element.__sortable.display = null;
+                    this._findClosest(e, child);
+                }
+            } catch (err) {
+                _didIteratorError8 = true;
+                _iteratorError8 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                        _iterator8.return();
+                    }
+                } finally {
+                    if (_didIteratorError8) {
+                        throw _iteratorError8;
+                    }
+                }
             }
         }
-
-        /**
-         * replace item in list at original index position
-         * @private
-         */
-
     }, {
-        key: '_replaceInList',
-        value: function _replaceInList(sortable, element) {
-            var children = sortable._getChildren();
+        key: '_getFirstChild',
+        value: function _getFirstChild(element, all) {
+            var children = this._getChildren(element, all);
             if (children.length) {
-                var index = element.__sortable.index;
-                if (index < children.length) {
-                    children[index].parentNode.insertBefore(element, children[index]);
-                } else {
-                    children[0].appendChild(element);
-                }
-            } else {
-                sortable.element.appendChild(element);
+                return children[0];
             }
         }
-
-        /**
-         * count the index of the child in the list of children
-         * @param {HTMLElement} child
-         * @return {number}
-         * @private
-         */
-
     }, {
-        key: '_getIndex',
-        value: function _getIndex(child) {
-            var children = this._getChildren();
-            for (var i = 0; i < children.length; i++) {
-                if (children[i] === child) {
-                    return i;
-                }
+        key: '_getLastChild',
+        value: function _getLastChild(element, all) {
+            var children = this._getChildren(element, all);
+            if (children.length) {
+                return children[children.length - 1];
             }
         }
-
-        /**
-         * traverse and search descendents in DOM
-         * @param {HTMLElement} base
-         * @param {string} search
-         * @param {HTMLElement[]} results to return
-         * @private
-         */
-
     }, {
-        key: '_traverseChildren',
-        value: function _traverseChildren(base, search, results) {
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
-
-            try {
-                for (var _iterator6 = base.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var child = _step6.value;
-
-                    if (search.length) {
-                        if (search.indexOf(child.className) !== -1) {
-                            results.push(child);
-                        }
-                    } else {
-                        results.push(child);
-                    }
-                    this._traverseChildren(child, search, results);
-                }
-            } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
-                    }
-                } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
-                    }
-                }
+        key: '_getParent',
+        value: function _getParent(element) {
+            element = element.parentNode;
+            while (element.style.display === 'none') {
+                element = element.parentNode;
             }
+            return element;
         }
-
-        /**
-         * find children in div
-         * @param {Sortable} sortable
-         * @param {boolean} [order] search for dragOrder as well
-         * @private
-         */
-
     }, {
-        key: '_getChildren',
-        value: function _getChildren(order) {
-            if (this.options.deepSearch) {
-                var search = [];
-                if (order && this.options.orderClass) {
-                    if (this.options.dragClass) {
-                        search.push(this.options.dragClass);
-                    }
-                    if (order && this.options.orderClass) {
-                        search.push(this.options.orderClass);
-                    }
-                } else if (!order && this.options.dragClass) {
-                    search.push(this.options.dragClass);
-                }
-                var results = [];
-                this._traverseChildren(this.element, search, results);
-                return results;
-            } else {
-                if (this.options.dragClass) {
-                    var list = [];
-                    var _iteratorNormalCompletion7 = true;
-                    var _didIteratorError7 = false;
-                    var _iteratorError7 = undefined;
-
-                    try {
-                        for (var _iterator7 = this.element.children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                            var child = _step7.value;
-
-                            if (utils.containsClassName(child, this.options.dragClass) || order && !this.options.orderClass || order && this.options.orderClass && utils.containsClassName(child, this.options.orderClass)) {
-                                list.push(child);
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError7 = true;
-                        _iteratorError7 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                _iterator7.return();
-                            }
-                        } finally {
-                            if (_didIteratorError7) {
-                                throw _iteratorError7;
-                            }
-                        }
-                    }
-
-                    return list;
-                } else {
-                    var _list = [];
-                    var _iteratorNormalCompletion8 = true;
-                    var _didIteratorError8 = false;
-                    var _iteratorError8 = undefined;
-
-                    try {
-                        for (var _iterator8 = this.element.children[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                            var _child3 = _step8.value;
-
-                            _list.push(_child3);
-                        }
-                    } catch (err) {
-                        _didIteratorError8 = true;
-                        _iteratorError8 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                _iterator8.return();
-                            }
-                        } finally {
-                            if (_didIteratorError8) {
-                                throw _iteratorError8;
-                            }
-                        }
-                    }
-
-                    return _list;
-                }
-            }
-        }
-
-        /**
-         * place indicator in an ordered list
-         * @param {Sortable} sortable
-         * @param {HTMLElement} dragging
-         * @private
-         */
-
-    }, {
-        key: '_placeInOrderedList',
-        value: function _placeInOrderedList(sortable, dragging) {
-            if (dragging.__sortable.current !== sortable) {
-                var id = sortable.options.orderId;
-                var dragOrder = dragging.getAttribute(id);
-                dragOrder = sortable.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder;
-                var found = void 0;
-                var children = sortable._getChildren(true);
-                if (sortable.options.reverseOrder) {
-                    for (var i = children.length - 1; i >= 0; i--) {
-                        var child = children[i];
-                        var childDragOrder = child.getAttribute(id);
-                        childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder;
-                        if (dragOrder > childDragOrder) {
-                            child.parentNode.insertBefore(dragging, child);
-                            found = true;
-                            break;
-                        }
-                    }
-                } else {
-                    var _iteratorNormalCompletion9 = true;
-                    var _didIteratorError9 = false;
-                    var _iteratorError9 = undefined;
-
-                    try {
-                        for (var _iterator9 = children[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                            var _child4 = _step9.value;
-
-                            var _childDragOrder2 = _child4.getAttribute(id);
-                            _childDragOrder2 = sortable.options.orderIsNumber ? parseFloat(_childDragOrder2) : _childDragOrder2;
-                            if (dragOrder < _childDragOrder2) {
-                                _child4.parentNode.insertBefore(dragging, _child4);
-                                found = true;
-                                break;
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError9 = true;
-                        _iteratorError9 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                                _iterator9.return();
-                            }
-                        } finally {
-                            if (_didIteratorError9) {
-                                throw _iteratorError9;
-                            }
-                        }
-                    }
-                }
-                if (!found) {
-                    sortable.element.appendChild(dragging);
-                }
-                if (dragging.__sortable.current) {
-                    if (dragging.__sortable.current !== dragging.__sortable.original) {
-                        dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current);
-                    } else {
-                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
-                    }
-                    this._clearMaximumPending(dragging.__sortable.current);
-                    this._maximum(null, dragging.__sortable.current);
-                }
-                sortable.emit('add-pending', dragging, sortable);
-                if (dragging.__sortable.isCopy) {
-                    sortable.emit('copy-pending', dragging, sortable);
-                }
-                dragging.__sortable.current = sortable;
-                this._maximumPending(dragging, sortable);
-                sortable.emit('update-pending', dragging, sortable);
-            }
-        }
-
-        /**
-         * search for where to place using percentage
-         * @param {Sortable} sortable
-         * @param {HTMLElement} dragging
-         * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
-         * @private
-         */
-
-    }, {
-        key: '_placeByPercentage',
-        value: function _placeByPercentage(sortable, dragging) {
-            var cursor = dragging.__sortable.dragging;
-            var xa1 = cursor.offsetLeft;
-            var ya1 = cursor.offsetTop;
-            var xa2 = cursor.offsetLeft + cursor.offsetWidth;
-            var ya2 = cursor.offsetTop + cursor.offsetHeight;
-            var largest = 0,
-                closest = void 0,
-                isBefore = void 0,
-                indicator = void 0;
-            var element = sortable.element;
-            var elements = sortable._getChildren(true);
-            var _iteratorNormalCompletion10 = true;
-            var _didIteratorError10 = false;
-            var _iteratorError10 = undefined;
-
-            try {
-                for (var _iterator10 = elements[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                    var child = _step10.value;
-
-                    if (child === dragging) {
-                        indicator = true;
-                    }
-                    var pos = utils.toGlobal(child);
-                    var xb1 = pos.x;
-                    var yb1 = pos.y;
-                    var xb2 = pos.x + child.offsetWidth;
-                    var yb2 = pos.y + child.offsetHeight;
-                    var percentage = utils.percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2);
-                    if (percentage > largest) {
-                        largest = percentage;
-                        closest = child;
-                        isBefore = indicator;
-                    }
-                }
-            } catch (err) {
-                _didIteratorError10 = true;
-                _iteratorError10 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                        _iterator10.return();
-                    }
-                } finally {
-                    if (_didIteratorError10) {
-                        throw _iteratorError10;
-                    }
-                }
-            }
-
-            if (closest) {
-                if (closest === dragging) {
-                    return 1;
-                }
-                if (isBefore && closest.nextSibling) {
-                    element.insertBefore(dragging, closest.nextSibling);
-                    sortable.emit('order-pending', sortable);
-                } else {
-                    element.insertBefore(dragging, closest);
-                    sortable.emit('order-pending', sortable);
-                }
-                return 2;
-            } else {
-                return 0;
-            }
-        }
-
-        /**
-         * search for where to place using distance
-         * @param {Sortable} sortable
-         * @param {HTMLElement} dragging
-         * @param {number} x
-         * @param {number} y
-         * @return {boolean} false=nothing to do
-         * @private
-         */
-
-    }, {
-        key: '_placeByDistance',
-        value: function _placeByDistance(sortable, dragging, x, y) {
-            if (utils.inside(x, y, dragging)) {
-                return true;
-            }
-            var index = -1;
-            if (dragging.__sortable.current === sortable) {
-                index = sortable._getIndex(dragging);
-                sortable.element.appendChild(dragging);
-                // dragging.remove()
-            }
-            var distance = Infinity,
-                closest = void 0;
-            var element = sortable.element;
-            var elements = sortable._getChildren(true);
-            var _iteratorNormalCompletion11 = true;
-            var _didIteratorError11 = false;
-            var _iteratorError11 = undefined;
-
-            try {
-                for (var _iterator11 = elements[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                    var child = _step11.value;
-
-                    if (utils.inside(x, y, child)) {
-                        closest = child;
-                        break;
-                    } else {
-                        var measure = utils.distanceToClosestCorner(x, y, child);
-                        if (measure < distance) {
-                            closest = child;
-                            distance = measure;
-                        }
-                    }
-                }
-            } catch (err) {
-                _didIteratorError11 = true;
-                _iteratorError11 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                        _iterator11.return();
-                    }
-                } finally {
-                    if (_didIteratorError11) {
-                        throw _iteratorError11;
-                    }
-                }
-            }
-
-            element.insertBefore(dragging, closest);
-            if (index === sortable._getIndex(dragging)) {
-                return true;
-            }
-            this._maximumPending(dragging, sortable);
-            sortable.emit('order-pending', dragging, sortable);
-        }
-
-        /**
-         * place indicator in an sortable list
-         * @param {number} x
-         * @param {number} y
-         * @param {HTMLElement} dragging
-         * @private
-         */
-
-    }, {
-        key: '_placeInSortableList',
-        value: function _placeInSortableList(sortable, x, y, dragging) {
-            var element = sortable.element;
-            var children = sortable._getChildren();
-            if (!children.length) {
-                element.appendChild(dragging);
-            } else {
-                // const percentage = this._placeByPercentage(sortable, dragging)
-                if (this._placeByDistance(sortable, dragging, x, y)) {
-                    return;
-                }
-            }
-            if (dragging.__sortable.current !== sortable) {
-                sortable.emit('add-pending', dragging, sortable);
-                if (dragging.__sortable.isCopy) {
-                    sortable.emit('copy-pending', dragging, sortable);
-                }
-                if (dragging.__sortable.current) {
-                    if (dragging.__sortable.current !== dragging.__sortable.original) {
-                        dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current);
-                    } else {
-                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
-                    }
-                    this._clearMaximumPending(dragging.__sortable.current);
-                    this._maximum(null, dragging.__sortable.current);
-                }
-                dragging.__sortable.current = sortable;
-            }
-            this._maximumPending(dragging, sortable);
-            sortable.emit('update-pending', dragging, sortable);
-        }
-
-        /**
-         * set icon if available
-         * @param {HTMLElement} dragging
-         * @param {Sortable} sortable
-         * @param {boolean} [cancel] force cancel (for options.copy)
-         * @private
-         */
-
-    }, {
-        key: '_setIcon',
-        value: function _setIcon(element, sortable, cancel) {
-            var dragging = element.__sortable.dragging;
-            if (dragging && dragging.icon) {
-                if (!sortable) {
-                    sortable = element.__sortable.original;
-                    if (cancel) {
-                        dragging.icon.src = sortable.options.icons.cancel;
-                    } else {
-                        dragging.icon.src = sortable.options.offList === 'delete' ? sortable.options.icons.delete : sortable.options.icons.cancel;
-                    }
-                } else {
-                    if (element.__sortable.isCopy) {
-                        dragging.icon.src = sortable.options.icons.copy;
-                    } else {
-                        dragging.icon.src = element.__sortable.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move;
-                    }
-                }
-            }
-        }
-
-        /**
-         * add a maximum counter to the element
-         * @param {HTMLElement} element
-         * @param {Sortable} sortable
-         * @private
-         */
-
-    }, {
-        key: '_maximumCounter',
-        value: function _maximumCounter(element, sortable) {
-            var count = -1;
-            if (sortable.options.maximum) {
-                var children = sortable._getChildren();
-                var _iteratorNormalCompletion12 = true;
-                var _didIteratorError12 = false;
-                var _iteratorError12 = undefined;
+        key: '_move',
+        value: function _move(e) {
+            if (this.target && this._checkThreshold(e)) {
+                this.indicator.remove();
+                this.target.style.left = e.pageX - this.offset.x + 'px';
+                this.target.style.top = e.pageY - this.offset.y + 'px';
+                var x = utils.toGlobal(this.target.name).x;
+                this.closest = { distanceAbove: Infinity, distanceBelow: Infinity };
+                var _iteratorNormalCompletion9 = true;
+                var _didIteratorError9 = false;
+                var _iteratorError9 = undefined;
 
                 try {
-                    for (var _iterator12 = children[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                        var child = _step12.value;
+                    for (var _iterator9 = this._getChildren()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                        var child = _step9.value;
 
-                        if (child !== element && child.__sortable) {
-                            count = child.__sortable.maximum > count ? child.__sortable.maximum : count;
-                        }
+                        this._findClosest(e, child);
                     }
                 } catch (err) {
-                    _didIteratorError12 = true;
-                    _iteratorError12 = err;
+                    _didIteratorError9 = true;
+                    _iteratorError9 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                            _iterator12.return();
+                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                            _iterator9.return();
                         }
                     } finally {
-                        if (_didIteratorError12) {
-                            throw _iteratorError12;
+                        if (_didIteratorError9) {
+                            throw _iteratorError9;
                         }
                     }
                 }
-            }
-            element.__sortable.maximum = count + 1;
-        }
 
-        /**
-         * handle maximum
-         * @private
-         */
-
-    }, {
-        key: '_maximum',
-        value: function _maximum(element, sortable) {
-            if (sortable.options.maximum) {
-                var children = sortable._getChildren();
-                if (children.length > sortable.options.maximum) {
-                    if (sortable.removePending) {
-                        while (sortable.removePending.length) {
-                            var child = sortable.removePending.pop();
-                            child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
-                            child.__sortable.display = null;
-                            child.remove();
-                            sortable.emit('maximum-remove', child, sortable);
+                if (!this.closest.above && !this.closest.below) {
+                    this.element.appendChild(this.indicator);
+                } else if (!this.closest.above) // null [] leaf
+                    {
+                        this.element.insertBefore(this.indicator, this._getFirstChild(this.element));
+                    } else if (!this.closest.below) // leaf [] null
+                    {
+                        var pos = utils.toGlobal(this.closest.above.name);
+                        if (x > pos.x + this.options.indentation) {
+                            this.closest.above.insertBefore(this.indicator, this._getFirstChild(this.closest.above, true));
+                        } else if (x > pos.x - this.options.indentation) {
+                            this.closest.above.parentNode.appendChild(this.indicator);
+                        } else {
+                            var parent = this.closest.above;
+                            while (parent !== this.element && x < pos.x) {
+                                parent = this._getParent(parent);
+                                if (parent !== this.element) {
+                                    pos = utils.toGlobal(parent.name);
+                                }
+                            }
+                            parent.appendChild(this.indicator);
                         }
-                        sortable.removePending = null;
-                    }
-                }
-                if (element) {
-                    this._maximumCounter(element, sortable);
-                }
-            }
-        }
-
-        /**
-         * clear pending list
-         * @param {Sortable} sortable
-         * @private
-         */
-
-    }, {
-        key: '_clearMaximumPending',
-        value: function _clearMaximumPending(sortable) {
-            if (sortable.removePending) {
-                while (sortable.removePending.length) {
-                    var child = sortable.removePending.pop();
-                    child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
-                    child.__sortable.display = null;
-                }
-                sortable.removePending = null;
-            }
-        }
-
-        /**
-         * handle pending maximum
-         * @param {HTMLElement} element
-         * @param {Sortable} sortable
-         * @private
-         */
-
-    }, {
-        key: '_maximumPending',
-        value: function _maximumPending(element, sortable) {
-            if (sortable.options.maximum) {
-                var children = sortable._getChildren();
-                if (children.length > sortable.options.maximum) {
-                    var savePending = sortable.removePending ? sortable.removePending.slice(0) : [];
-                    this._clearMaximumPending(sortable);
-                    sortable.removePending = [];
-                    var sort = void 0;
-                    if (sortable.options.maximumFIFO) {
-                        sort = children.sort(function (a, b) {
-                            return a === element ? 1 : a.__sortable.maximum - b.__sortable.maximum;
-                        });
-                    } else {
-                        sort = children.sort(function (a, b) {
-                            return a === element ? 1 : b.__sortable.maximum - a.__sortable.maximum;
-                        });
-                    }
-                    for (var i = 0; i < children.length - sortable.options.maximum; i++) {
-                        var hide = sort[i];
-                        hide.__sortable.display = hide.style.display || 'unset';
-                        hide.style.display = 'none';
-                        sortable.removePending.push(hide);
-                        if (savePending.indexOf(hide) === -1) {
-                            sortable.emit('maximum-remove-pending', hide, sortable);
+                    } else if (this.closest.below.parentNode === this.closest.above) // parent [] child
+                    {
+                        this.closest.above.insertBefore(this.indicator, this.closest.below);
+                    } else if (this.closest.below.parentNode === this.closest.above.parentNode) // sibling [] sibling
+                    {
+                        var _pos = utils.toGlobal(this.closest.above.name);
+                        if (x > _pos.x + this.options.indentation) {
+                            this.closest.above.insertBefore(this.indicator, this._getLastChild(this.closest.above, true));
+                        } else {
+                            this.closest.above.parentNode.insertBefore(this.indicator, this.closest.below);
+                        }
+                    } else // child [] parent^
+                    {
+                        var _pos2 = utils.toGlobal(this.closest.above.name);
+                        if (x > _pos2.x + this.options.indentation) {
+                            this.closest.above.insertBefore(this.indicator, this._getLastChild(this.closest.above, true));
+                        } else if (x > _pos2.x - this.options.indentation) {
+                            this.closest.above.parentNode.appendChild(this.indicator);
+                        } else if (x < utils.toGlobal(this.closest.below.name).x) {
+                            this.closest.below.parentNode.insertBefore(this.indicator, this.closest.below);
+                        } else {
+                            var _parent = this.closest.above;
+                            while (_parent.parentNode !== this.closest.below.parentNode && x < _pos2.x) {
+                                _parent = this._getParent(_parent);
+                                _pos2 = utils.toGlobal(_parent.name);
+                            }
+                            _parent.appendChild(this.indicator);
                         }
                     }
-                }
+                this._setIndicator();
             }
         }
-
-        /**
-         * change cursor during mousedown
-         * @param {MouseEvent} e
-         * @private
-         */
-
     }, {
-        key: '_mouseDown',
-        value: function _mouseDown(e) {
-            if (this.options.cursorHover) {
-                utils.style(e.currentTarget, 'cursor', this.options.cursorDown);
-            }
-        }
-
-        /**
-         * change cursor during mouseup
-         * @param {MouseEvent} e
-         * @private
-         */
-
-    }, {
-        key: '_mouseUp',
-        value: function _mouseUp(e) {
-            this.emit('clicked', e.currentTarget, this);
-            if (this.options.cursorHover) {
-                utils.style(e.currentTarget, 'cursor', this.options.cursorHover);
-            }
-        }
-    }], [{
-        key: 'create',
-
-
-        /**
-         * create multiple sortable elements
-         * @param {HTMLElements[]} elements
-         * @param {object} options - see constructor for options
-         */
-        value: function create(elements, options) {
-            var results = [];
-            var _iteratorNormalCompletion13 = true;
-            var _didIteratorError13 = false;
-            var _iteratorError13 = undefined;
-
-            try {
-                for (var _iterator13 = elements[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-                    var element = _step13.value;
-
-                    results.push(new Sortable(element, options));
-                }
-            } catch (err) {
-                _didIteratorError13 = true;
-                _iteratorError13 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                        _iterator13.return();
+        key: '_up',
+        value: function _up() {
+            if (this.target) {
+                if (!this.moving) {
+                    if (this.options.expandOnClick) {
+                        this.toggleExpand(this.target);
                     }
-                } finally {
-                    if (_didIteratorError13) {
-                        throw _iteratorError13;
-                    }
+                    this.emit('clicked', this.target, this);
+                } else {
+                    this.indicator.parentNode.insertBefore(this.target, this.indicator);
+                    this.expand(this.indicator.parentNode);
+                    this.target.style.position = this.old.position === 'unset' ? '' : this.old.position;
+                    this.target.name.style.boxShadow = this.old.boxShadow === 'unset' ? '' : this.old.boxShadow;
+                    this.target.style.opacity = this.old.opacity === 'unset' ? '' : this.old.opacity;
+                    this.target.indentation.style.width = this.indicator.indentation.offsetWidth + 'px';
+                    this.indicator.remove();
+                    this._moveData();
+                    this.emit('move', this.target, this);
+                    this.emit('update', this.target, this);
                 }
+                if (this.holdTimeout) {
+                    window.clearTimeout(this.holdTimeout);
+                    this.holdTimeout = null;
+                }
+                this.target = this.moving = null;
             }
-
-            return results;
         }
     }, {
-        key: 'defaults',
+        key: '_moveData',
+        value: function _moveData() {
+            this.target[this.options.data].parent.children.splice(this.target[this.options.data].parent.children.indexOf(this.target[this.options.data]), 1);
+            this.target.parentNode[this.options.data].children.splice(utils.getChildIndex(this.target.parentNode, this.target), 0, this.target[this.options.data]);
+            this.target[this.options.data].parent = this.target.parentNode[this.options.data];
+        }
+    }, {
+        key: 'move',
         get: function get() {
-            return defaults;
+            return this.options.move;
+        },
+        set: function set(value) {
+            this.options.move = value;
         }
     }]);
 
-    return Sortable;
+    return Tree;
 }(Events);
 
+module.exports = Tree;
+
 /**
- * fires when an element is picked up because it was moved beyond the options.threshold
- * @event Sortable#pickup
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
+ * @typedef {Object} Tree~TreeData
+ * @property {TreeData[]} children
+ * @property {string} name
+ * @property {parent} [parent] if not provided then will traverse tree to find parent
  */
 
 /**
- * fires when a sortable is reordered
- * @event Sortable#order
- * @property {HTMLElement} element that was reordered
- * @property {Sortable} sortable where element was placed
- */
+  * trigger when expand is called either through UI interaction or Tree.expand()
+  * @event Tree~expand
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when an element is added to this sortable
- * @event Sortable#add
- * @property {HTMLElement} element added
- * @property {Sortable} sortable where element was added
- */
+  * trigger when collapse is called either through UI interaction or Tree.expand()
+  * @event Tree~collapse
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when an element is removed from this sortable
- * @event Sortable#remove
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was removed
- */
+  * trigger when name is change either through UI interaction or Tree.nameChange()
+  * @event Tree~name-change
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {string} name
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when an element is removed from all sortables
- * @event Sortable#delete
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
+  * trigger when a leaf is picked up through UI interaction
+  * @event Tree~move-pending
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when a copy of an element is dropped
- * @event Sortable#copy
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
+  * trigger when a leaf's location is changed
+  * @event Tree~move
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when the sortable is updated with an add, remove, or order change
- * @event Sortable#update
- * @property {HTMLElement} element changed
- * @property {Sortable} sortable with element
- */
+  * trigger when a leaf is clicked and not dragged or held
+  * @event Tree~clicked
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when an element is removed because maximum was reached for the sortable
- * @event Sortable#maximum-remove
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
+  * trigger when a leaf is changed (i.e., moved, name-change)
+  * @event Tree~update
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
 /**
- * fires when order was changed but element was not dropped yet
- * @event Sortable#order-pending
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
- */
+  * trigger when a leaf's div is created
+  * @event Tree~render
+  * @type {object}
+  * @property {HTMLElement} tree element
+  * @property {Tree} Tree
+  */
 
-/**
- * fires when element is added but not dropped yet
- * @event Sortable#add-pending
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
- */
-
-/**
- * fires when element is removed but not dropped yet
- * @event Sortable#remove-pending
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
- */
-
-/**
- * fires when element is removed after being temporarily added
- * @event Sortable#add-remove-pending
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
- */
-
-/**
- * fires when an element is about to be removed from all sortables
- * @event Sortable#delete-pending
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
-
-/**
- * fires when an element is added, removed, or reorder but element has not dropped yet
- * @event Sortable#update-pending
- * @property {HTMLElement} element being dragged
- * @property {Sortable} current sortable with element placeholder
- */
-
-/**
- * fires when a copy of an element is about to drop
- * @event Sortable#copy-pending
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
-
-/**
- * fires when an element is about to be removed because maximum was reached for the sortable
- * @event Sortable#maximum-remove-pending
- * @property {HTMLElement} element removed
- * @property {Sortable} sortable where element was dragged from
- */
-
-/**
- * fires when an element is clicked without dragging
- * @event Sortable#clicked
- * @property {HTMLElement} element clicked
- * @property {Sortable} sortable where element is a child
- */
-
-module.exports = Sortable;
-
-},{"./defaults":183,"./utils":186,"eventemitter3":3}],186:[function(require,module,exports){
+},{"./defaults":184,"./icons":185,"./utils":187,"clicked":3,"eventemitter3":4}],187:[function(require,module,exports){
 'use strict';
-
-/**
- * Whether element contains classname
- * @param {HTMLElement} e
- * @param {string} name
- * @returns {boolean}
- */
-function containsClassName(e, name) {
-    if (e.className) {
-        var list = e.className.split(' ');
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var entry = _step.value;
-
-                if (entry === name) {
-                    return true;
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-    }
-    return false;
-}
 
 /**
  * measure distance between two points
@@ -19136,23 +18379,26 @@ function distance(x1, y1, x2, y2) {
 }
 
 /**
- * find closest distance from UIEvent to a corner of an element
+ * find shortest distance from point to HTMLElement's bounding box
+ * from: https://gamedev.stackexchange.com/questions/44483/how-do-i-calculate-distance-between-a-point-and-an-axis-aligned-rectangle
  * @param {number} x
  * @param {number} y
  * @param {HTMLElement} element
  */
-function distanceToClosestCorner(x, y, element) {
+function distancePointElement(px, py, element) {
     var pos = toGlobal(element);
-    var topLeft = distance(x, y, pos.x, pos.y);
-    var topRight = distance(x, y, pos.x + element.offsetWidth, pos.y);
-    var bottomLeft = distance(x, y, pos.x, pos.y + element.offsetHeight);
-    var bottomRight = distance(x, y, pos.x + element.offsetWidth, pos.y + element.offsetHeight);
-    return Math.min(topLeft, topRight, bottomLeft, bottomRight);
+    var width = element.offsetWidth;
+    var height = element.offsetHeight;
+    var x = pos.x + width / 2;
+    var y = pos.y + height / 2;
+    var dx = Math.max(Math.abs(px - x) - width / 2, 0);
+    var dy = Math.max(Math.abs(py - y) - height / 2, 0);
+    return dx * dx + dy * dy;
 }
 
 /**
  * determine whether the mouse is inside an element
-     * @param {HTMLElement} dragging
+ * @param {HTMLElement} dragging
  * @param {HTMLElement} element
  */
 function inside(x, y, element) {
@@ -19216,13 +18462,13 @@ function options(options, defaults) {
  */
 function style(element, style, value) {
     if (Array.isArray(value)) {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
         try {
-            for (var _iterator2 = value[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var entry = _step2.value;
+            for (var _iterator = value[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var entry = _step.value;
 
                 element.style[style] = entry;
                 if (element.style[style] === entry) {
@@ -19230,16 +18476,16 @@ function style(element, style, value) {
                 }
             }
         } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError = true;
+            _iteratorError = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                    _iterator2.return();
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
                 }
             } finally {
-                if (_didIteratorError2) {
-                    throw _iteratorError2;
+                if (_didIteratorError) {
+                    throw _iteratorError;
                 }
             }
         }
@@ -19272,15 +18518,114 @@ function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2) {
     }
 }
 
+function removeChildren(element) {
+    while (element.firstChild) {
+        element.firstChild.remove();
+    }
+}
+
+function html(options) {
+    options = options || {};
+    var object = document.createElement(options.type || 'div');
+    if (options.parent) {
+        options.parent.appendChild(object);
+    }
+    if (options.defaultStyles) {
+        styles(object, options.defaultStyles);
+    }
+    if (options.styles) {
+        styles(object, options.styles);
+    }
+    if (options.html) {
+        object.innerHTML = options.html;
+    }
+    if (options.id) {
+        object.id = options.id;
+    }
+    return object;
+}
+
+function styles(object, styles) {
+    for (var _style in styles) {
+        if (Array.isArray(styles[_style])) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = styles[_style][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var entry = _step2.value;
+
+                    object.style[_style] = entry;
+                    if (object.style[_style] === entry) {
+                        break;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        } else {
+            object.style[_style] = styles[_style];
+        }
+    }
+}
+
+function getChildIndex(parent, child) {
+    var index = 0;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = parent.children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var entry = _step3.value;
+
+            if (entry === child) {
+                return index;
+            }
+            index++;
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+
+    return -1;
+}
+
 module.exports = {
-    containsClassName: containsClassName,
+    removeChildren: removeChildren,
     distance: distance,
-    distanceToClosestCorner: distanceToClosestCorner,
+    distancePointElement: distancePointElement,
     inside: inside,
     toGlobal: toGlobal,
     options: options,
     style: style,
-    percentage: percentage
+    percentage: percentage,
+    html: html,
+    styles: styles,
+    getChildIndex: getChildIndex
 };
 
 },{}]},{},[1]);

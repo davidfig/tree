@@ -52,14 +52,16 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Tree#move"><a href="Tree.html#move">move</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
             <span class="subtitle">Typedefs</span>
             
                 <li class="parent" data-name="Tree~TreeData"><a href="Tree.html#~TreeData">TreeData</a></li>
-            
-                <li class="parent" data-name="Tree~TreeOptions"><a href="Tree.html#~TreeOptions">TreeOptions</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -76,11 +78,21 @@
             
             <span class="subtitle">Events</span>
             
+                <li class="parent" data-name="Tree~event:clicked"><a href="Tree.html#~event:clicked">clicked</a></li>
+            
                 <li class="parent" data-name="Tree~event:collapse"><a href="Tree.html#~event:collapse">collapse</a></li>
             
                 <li class="parent" data-name="Tree~event:expand"><a href="Tree.html#~event:expand">expand</a></li>
             
+                <li class="parent" data-name="Tree~event:move"><a href="Tree.html#~event:move">move</a></li>
+            
+                <li class="parent" data-name="Tree~event:move-pending"><a href="Tree.html#~event:move-pending">move-pending</a></li>
+            
                 <li class="parent" data-name="Tree~event:name-change"><a href="Tree.html#~event:name-change">name-change</a></li>
+            
+                <li class="parent" data-name="Tree~event:render"><a href="Tree.html#~event:render">render</a></li>
+            
+                <li class="parent" data-name="Tree~event:update"><a href="Tree.html#~event:update">update</a></li>
             
             </ul>
         </li>
@@ -127,7 +139,7 @@
 
         
         <div class="tag-source">
-            <a href="tree.js.html#line27">tree.js:27</a>
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line36">tree.js:36</a>
         </div>
         
     </div>
@@ -159,6 +171,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -181,6 +195,10 @@
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -210,6 +228,10 @@
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -237,6 +259,10 @@
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -306,10 +332,52 @@
         </tr>
 	
 	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
 	
         <tr>
             
-                <td class="name"><code>parent</code></td>
+                <td class="name"><code>options[this.options.data]</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    data
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>name of tree parameter containing the data</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.parent</code></td>
             
             
             <td class="type">
@@ -338,14 +406,86 @@
                         
                     
                 
-                <p>name of tree parameter containing the parent link</p></td>
+                <p>name of tree parameter containing the parent link in data</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>indentation</code></td>
+                <td class="name"><code>options.name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    name
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>name of tree parameter containing the name in data</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.move</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>allow tree to be rearranged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.indentation</code></td>
             
             
             <td class="type">
@@ -360,7 +500,7 @@
             
                 <td class="default">
                 
-                    15
+                    20
                 
                 </td>
             
@@ -381,7 +521,7 @@
 	
         <tr>
             
-                <td class="name"><code>threshold</code></td>
+                <td class="name"><code>options.threshold</code></td>
             
             
             <td class="type">
@@ -417,7 +557,7 @@
 	
         <tr>
             
-                <td class="name"><code>holdTime</code></td>
+                <td class="name"><code>options.holdTime</code></td>
             
             
             <td class="type">
@@ -453,7 +593,7 @@
 	
         <tr>
             
-                <td class="name"><code>expandOnClick</code></td>
+                <td class="name"><code>options.expandOnClick</code></td>
             
             
             <td class="type">
@@ -489,7 +629,43 @@
 	
         <tr>
             
-                <td class="name"><code>nameStyles</code></td>
+                <td class="name"><code>options.dragOpacity</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0.75
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>opacity setting for dragged item</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.nameStyles</code></td>
             
             
             <td class="type">
@@ -523,7 +699,7 @@
 	
         <tr>
             
-                <td class="name"><code>indicatorStyles</code></td>
+                <td class="name"><code>options.indicatorStyles</code></td>
             
             
             <td class="type">
@@ -551,12 +727,6 @@
                     
                 
                 </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
         </tr>
 	
 	
@@ -591,11 +761,21 @@
     
     <h5>Fires:</h5>
     <ul>
+        <li>event:render</li>
+    
+        <li>event:clicked</li>
+    
         <li>event:expand</li>
     
         <li>event:collapse</li>
     
         <li>event:name-change</li>
+    
+        <li>event:move</li>
+    
+        <li>event:move-pending</li>
+    
+        <li>event:update</li>
     </ul>
     
 
@@ -624,6 +804,61 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl class="list-members">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="move">
+            <a class="share-icon" href="#move"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">move</span>
+            <span class="type-signature type">booleans</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>allow tree to be rearranged</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -646,7 +881,7 @@
 
         
         <div class="tag-source">
-            <a href="tree.js.html#line170">tree.js:170</a>
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line217">tree.js:217</a>
         </div>
         
     </div>
@@ -876,30 +1111,63 @@
     
 </dd>
 
+            </dl>
+    
+
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        <dl class="list-events">
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="~TreeOptions">
-            <a class="share-icon" href="#~TreeOptions"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">TreeOptions</span>
-            <span class="type-signature type">object</span>
+        <h4 class="name" id="~event:clicked">
+            <a class="share-icon" href="#~event:clicked"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clicked
+            </span>
+            
             
             
             
             
         </h4>
+
+        
+        <div class="tag-source">
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line616">tree.js:616</a>
+        </div>
+        
     </div>
-    
+
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>Options for Tree</p>
+        <p>trigger when a leaf is clicked and not dragged or held</p>
     </div>
     
+
     
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+
+    
+
     
 <dl class="details">
     
@@ -918,11 +1186,7 @@
 		<th>Type</th>
 		
 		
-		<th>Argument</th>
 		
-		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -934,326 +1198,43 @@
 	
         <tr>
             
-                <td class="name"><code>TreeOptions.children</code></td>
+                <td class="name"><code>tree</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">HTMLElement</span>
 
 
             
             </td>
             
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
             
             
             
-                <td class="default">
-                
-                    children
-                
-                </td>
-            
-            
-            <td class="description last"><p>name of tree parameter containing the children</p></td>
+            <td class="description last"><p>element</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>TreeOptions.parent</code></td>
+                <td class="name"><code>Tree</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="Tree.html">Tree</a></span>
 
 
             
             </td>
             
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
             
-            
-            
-                <td class="default">
-                
-                    parent
-                
-                </td>
-            
-            
-            <td class="description last"><p>name of tree parameter containing the parent link</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    name
-                
-                </td>
-            
-            
-            <td class="description last"><p>name of tree parameter containing the text for a leaf</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.expanded</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    expanded
-                
-                </td>
-            
-            
-            <td class="description last"><p>name of tree parameter containing whether the leaf is expanded</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.indentation</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-            
-            <td class="description last"><p>number of pixels to indent for each level</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.nameStyles</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.threshold</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-            
-            <td class="description last"><p>number of pixels to move to start a drag</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>options.expandOnClick</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-            
-            <td class="description last"><p>expand and collapse node on click without drag</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>TreeOptions.indicatorStyles</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
             
             
             <td class="description last"></td>
@@ -1284,19 +1265,21 @@
     
 </dl>
 
+
     
+
+    
+
+    
+
+    
+
+    
+
     
 </dd>
 
-            </dl>
-    
-
-    
-
-    
-        <h3 class="subsection-title">Events</h3>
-
-        <dl class="list-events">
+        
             
 <dt>
     <div class="nameContainer">
@@ -1314,7 +1297,7 @@
 
         
         <div class="tag-source">
-            <a href="tree.js.html#line377">tree.js:377</a>
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line583">tree.js:583</a>
         </div>
         
     </div>
@@ -1323,6 +1306,10 @@
 </dt>
 <dd>
 
+    
+    <div class="description">
+        <p>trigger when collapse is called either through UI interaction or Tree.expand()</p>
+    </div>
     
 
     
@@ -1470,7 +1457,7 @@
 
         
         <div class="tag-source">
-            <a href="tree.js.html#line370">tree.js:370</a>
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line575">tree.js:575</a>
         </div>
         
     </div>
@@ -1479,6 +1466,330 @@
 </dt>
 <dd>
 
+    
+    <div class="description">
+        <p>trigger when expand is called either through UI interaction or Tree.expand()</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Tree.html">Tree</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:move">
+            <a class="share-icon" href="#~event:move"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                move
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line608">tree.js:608</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>trigger when a leaf's location is changed</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Tree.html">Tree</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:move-pending">
+            <a class="share-icon" href="#~event:move-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                move-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line600">tree.js:600</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>trigger when a leaf is picked up through UI interaction</p>
+    </div>
     
 
     
@@ -1626,7 +1937,7 @@
 
         
         <div class="tag-source">
-            <a href="tree.js.html#line384">tree.js:384</a>
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line591">tree.js:591</a>
         </div>
         
     </div>
@@ -1635,6 +1946,10 @@
 </dt>
 <dd>
 
+    
+    <div class="description">
+        <p>trigger when name is change either through UI interaction or Tree.nameChange()</p>
+    </div>
     
 
     
@@ -1787,6 +2102,326 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:render">
+            <a class="share-icon" href="#~event:render"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                render
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line632">tree.js:632</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>trigger when a leaf's div is created</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Tree.html">Tree</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~event:update">
+            <a class="share-icon" href="#~event:update"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                update
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="-_mnt_c_Users_dsfig_programming_components_tree_src_tree.js.html#line624">tree.js:624</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>trigger when a leaf is changed (i.e., moved, name-change)</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Tree</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Tree.html">Tree</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         </dl>
     
 </article>
@@ -1801,7 +2436,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 30 2018 12:20:28 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 02 2018 17:16:27 GMT+0800 (DST)
             </div>
         </footer>
     </div>
