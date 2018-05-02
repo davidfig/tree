@@ -275,18 +275,18 @@ class Tree extends Events
      */
     edit(leaf)
     {
-        this.edit = leaf
-        this.input = utils.html({ parent: this.edit.name.parentNode, type: 'input', styles: this.options.nameStyles })
-        const computed = window.getComputedStyle(this.edit.name)
+        this.editing = leaf
+        this.input = utils.html({ parent: this.editing.name.parentNode, type: 'input', styles: this.options.nameStyles })
+        const computed = window.getComputedStyle(this.editing.name)
         this.input.style.boxSizing = 'content-box'
         this.input.style.fontFamily = computed.getPropertyValue('font-family')
         this.input.style.fontSize = computed.getPropertyValue('font-size')
-        this.input.value = this.edit.name.innerText
+        this.input.value = this.editing.name.innerText
         this.input.setSelectionRange(0, this.input.value.length)
         this.input.focus()
         this.input.addEventListener('update', () =>
         {
-            this.nameChange(this.edit, this.input.value)
+            this.nameChange(this.editing, this.input.value)
             this._holdClose()
         })
         this.input.addEventListener('keyup', (e) =>
@@ -297,21 +297,21 @@ class Tree extends Events
             }
             if (e.code === 'Enter')
             {
-                this.nameChange(this.edit, this.input.value)
+                this.nameChange(this.editing, this.input.value)
                 this._holdClose()
             }
         })
-        this.edit.name.style.display = 'none'
+        this.editing.name.style.display = 'none'
         this.target = null
     }
 
     _holdClose()
     {
-        if (this.edit)
+        if (this.editing)
         {
             this.input.remove()
-            this.edit.name.style.display = 'block'
-            this.edit = this.input = null
+            this.editing.name.style.display = 'block'
+            this.editing = this.input = null
         }
     }
 
