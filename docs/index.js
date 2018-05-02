@@ -18251,13 +18251,13 @@ var Tree = function (_Events) {
         }
     }, {
         key: '_up',
-        value: function _up() {
+        value: function _up(e) {
             if (this.target) {
                 if (!this.moving) {
                     if (this.options.expandOnClick) {
                         this.toggleExpand(this.target);
                     }
-                    this.emit('clicked', this.target, this);
+                    this.emit('clicked', this.target, e, this);
                 } else {
                     this.indicator.parentNode.insertBefore(this.target, this.indicator);
                     this.expand(this.indicator.parentNode);
@@ -18353,6 +18353,7 @@ module.exports = Tree;
   * @event Tree~clicked
   * @type {object}
   * @property {HTMLElement} tree element
+  * @property {UIEvent} event
   * @property {Tree} Tree
   */
 

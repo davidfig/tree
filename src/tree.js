@@ -531,7 +531,7 @@ class Tree extends Events
         }
     }
 
-    _up()
+    _up(e)
     {
         if (this.target)
         {
@@ -541,7 +541,7 @@ class Tree extends Events
                 {
                     this.toggleExpand(this.target)
                 }
-                this.emit('clicked', this.target, this)
+                this.emit('clicked', this.target, e, this)
             }
             else
             {
@@ -629,6 +629,7 @@ module.exports = Tree
   * @event Tree~clicked
   * @type {object}
   * @property {HTMLElement} tree element
+  * @property {UIEvent} event
   * @property {Tree} Tree
   */
 
