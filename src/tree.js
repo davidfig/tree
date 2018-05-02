@@ -175,33 +175,39 @@ class Tree extends Events
 
     expand(leaf)
     {
-        const children = this._getChildren(leaf, true)
-        if (children.length)
+        if (leaf.isLeaf)
         {
-            for (let child of children)
+            const children = this._getChildren(leaf, true)
+            if (children.length)
             {
-                child.style.display = 'block'
+                for (let child of children)
+                {
+                    child.style.display = 'block'
+                }
+                leaf[this.options.data][this.options.expanded] = true
+                leaf.icon.innerHTML = icons.open
+                this.emit('expand', leaf, this)
+                this.emit('update', leaf, this)
             }
-            leaf[this.options.data][this.options.expanded] = true
-            leaf.icon.innerHTML = icons.open
-            this.emit('expand', leaf, this)
-            this.emit('update', leaf, this)
         }
     }
 
     collapse(leaf)
     {
-        const children = this._getChildren(leaf, true)
-        if (children.length)
+        if (leaf.isLeaf)
         {
-            for (let child of children)
+            const children = this._getChildren(leaf, true)
+            if (children.length)
             {
-                child.style.display = 'none'
+                for (let child of children)
+                {
+                    child.style.display = 'none'
+                }
+                leaf[this.options.data][this.options.expanded] = false
+                leaf.icon.innerHTML = icons.closed
+                this.emit('collapse', leaf, this)
+                this.emit('update', leaf, this)
             }
-            leaf[this.options.data][this.options.expanded] = false
-            leaf.icon.innerHTML = icons.closed
-            this.emit('collapse', leaf, this)
-            this.emit('update', leaf, this)
         }
     }
 
@@ -381,7 +387,6 @@ class Tree extends Events
             else
             {
                 const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)
-console.log(entry.name.innerText, distance)
                 if (distance < this.closest.distanceBelow)
                 {
                     this.closest.distanceBelow = distance
@@ -415,7 +420,8 @@ console.log(entry.name.innerText, distance)
 
     _getParent(element)
     {
-        while (element !== this.element && element.style.display === 'none')
+        element = element.parentNode
+        while (element.style.display === 'none')
         {
             element = element.parentNode
         }
@@ -429,6 +435,7 @@ console.log(entry.name.innerText, distance)
             this.indicator.remove()
             this.target.style.left = e.pageX - this.offset.x + 'px'
             this.target.style.top = e.pageY - this.offset.y + 'px'
+            const x = utils.toGlobal(this.target.name).x
             this.closest = { distanceAbove: Infinity, distanceBelow: Infinity }
             for (let child of this._getChildren())
             {
@@ -445,19 +452,26 @@ console.log(entry.name.innerText, distance)
             else if (!this.closest.below) // leaf [] null
             {
                 let pos = utils.toGlobal(this.closest.above.name)
-                if (e.pageX > pos.x + this.options.indentiation)
+                if (x > pos.x + this.options.indentation)
                 {
-                    this.closest.below.insertBefore(this.indicator, this._getFirstChild(this.closest.below, true))
+                    this.closest.above.insertBefore(this.indicator, this._getFirstChild(this.closest.above, true))
+                }
+                else if (x > pos.x - this.options.indentation)
+                {
+                    this.closest.above.parentNode.appendChild(this.indicator)
                 }
                 else
                 {
                     let parent = this.closest.above
-                    while (e.pageX < pos.x + this.options.indentation)
+                    while (parent !== this.element && x < pos.x)
                     {
                         parent = this._getParent(parent)
-                        pos = utils.toGlobal(parent.name)
+                        if (parent !== this.element)
+                        {
+                            pos = utils.toGlobal(parent.name)
+                            }
                     }
-                    parent.insertBefore(this.indicator, this._getLastChild(parent, true))
+                    parent.appendChild(this.indicator)
                 }
             }
 
@@ -468,7 +482,7 @@ console.log(entry.name.innerText, distance)
             else if (this.closest.below.parentNode === this.closest.above.parentNode) // sibling [] sibling
             {
                 const pos = utils.toGlobal(this.closest.above.name)
-                if (e.pageX > pos.x + this.options.indentiation)
+                if (x > pos.x + this.options.indentation)
                 {
                     this.closest.above.insertBefore(this.indicator, this._getLastChild(this.closest.above, true))
                 }
@@ -477,10 +491,31 @@ console.log(entry.name.innerText, distance)
                     this.closest.above.parentNode.insertBefore(this.indicator, this.closest.below)
                 }
             }
-            else
+            else // child [] parent^
             {
-console.log('broken')
-                this.closest.below.parentNode.insertBefore(this.indicator, this.closest.below)
+                let pos = utils.toGlobal(this.closest.above.name)
+                if (x > pos.x + this.options.indentation)
+                {
+                    this.closest.above.insertBefore(this.indicator, this._getLastChild(this.closest.above, true))
+                }
+                else if (x > pos.x - this.options.indentation)
+                {
+                    this.closest.above.parentNode.appendChild(this.indicator)
+                }
+                else if (x < utils.toGlobal(this.closest.below.name).x)
+                {
+                    this.closest.below.parentNode.insertBefore(this.indicator, this.closest.below)
+                }
+                else
+                {
+                    let parent = this.closest.above
+                    while (parent.parentNode !== this.closest.below.parentNode && x < pos.x)
+                    {
+                        parent = this._getParent(parent)
+                        pos = utils.toGlobal(parent.name)
+                    }
+                    parent.appendChild(this.indicator)
+                }
             }
             this._setIndicator()
         }
@@ -501,6 +536,7 @@ console.log('broken')
             else
             {
                 this.indicator.parentNode.insertBefore(this.target, this.indicator)
+                this.expand(this.indicator.parentNode)
                 this.target.style.position = this.old.position === 'unset' ? '' : this.old.position
                 this.target.name.style.boxShadow = this.old.boxShadow === 'unset' ? '' : this.old.boxShadow
                 this.target.style.opacity = this.old.opacity === 'unset' ? '' : this.old.opacity
