@@ -32,7 +32,6 @@ https://davidfig.github.io/tree/
 ## API Documentation
 https://davidfig.github.io/tree/jsdoc/
 
-
 ## Installation
 
     npm i yy-tree

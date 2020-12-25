@@ -12,6 +12,18 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/tree.js~tree#classbasename",
+    "class/src/tree.js~Tree.html#instance-get-classBaseName",
+    "src/tree.js~Tree#classBaseName",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#classbasename",
+    "class/src/tree.js~Tree.html#instance-set-classBaseName",
+    "src/tree.js~Tree#classBaseName",
+    "member"
+  ],
+  [
     "src/tree.js~tree#collapse",
     "class/src/tree.js~Tree.html#instance-method-collapse",
     "src/tree.js~Tree#collapse",
@@ -60,10 +72,28 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/tree.js~tree#leaf",
-    "class/src/tree.js~Tree.html#instance-method-leaf",
-    "src/tree.js~Tree#leaf",
+    "src/tree.js~tree#findintree",
+    "class/src/tree.js~Tree.html#instance-method-findInTree",
+    "src/tree.js~Tree#findInTree",
     "method"
+  ],
+  [
+    "src/tree.js~tree#getleaf",
+    "class/src/tree.js~Tree.html#instance-method-getLeaf",
+    "src/tree.js~Tree#getLeaf",
+    "method"
+  ],
+  [
+    "src/tree.js~tree#indentation",
+    "class/src/tree.js~Tree.html#instance-get-indentation",
+    "src/tree.js~Tree#indentation",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#indentation",
+    "class/src/tree.js~Tree.html#instance-set-indentation",
+    "src/tree.js~Tree#indentation",
+    "member"
   ],
   [
     "src/tree.js~tree#move",
@@ -82,6 +112,12 @@ window.esdocSearchIndex = [
     "class/src/tree.js~Tree.html#instance-method-nameChange",
     "src/tree.js~Tree#nameChange",
     "method"
+  ],
+  [
+    "src/tree.js~tree#selection",
+    "class/src/tree.js~Tree.html#instance-member-selection",
+    "src/tree.js~Tree#selection",
+    "member"
   ],
   [
     "src/tree.js~tree#toggleexpand",

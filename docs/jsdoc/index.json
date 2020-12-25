@@ -3,7 +3,7 @@
     "__docId__": 0,
     "kind": "file",
     "name": "src/tree.js",
-    "content": "import Events from 'eventemitter3'\nimport clicked from 'clicked'\n\nimport { defaults } from './defaults'\nimport * as utils from './utils'\nimport { icons } from './icons'\n\nexport class Tree extends Events {\n    /**\n     * Create Tree\n     * @param {(HTMLElement|string)} element - if a string is provided, it calls document.querySelector(element)\n     * @param {TreeData} tree - data for tree\n     * @param {TreeOptions} [options]\n     * @param {string} [options.children=children] name of tree parameter containing the children\n     * @param {string} [options[this.options.data]=data] name of tree parameter containing the data\n     * @param {string} [options.parent=parent] name of tree parameter containing the parent link in data\n     * @param {string} [options.name=name] name of tree parameter containing the name in data\n     * @param {boolean} [options.move=true] allow tree to be rearranged\n     * @param {number} [options.indentation=20] number of pixels to indent for each level\n     * @param {number} [options.threshold=10] number of pixels to move to start a drag\n     * @param {number} [options.holdTime=2000] number of milliseconds before name can be edited (set to 0 to disable)\n     * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag\n     * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item\n     * @param {string[]} [options.nameStyles]\n     * @param {string[]} [options.indicatorStyles]\n     * @fires render\n     * @fires clicked\n     * @fires expand\n     * @fires collapse\n     * @fires name-change\n     * @fires move\n     * @fires move-pending\n     * @fires update\n     */\n    constructor(element, tree, options) {\n        super()\n        this._options = utils.options(options, defaults)\n        if (typeof element === 'string') {\n            /**\n             * Main div holding tree\n             * @type {HTMLElement}\n             */\n            this.element = document.querySelector(element)\n        } else {\n            this.element = element\n        }\n        this.element[this._options.data] = tree\n        document.body.addEventListener('mousemove', (e) => this._move(e))\n        document.body.addEventListener('touchmove', (e) => this._move(e))\n        document.body.addEventListener('mouseup', (e) => this._up(e))\n        document.body.addEventListener('touchend', (e) => this._up(e))\n        document.body.addEventListener('mouseleave', (e) => this._up(e))\n        this._createIndicator()\n        this.update()\n    }\n\n    /**\n     * whether tree may be rearranged\n     * @type {boolean}\n     */\n    get move() {\n        return this._options.move\n    }\n    set move(value) {\n        this._options.move = value\n    }\n\n    _createIndicator() {\n        this._indicator = utils.html()\n        const content = utils.html({ parent: this._indicator, styles: { display: 'flex' } })\n        this._indicator.indentation = utils.html({ parent: content })\n        this._indicator.icon = utils.html({ parent: content, defaultStyles: this._options.expandStyles, styles: { height: 0 } })\n        this._indicator.line = utils.html({\n            parent: content,\n            styles: this._options.indicatorStyles\n        })\n    }\n\n    leaf(data, level) {\n        const leaf = utils.html()\n        leaf.isLeaf = true\n        leaf[this._options.data] = data\n        leaf.content = utils.html({ parent: leaf, styles: { display: 'flex', alignItems: 'center' } })\n        leaf.indentation = utils.html({ parent: leaf.content, styles: { width: level * this._options.indentation + 'px' } })\n        leaf.icon = utils.html({ parent: leaf.content, html: data[this._options.expanded] ? icons.open : icons.closed, styles: this._options.expandStyles })\n        leaf.name = utils.html({ parent: leaf.content, html: data[this._options.name], styles: this._options.nameStyles })\n\n        leaf.name.addEventListener('mousedown', (e) => this._down(e))\n        leaf.name.addEventListener('touchstart', (e) => this._down(e))\n        for (let child of data[this._options.children]) {\n            const add = this.leaf(child, level + 1)\n            add[this._options.data].parent = data\n            leaf.appendChild(add)\n            if (!data[this._options.expanded]) {\n                add.style.display = 'none'\n            }\n        }\n        if (this._getChildren(leaf, true).length === 0) {\n            this._hideIcon(leaf)\n        }\n        clicked(leaf.icon, () => this.toggleExpand(leaf))\n        this.emit('render', leaf, this)\n        return leaf\n    }\n\n    _getChildren(leaf, all) {\n        leaf = leaf || this.element\n        const children = []\n        for (let child of leaf.children) {\n            if (child.isLeaf && (all || child.style.display !== 'none')) {\n                children.push(child)\n            }\n        }\n        return children\n    }\n\n    _hideIcon(leaf) {\n        if (leaf.isLeaf) {\n            leaf.icon.style.opacity = 0\n            leaf.icon.style.cursor = 'unset'\n        }\n    }\n\n    _showIcon(leaf) {\n        if (leaf.isLeaf) {\n            leaf.icon.style.opacity = 1\n            leaf.icon.style.cursor = this._options.expandStyles.cursor\n        }\n    }\n\n    /** Expands all leaves */\n    expandAll() {\n        this._expandChildren(this.element)\n    }\n\n    _expandChildren(leaf) {\n        for (let child of this._getChildren(leaf, true)) {\n            this.expand(child)\n            this._expandChildren(child)\n        }\n    }\n\n    /** Collapses all leaves */\n    collapseAll() {\n        this._collapseChildren(this)\n    }\n\n    _collapseChildren(leaf) {\n        for (let child of this._getChildren(leaf, true)) {\n            this.collapse(child)\n            this._collapseChildren(child)\n        }\n    }\n\n    /**\n     * Toggles a leaf\n     * @param {HTMLElement} leaf\n     */\n    toggleExpand(leaf) {\n        if (leaf.icon.style.opacity !== '0') {\n            if (leaf[this._options.data][this._options.expanded]) {\n                this.collapse(leaf)\n            } else {\n                this.expand(leaf)\n            }\n        }\n    }\n\n    /**\n     * Expands a leaf\n     * @param {HTMLElement} leaf\n     */\n    expand(leaf) {\n        if (leaf.isLeaf) {\n            const children = this._getChildren(leaf, true)\n            if (children.length) {\n                for (let child of children) {\n                    child.style.display = 'block'\n                }\n                leaf[this._options.data][this._options.expanded] = true\n                leaf.icon.innerHTML = icons.open\n                this.emit('expand', leaf, this)\n                this.emit('update', leaf, this)\n            }\n        }\n    }\n\n    /**\n     * Collapses a leaf\n     * @param {HTMLElement} leaf\n     */\n    collapse(leaf) {\n        if (leaf.isLeaf) {\n            const children = this._getChildren(leaf, true)\n            if (children.length) {\n                for (let child of children) {\n                    child.style.display = 'none'\n                }\n                leaf[this._options.data][this._options.expanded] = false\n                leaf.icon.innerHTML = icons.closed\n                this.emit('collapse', leaf, this)\n                this.emit('update', leaf, this)\n            }\n        }\n    }\n\n    /**\n     * call this after tree's data has been updated outside of this library\n     */\n    update() {\n        const scroll = this.element.scrollTop\n        utils.removeChildren(this.element)\n        for (let leaf of this.element[this._options.data][this._options.children]) {\n            const add = this.leaf(leaf, 0)\n            add[this._options.data].parent = this.element[this._options.data]\n            this.element.appendChild(add)\n        }\n        this.element.scrollTop = scroll + 'px'\n    }\n\n    _down(e) {\n        this._target = e.currentTarget.parentNode.parentNode\n        this._isDown = { x: e.pageX, y: e.pageY }\n        const pos = utils.toGlobal(this._target)\n        this._offset = { x: e.pageX - pos.x, y: e.pageY - pos.y }\n        if (this._options.holdTime) {\n            this._holdTimeout = window.setTimeout(() => this._hold(), this._options.holdTime)\n        }\n        e.preventDefault()\n        e.stopPropagation()\n    }\n\n    _hold() {\n        this._holdTimeout = null\n        this.edit(this._target)\n    }\n\n    /**\n     * edit the name entry using the data\n     * @param {object} data element of leaf\n     */\n    editData(data) {\n        const children = this._getChildren(null, true)\n        for (let child of children) {\n            if (child.data === data) {\n                this.edit(child)\n            }\n        }\n    }\n\n    /**\n     * edit the name entry using the created element\n     * @param {HTMLElement} leaf\n     */\n    edit(leaf) {\n        this._editing = leaf\n        this._input = utils.html({ parent: this._editing.name.parentNode, type: 'input', styles: this._options.nameStyles })\n        const computed = window.getComputedStyle(this._editing.name)\n        this._input.style.boxSizing = 'content-box'\n        this._input.style.fontFamily = computed.getPropertyValue('font-family')\n        this._input.style.fontSize = computed.getPropertyValue('font-size')\n        this._input.value = this._editing.name.innerText\n        this._input.setSelectionRange(0, this._input.value.length)\n        this._input.focus()\n        this._input.addEventListener('update', () => {\n            this.nameChange(this._editing, this._input.value)\n            this._holdClose()\n        })\n        this._input.addEventListener('keyup', (e) => {\n            if (e.code === 'Escape') {\n                this._holdClose()\n            }\n            if (e.code === 'Enter') {\n                this.nameChange(this._editing, this._input.value)\n                this._holdClose()\n            }\n        })\n        this._editing.name.style.display = 'none'\n        this._target = null\n    }\n\n    _holdClose() {\n        if (this._editing) {\n            this._input.remove()\n            this._editing.name.style.display = 'block'\n            this._editing = this._input = null\n        }\n    }\n\n    nameChange(leaf, name) {\n        leaf[this._options.data].name = this._input.value\n        leaf.name.innerHTML = name\n        this.emit('name-change', leaf, this._input.value, this)\n        this.emit('update', leaf, this)\n    }\n\n    _setIndicator() {\n        let level = 0\n        let traverse = this._indicator.parentNode\n        while (traverse !== this.element) {\n            level++\n            traverse = traverse.parentNode\n        }\n        this._indicator.indentation.style.width = level * this._options.indentation + 'px'\n    }\n\n    _pickup() {\n        if (this._holdTimeout) {\n            window.clearTimeout(this._holdTimeout)\n            this._holdTimeout = null\n        }\n        this.emit('move-pending', this._target, this)\n        const parent = this._target.parentNode\n        parent.insertBefore(this._indicator, this._target)\n        this._setIndicator()\n        const pos = utils.toGlobal(this._target)\n        document.body.appendChild(this._target)\n        this._old = {\n            opacity: this._target.style.opacity || 'unset',\n            position: this._target.style.position || 'unset',\n            boxShadow: this._target.name.style.boxShadow || 'unset'\n        }\n        this._target.style.position = 'absolute'\n        this._target.name.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.25)'\n        this._target.style.left = pos.x + 'px'\n        this._target.style.top = pos.y + 'px'\n        this._target.style.opacity = this._options.dragOpacity\n        if (this._getChildren(parent, true).length === 0) {\n            this._hideIcon(parent)\n        }\n    }\n\n    _checkThreshold(e) {\n        if (!this._options.move) {\n            return false\n        } else if (this._moving) {\n            return true\n        } else {\n            if (utils.distance(this._isDown.x, this._isDown.y, e.pageX, e.pageY)) {\n                this._moving = true\n                this._pickup()\n                return true\n            } else {\n                return false\n            }\n        }\n    }\n\n    _findClosest(e, entry) {\n        const pos = utils.toGlobal(entry.name)\n        if (pos.y + entry.name.offsetHeight / 2 <= e.pageY) {\n            if (!this._closest.foundAbove) {\n                if (utils.inside(e.pageX, e.pageY, entry.name)) {\n                    this._closest.foundAbove = true\n                    this._closest.above = entry\n                } else {\n                    const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)\n                    if (distance < this._closest.distanceAbove) {\n                        this._closest.distanceAbove = distance\n                        this._closest.above = entry\n                    }\n                }\n            }\n        } else if (!this._closest.foundBelow) {\n            if (utils.inside(e.pageX, e.pageY, entry.name)) {\n                this._closest.foundBelow = true\n                this._closest.below = entry\n            } else {\n                const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)\n                if (distance < this._closest.distanceBelow) {\n                    this._closest.distanceBelow = distance\n                    this._closest.below = entry\n                }\n            }\n        }\n        for (let child of this._getChildren(entry)) {\n            this._findClosest(e, child)\n        }\n    }\n\n    _getFirstChild(element, all) {\n        const children = this._getChildren(element, all)\n        if (children.length) {\n            return children[0]\n        }\n    }\n\n    _getLastChild(element, all) {\n        const children = this._getChildren(element, all)\n        if (children.length) {\n            return children[children.length - 1]\n        }\n    }\n\n    _getParent(element) {\n        element = element.parentNode\n        while (element.style.display === 'none') {\n            element = element.parentNode\n        }\n        return element\n    }\n\n    _move(e) {\n        if (this._target && this._checkThreshold(e)) {\n            this._indicator.remove()\n            this._target.style.left = e.pageX - this._offset.x + 'px'\n            this._target.style.top = e.pageY - this._offset.y + 'px'\n            const x = utils.toGlobal(this._target.name).x\n            this._closest = { distanceAbove: Infinity, distanceBelow: Infinity }\n            for (let child of this._getChildren()) {\n                this._findClosest(e, child)\n            }\n            if (!this._closest.above && !this._closest.below) {\n                this.element.appendChild(this._indicator)\n            } else if (!this._closest.above)  {\n                // null [] leaf\n                this.element.insertBefore(this._indicator, this._getFirstChild(this.element))\n            } else if (!this._closest.below) {\n                // leaf [] null\n                let pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this._options.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getFirstChild(this._closest.above, true))\n                } else if (x > pos.x - this._options.indentation) {\n                    this._closest.above.parentNode.appendChild(this._indicator)\n                } else {\n                    let parent = this._closest.above\n                    while (parent !== this.element && x < pos.x) {\n                        parent = this._getParent(parent)\n                        if (parent !== this.element) {\n                            pos = utils.toGlobal(parent.name)\n                        }\n                    }\n                    parent.appendChild(this._indicator)\n                }\n            } else if (this._closest.below.parentNode === this._closest.above) {\n                // parent [] child\n                this._closest.above.insertBefore(this._indicator, this._closest.below)\n            } else if (this._closest.below.parentNode === this._closest.above.parentNode) {\n                // sibling [] sibling\n                const pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this._options.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))\n                } else {\n                    this._closest.above.parentNode.insertBefore(this._indicator, this._closest.below)\n                }\n            } else {\n                // child [] parent^\n                let pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this._options.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))\n                } else if (x > pos.x - this._options.indentation) {\n                    this._closest.above.parentNode.appendChild(this._indicator)\n                } else if (x < utils.toGlobal(this._closest.below.name).x) {\n                    this._closest.below.parentNode.insertBefore(this._indicator, this._closest.below)\n                } else {\n                    let parent = this._closest.above\n                    while (parent.parentNode !== this._closest.below.parentNode && x < pos.x) {\n                        parent = this._getParent(parent)\n                        pos = utils.toGlobal(parent.name)\n                    }\n                    parent.appendChild(this._indicator)\n                }\n            }\n            this._setIndicator()\n        }\n    }\n\n    _up(e) {\n        if (this._target) {\n            if (!this._moving) {\n                if (this._options.expandOnClick) {\n                    this.toggleExpand(this._target)\n                }\n                this.emit('clicked', this._target, e, this)\n            } else {\n                this._indicator.parentNode.insertBefore(this._target, this._indicator)\n                this.expand(this._indicator.parentNode)\n                this._showIcon(this._indicator.parentNode)\n                this._target.style.position = this._old.position === 'unset' ? '' : this._old.position\n                this._target.name.style.boxShadow = this._old.boxShadow === 'unset' ? '' : this._old.boxShadow\n                this._target.style.opacity = this._old.opacity === 'unset' ? '' : this._old.opacity\n                this._target.indentation.style.width = this._indicator.indentation.offsetWidth + 'px'\n                this._indicator.remove()\n                this._moveData()\n                this.emit('move', this._target, this)\n                this.emit('update', this._target, this)\n            }\n            if (this._holdTimeout) {\n                window.clearTimeout(this._holdTimeout)\n                this._holdTimeout = null\n            }\n            this._target = this._moving = null\n        }\n    }\n\n    _moveData() {\n        this._target[this._options.data].parent.children.splice(this._target[this._options.data].parent.children.indexOf(this._target[this._options.data]), 1)\n        this._target.parentNode[this._options.data].children.splice(utils.getChildIndex(this._target.parentNode, this._target), 0, this._target[this._options.data])\n        this._target[this._options.data].parent = this._target.parentNode[this._options.data]\n    }\n}\n\n/**\n * @typedef {Object} Tree~TreeData\n * @property {TreeData[]} children\n * @property {string} name\n * @property {parent} [parent] if not provided then will traverse tree to find parent\n */\n\n/**\n  * trigger when expand is called either through UI interaction or Tree.expand()\n  * @event Tree~expand\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when collapse is called either through UI interaction or Tree.expand()\n  * @event Tree~collapse\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when name is change either through UI interaction or Tree.nameChange()\n  * @event Tree~name-change\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {string} name\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is picked up through UI interaction\n  * @event Tree~move-pending\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf's location is changed\n  * @event Tree~move\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is clicked and not dragged or held\n  * @event Tree~clicked\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {UIEvent} event\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is changed (i.e., moved, name-change)\n  * @event Tree~update\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf's div is created\n  * @event Tree~render\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */",
+    "content": "import Events from 'eventemitter3'\nimport clicked from 'clicked'\n\nimport { defaults, styleDefaults } from './defaults'\nimport * as utils from './utils'\nimport { icons } from './icons'\n\nexport class Tree extends Events {\n    /**\n     * Create Tree\n     * @param {(HTMLElement|string)} element - if a string is provided, it calls document.querySelector(element)\n     * @param {TreeData} tree - data for tree (see readme for description)\n     * @param {TreeOptions} [options]\n     * @param {boolean} [options.move=true] drag tree to rearrange\n     * @param {boolean} [options.select=true] click to select node\n     * @param {number} [options.indentation=20] number of pixels to indent for each level\n     * @param {number} [options.threshold=10] number of pixels to move to start a drag\n     * @param {number} [options.holdTime=2000] number of milliseconds before name can be edited (set to 0 to disable)\n     * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag except (will select before expanding if select=true)\n     * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item\n     * @param {string} [options.classBaseName=yy-tree] first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)\n     * @param {boolean} [options.addStyles=true] attaches a style sheet with default and overridden styles; set to false to use your own stylesheet\n     * @param {object} [styles]\n     * @param {string[]} [styles.nameStyles] use these to override individual styles for the name (will be included in the attached stylesheet)\n     * @param {string[]} [styles.contentStyles] use these to override individual styles for the content (will be included in the attached stylesheet)\n     * @param {string[]} [styles.indicatorStyles] use these to override individual styles for the move-line indicator (will be included in the attached stylesheet)\n     * @param {string[]} [styles.selectedStyles] use these to override individual styles for the selected item (will be included in the attached stylesheet)\n     * @fires render\n     * @fires clicked\n     * @fires expand\n     * @fires collapse\n     * @fires name-change\n     * @fires move\n     * @fires move-pending\n     * @fires update\n     */\n    constructor(element, tree, options, styles) {\n        super()\n        this._options = utils.options(options, defaults)\n        if (typeof element === 'string') {\n            /**\n             * Main div holding tree\n             * @type {HTMLElement}\n             */\n            this.element = document.querySelector(element)\n        } else {\n            this.element = element\n        }\n        this.element.classList.add(this.classBaseName)\n        this.element.data = tree\n        document.body.addEventListener('mousemove', (e) => this._move(e))\n        document.body.addEventListener('touchmove', (e) => this._move(e))\n        document.body.addEventListener('mouseup', (e) => this._up(e))\n        document.body.addEventListener('touchend', (e) => this._up(e))\n        document.body.addEventListener('mouseleave', (e) => this._up(e))\n        this._createIndicator()\n        if (this._options.addStyles !== false) {\n            this._addStyles(styles)\n        }\n        this.update()\n    }\n\n    /**\n     * className's prefix (e.g., \"yy-tree\"-content)\n     * @type {string}\n     */\n    get classBaseName() {\n        return this._options.classBaseName\n    }\n    set classBaseName(value) {\n        if (value !== this._options.classBaseName) {\n            this._options.classBaseName = value\n            this.update()\n        }\n    }\n\n    /**\n     * indentation for tree\n     * @type {number}\n     */\n    get indentation() {\n        return this._options.indentation\n    }\n    set indentation(value) {\n        if (value !== this._options.indentation) {\n            this._options.indentation = value\n            this._indicator.style.marginLeft = value + 'px'\n            this.update()\n        }\n    }\n\n    /**\n     * whether tree may be rearranged\n     * @type {boolean}\n     */\n    get move() {\n        return this._options.move\n    }\n    set move(value) {\n        this._options.move = value\n    }\n\n    _leaf(data, level) {\n        const leaf = utils.html({ className: `${this.classBaseName}-leaf` })\n        leaf.isLeaf = true\n        leaf.data = data\n        leaf.content = utils.html({ parent: leaf, className: `${this.classBaseName}-content` })\n        leaf.style.marginLeft = this.indentation + 'px'\n        leaf.icon = utils.html({\n            parent: leaf.content,\n            html: data.expanded ? icons.open : icons.closed,\n            className: `${this.classBaseName}-expand`\n        })\n        leaf.name = utils.html({ parent: leaf.content, html: data.name, className: `${this.classBaseName}-name` })\n        leaf.name.addEventListener('mousedown', (e) => this._down(e))\n        leaf.name.addEventListener('touchstart', (e) => this._down(e))\n        for (let child of data.children) {\n            const add = this._leaf(child, level + 1)\n            add.data.parent = data\n            leaf.appendChild(add)\n            if (!data.expanded) {\n                add.style.display = 'none'\n            }\n        }\n        if (this._getChildren(leaf, true).length === 0) {\n            this._hideIcon(leaf)\n        }\n        clicked(leaf.icon, () => this.toggleExpand(leaf))\n        this.emit('render', leaf, this)\n        return leaf\n    }\n\n    _createIndicator() {\n        this._indicator = utils.html()\n        this._indicator.style.marginLeft = this.indentation + 'px'\n        const content = utils.html({ parent: this._indicator })\n        content.style.display = 'flex'\n        this._indicator.indentation = utils.html({ parent: content })\n        this._indicator.icon = utils.html({ parent: content, className: `${this.classBaseName}-expand` })\n        this._indicator.icon.style.height = 0\n        this._indicator.line = utils.html({ parent: content, className: `${this.classBaseName}-indicator` })\n    }\n\n    _getChildren(leaf, all) {\n        leaf = leaf || this.element\n        const children = []\n        for (let child of leaf.children) {\n            if (child.isLeaf && (all || child.style.display !== 'none')) {\n                children.push(child)\n            }\n        }\n        return children\n    }\n\n    _hideIcon(leaf) {\n        if (leaf.isLeaf) {\n            leaf.icon.style.opacity = 0\n            leaf.icon.style.cursor = 'unset'\n        }\n    }\n\n    _showIcon(leaf) {\n        if (leaf.isLeaf) {\n            leaf.icon.style.opacity = 1\n            leaf.icon.style.cursor = this._options.cursorExpand\n        }\n    }\n\n    /** Expands all leaves */\n    expandAll() {\n        this._expandChildren(this.element)\n    }\n\n    _expandChildren(leaf) {\n        for (let child of this._getChildren(leaf, true)) {\n            this.expand(child)\n            this._expandChildren(child)\n        }\n    }\n\n    /** Collapses all leaves */\n    collapseAll() {\n        this._collapseChildren(this)\n    }\n\n    _collapseChildren(leaf) {\n        for (let child of this._getChildren(leaf, true)) {\n            this.collapse(child)\n            this._collapseChildren(child)\n        }\n    }\n\n    /**\n     * Toggles a leaf\n     * @param {HTMLElement} leaf\n     */\n    toggleExpand(leaf) {\n        if (leaf.icon.style.opacity !== '0') {\n            if (leaf.data.expanded) {\n                this.collapse(leaf)\n            } else {\n                this.expand(leaf)\n            }\n        }\n    }\n\n    /**\n     * Expands a leaf\n     * @param {HTMLElement} leaf\n     */\n    expand(leaf) {\n        if (leaf.isLeaf) {\n            const children = this._getChildren(leaf, true)\n            if (children.length) {\n                for (let child of children) {\n                    child.style.display = 'block'\n                }\n                leaf.data.expanded = true\n                leaf.icon.innerHTML = icons.open\n                this.emit('expand', leaf, this)\n                this.emit('update', leaf, this)\n            }\n        }\n    }\n\n    /**\n     * Collapses a leaf\n     * @param {HTMLElement} leaf\n     */\n    collapse(leaf) {\n        if (leaf.isLeaf) {\n            const children = this._getChildren(leaf, true)\n            if (children.length) {\n                for (let child of children) {\n                    child.style.display = 'none'\n                }\n                leaf.data.expanded = false\n                leaf.icon.innerHTML = icons.closed\n                this.emit('collapse', leaf, this)\n                this.emit('update', leaf, this)\n            }\n        }\n    }\n\n    /** call this after tree's data has been updated outside of this library */\n    update() {\n        const scroll = this.element.scrollTop\n        utils.removeChildren(this.element)\n        for (let leaf of this.element.data.children) {\n            const add = this._leaf(leaf, 0)\n            add.data.parent = this.element.data\n            this.element.appendChild(add)\n        }\n        this.element.scrollTop = scroll + 'px'\n    }\n\n    _down(e) {\n        this._target = e.currentTarget.parentNode.parentNode\n        let alreadySelected\n        if (this.selection === this._target) {\n            alreadySelected = true\n        } else {\n            if (this.selection) {\n                this.selection.name.classList.remove(`${this.classBaseName}-select`)\n            }\n            this.selection = this._target\n            this.selection.name.classList.add(`${this.classBaseName}-select`)\n        }\n        this._isDown = { x: e.pageX, y: e.pageY, alreadySelected }\n        const pos = utils.toGlobal(this._target)\n        this._offset = { x: e.pageX - pos.x, y: e.pageY - pos.y }\n        if (this._options.holdTime) {\n            this._holdTimeout = window.setTimeout(() => this._hold(), this._options.holdTime)\n        }\n        e.preventDefault()\n        e.stopPropagation()\n    }\n\n    _hold() {\n        this._holdTimeout = null\n        this.edit(this._target)\n    }\n\n    /**\n     * edit the name entry using the data\n     * @param {object} data element of leaf\n     */\n    editData(data) {\n        const children = this._getChildren(null, true)\n        for (let child of children) {\n            if (child.data === data) {\n                this.edit(child)\n            }\n        }\n    }\n\n    /**\n     * edit the name entry using the created element\n     * @param {HTMLElement} leaf\n     */\n    edit(leaf) {\n        this._editing = leaf\n        this._input = utils.html({ parent: this._editing.name.parentNode, type: 'input', className: `${this.classBaseName}-name` })\n        const computed = window.getComputedStyle(this._editing.name)\n        this._input.style.boxSizing = 'content-box'\n        this._input.style.fontFamily = computed.getPropertyValue('font-family')\n        this._input.style.fontSize = computed.getPropertyValue('font-size')\n        this._input.value = this._editing.name.innerText\n        this._input.setSelectionRange(0, this._input.value.length)\n        this._input.focus()\n        this._input.addEventListener('update', () => {\n            this.nameChange(this._editing, this._input.value)\n            this._holdClose()\n        })\n        this._input.addEventListener('keyup', (e) => {\n            if (e.code === 'Escape') {\n                this._holdClose()\n            }\n            if (e.code === 'Enter') {\n                this.nameChange(this._editing, this._input.value)\n                this._holdClose()\n            }\n        })\n        this._editing.name.style.display = 'none'\n        this._target = null\n    }\n\n    _holdClose() {\n        if (this._editing) {\n            this._input.remove()\n            this._editing.name.style.display = 'block'\n            this._editing = this._input = null\n        }\n    }\n\n    /**\n     * change the name of a leaf\n     * @param {HTMLElement} leaf\n     * @param {string} name\n     */\n    nameChange(leaf, name) {\n        leaf.data.name = this._input.value\n        leaf.name.innerHTML = name\n        this.emit('name-change', leaf, this._input.value, this)\n        this.emit('update', leaf, this)\n    }\n\n    /**\n     * Find a leaf based using its data\n     * @param {object} leaf\n     * @param {HTMLElement} [root=this.element]\n     */\n    getLeaf(leaf, root = this.element) {\n        this.findInTree(root, data => data === leaf)\n    }\n\n    /**\n     * call the callback function on each node; returns the node if callback === true\n     * @param {function} callback\n     */\n    findInTree(leaf, callback) {\n        for (const child of leaf.children) {\n            if (callback(child)) {\n                return child\n            }\n            const find = this.findInTree(child, callback)\n            if (find) {\n                return find\n            }\n        }\n    }\n\n    _pickup() {\n        if (this._holdTimeout) {\n            window.clearTimeout(this._holdTimeout)\n            this._holdTimeout = null\n        }\n        this.emit('move-pending', this._target, this)\n        const parent = this._target.parentNode\n        parent.insertBefore(this._indicator, this._target)\n        const pos = utils.toGlobal(this._target)\n        document.body.appendChild(this._target)\n        this._old = {\n            opacity: this._target.style.opacity || 'unset',\n            position: this._target.style.position || 'unset',\n            boxShadow: this._target.name.style.boxShadow || 'unset'\n        }\n        this._target.style.position = 'absolute'\n        this._target.name.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.25)'\n        this._target.style.left = pos.x + 'px'\n        this._target.style.top = pos.y + 'px'\n        this._target.style.opacity = this._options.dragOpacity\n        if (this._getChildren(parent, true).length === 0) {\n            this._hideIcon(parent)\n        }\n    }\n\n    _checkThreshold(e) {\n        if (!this._options.move) {\n            return false\n        } else if (this._moving) {\n            return true\n        } else {\n            if (utils.distance(this._isDown.x, this._isDown.y, e.pageX, e.pageY)) {\n                this._moving = true\n                this._pickup()\n                return true\n            } else {\n                return false\n            }\n        }\n    }\n\n    _findClosest(e, entry) {\n        const pos = utils.toGlobal(entry.name)\n        if (pos.y + entry.name.offsetHeight / 2 <= e.pageY) {\n            if (!this._closest.foundAbove) {\n                if (utils.inside(e.pageX, e.pageY, entry.name)) {\n                    this._closest.foundAbove = true\n                    this._closest.above = entry\n                } else {\n                    const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)\n                    if (distance < this._closest.distanceAbove) {\n                        this._closest.distanceAbove = distance\n                        this._closest.above = entry\n                    }\n                }\n            }\n        } else if (!this._closest.foundBelow) {\n            if (utils.inside(e.pageX, e.pageY, entry.name)) {\n                this._closest.foundBelow = true\n                this._closest.below = entry\n            } else {\n                const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)\n                if (distance < this._closest.distanceBelow) {\n                    this._closest.distanceBelow = distance\n                    this._closest.below = entry\n                }\n            }\n        }\n        for (let child of this._getChildren(entry)) {\n            this._findClosest(e, child)\n        }\n    }\n\n    _getFirstChild(element, all) {\n        const children = this._getChildren(element, all)\n        if (children.length) {\n            return children[0]\n        }\n    }\n\n    _getLastChild(element, all) {\n        const children = this._getChildren(element, all)\n        if (children.length) {\n            return children[children.length - 1]\n        }\n    }\n\n    _getParent(element) {\n        element = element.parentNode\n        while (element.style.display === 'none') {\n            element = element.parentNode\n        }\n        return element\n    }\n\n    _move(e) {\n        if (this._target && this._checkThreshold(e)) {\n            this._indicator.remove()\n            this._target.style.left = e.pageX - this._offset.x + 'px'\n            this._target.style.top = e.pageY - this._offset.y + 'px'\n            const x = utils.toGlobal(this._target.name).x\n            this._closest = { distanceAbove: Infinity, distanceBelow: Infinity }\n            for (let child of this._getChildren()) {\n                this._findClosest(e, child)\n            }\n            if (!this._closest.above && !this._closest.below) {\n                this.element.appendChild(this._indicator)\n            } else if (!this._closest.above)  {\n                // null [] leaf\n                this.element.insertBefore(this._indicator, this._getFirstChild(this.element))\n            } else if (!this._closest.below) {\n                // leaf [] null\n                let pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getFirstChild(this._closest.above, true))\n                } else if (x > pos.x - this.indentation) {\n                    this._closest.above.parentNode.appendChild(this._indicator)\n                } else {\n                    let parent = this._closest.above\n                    while (parent !== this.element && x < pos.x) {\n                        parent = this._getParent(parent)\n                        if (parent !== this.element) {\n                            pos = utils.toGlobal(parent.name)\n                        }\n                    }\n                    parent.appendChild(this._indicator)\n                }\n            } else if (this._closest.below.parentNode === this._closest.above) {\n                // parent [] child\n                this._closest.above.insertBefore(this._indicator, this._closest.below)\n            } else if (this._closest.below.parentNode === this._closest.above.parentNode) {\n                // sibling [] sibling\n                const pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))\n                } else {\n                    this._closest.above.parentNode.insertBefore(this._indicator, this._closest.below)\n                }\n            } else {\n                // child [] parent^\n                let pos = utils.toGlobal(this._closest.above.name)\n                if (x > pos.x + this.indentation) {\n                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))\n                } else if (x > pos.x - this.indentation) {\n                    this._closest.above.parentNode.appendChild(this._indicator)\n                } else if (x < utils.toGlobal(this._closest.below.name).x) {\n                    this._closest.below.parentNode.insertBefore(this._indicator, this._closest.below)\n                } else {\n                    let parent = this._closest.above\n                    while (parent.parentNode !== this._closest.below.parentNode && x < pos.x) {\n                        parent = this._getParent(parent)\n                        pos = utils.toGlobal(parent.name)\n                    }\n                    parent.appendChild(this._indicator)\n                }\n            }\n        }\n    }\n\n    _up(e) {\n        if (this._target) {\n            if (!this._moving) {\n                if (this._options.expandOnClick && (!this._options.select || this._isDown.alreadySelected)) {\n                    this.toggleExpand(this._target)\n                }\n                this.emit('clicked', this._target, e, this)\n            } else {\n                this._indicator.parentNode.insertBefore(this._target, this._indicator)\n                this.expand(this._indicator.parentNode)\n                this._showIcon(this._indicator.parentNode)\n                this._target.style.position = this._old.position === 'unset' ? '' : this._old.position\n                this._target.name.style.boxShadow = this._old.boxShadow === 'unset' ? '' : this._old.boxShadow\n                this._target.style.opacity = this._old.opacity === 'unset' ? '' : this._old.opacity\n                this._indicator.remove()\n                this._moveData()\n                this.emit('move', this._target, this)\n                this.emit('update', this._target, this)\n            }\n            if (this._holdTimeout) {\n                window.clearTimeout(this._holdTimeout)\n                this._holdTimeout = null\n            }\n            this._target = this._moving = null\n        }\n    }\n\n    _moveData() {\n        this._target.data.parent.children.splice(this._target.data.parent.children.indexOf(this._target.data), 1)\n        this._target.parentNode.data.children.splice(utils.getChildIndex(this._target.parentNode, this._target), 0, this._target.data)\n        this._target.data.parent = this._target.parentNode.data\n    }\n\n    _addStyles(userStyles) {\n        const styles = utils.options(userStyles, styleDefaults)\n        let s = `.${this.classBaseName}-name{`\n        for (const key in styles.nameStyles) {\n            s += `${key}:${styles.nameStyles[key]};`\n        }\n        s += `}.${this.classBaseName}-content{`\n        for (const key in styles.contentStyles) {\n            s += `${key}:${styles.contentStyles[key]};`\n        }\n        s += `}.${this.classBaseName}-indicator{`\n        for (const key in styles.indicatorStyles) {\n            s += `${key}:${styles.indicatorStyles[key]};`\n        }\n        s += `}.${this.classBaseName}-expand{`\n        for (const key in styles.expandStyles) {\n            s += `${key}:${styles.expandStyles[key]};`\n        }\n        s += `}.${this.classBaseName}-select{`\n        for (const key in styles.selectStyles) {\n            s += `${key}:${styles.selectStyles[key]};`\n        }\n        s + '}'\n        const style = document.createElement('style')\n        style.innerHTML = s\n        document.head.appendChild(style)\n    }\n}\n\n/**\n * @typedef {Object} Tree~TreeData\n * @property {TreeData[]} children\n * @property {string} name\n * @property {parent} [parent] if not provided then will traverse tree to find parent\n */\n\n/**\n  * trigger when expand is called either through UI interaction or Tree.expand()\n  * @event Tree~expand\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when collapse is called either through UI interaction or Tree.expand()\n  * @event Tree~collapse\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when name is change either through UI interaction or Tree.nameChange()\n  * @event Tree~name-change\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {string} name\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is picked up through UI interaction\n  * @event Tree~move-pending\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf's location is changed\n  * @event Tree~move\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is clicked and not dragged or held\n  * @event Tree~clicked\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {UIEvent} event\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf is changed (i.e., moved, name-change)\n  * @event Tree~update\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */\n\n/**\n  * trigger when a leaf's div is created\n  * @event Tree~render\n  * @type {object}\n  * @property {HTMLElement} tree element\n  * @property {Tree} Tree\n  */",
     "static": true,
     "longname": "C:/Users/dsfig/programming/components/tree/src/tree.js",
     "access": "public",
@@ -89,7 +89,7 @@
     "longname": "src/tree.js~Tree#constructor",
     "access": "public",
     "description": "Create Tree",
-    "lineNumber": 35,
+    "lineNumber": 37,
     "unknown": [
       {
         "tagName": "@fires",
@@ -144,7 +144,7 @@
         "spread": false,
         "optional": false,
         "name": "tree",
-        "description": "data for tree"
+        "description": "data for tree (see readme for description)"
       },
       {
         "nullable": null,
@@ -159,50 +159,14 @@
       {
         "nullable": null,
         "types": [
-          "string"
+          "boolean"
         ],
         "spread": false,
         "optional": true,
-        "defaultValue": "children",
-        "defaultRaw": "children",
-        "name": "options.children",
-        "description": "name of tree parameter containing the children"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": true,
-        "defaultValue": "data",
-        "defaultRaw": "data",
-        "name": "options[this.options.data]",
-        "description": "name of tree parameter containing the data"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": true,
-        "defaultValue": "parent",
-        "defaultRaw": "parent",
-        "name": "options.parent",
-        "description": "name of tree parameter containing the parent link in data"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": true,
-        "defaultValue": "name",
-        "defaultRaw": "name",
-        "name": "options.name",
-        "description": "name of tree parameter containing the name in data"
+        "defaultValue": "true",
+        "defaultRaw": true,
+        "name": "options.move",
+        "description": "drag tree to rearrange"
       },
       {
         "nullable": null,
@@ -213,8 +177,8 @@
         "optional": true,
         "defaultValue": "true",
         "defaultRaw": true,
-        "name": "options.move",
-        "description": "allow tree to be rearranged"
+        "name": "options.select",
+        "description": "click to select node"
       },
       {
         "nullable": null,
@@ -262,7 +226,7 @@
         "defaultValue": "true",
         "defaultRaw": true,
         "name": "options.expandOnClick",
-        "description": "expand and collapse node on click without drag"
+        "description": "expand and collapse node on click without drag except (will select before expanding if select=true)"
       },
       {
         "nullable": null,
@@ -279,11 +243,35 @@
       {
         "nullable": null,
         "types": [
-          "string[]"
+          "string"
         ],
         "spread": false,
         "optional": true,
-        "name": "options.nameStyles",
+        "defaultValue": "yy-tree",
+        "defaultRaw": "yy-tree",
+        "name": "options.classBaseName",
+        "description": "first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "true",
+        "defaultRaw": true,
+        "name": "options.addStyles",
+        "description": "attaches a style sheet with default and overridden styles; set to false to use your own stylesheet"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "styles",
         "description": ""
       },
       {
@@ -293,8 +281,38 @@
         ],
         "spread": false,
         "optional": true,
-        "name": "options.indicatorStyles",
-        "description": ""
+        "name": "styles.nameStyles",
+        "description": "use these to override individual styles for the name (will be included in the attached stylesheet)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "styles.contentStyles",
+        "description": "use these to override individual styles for the content (will be included in the attached stylesheet)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "styles.indicatorStyles",
+        "description": "use these to override individual styles for the move-line indicator (will be included in the attached stylesheet)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "styles.selectedStyles",
+        "description": "use these to override individual styles for the selected item (will be included in the attached stylesheet)"
       }
     ]
   },
@@ -307,7 +325,7 @@
     "longname": "src/tree.js~Tree#_options",
     "access": "private",
     "description": null,
-    "lineNumber": 37,
+    "lineNumber": 39,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -325,7 +343,7 @@
     "longname": "src/tree.js~Tree#element",
     "access": "public",
     "description": "Main div holding tree",
-    "lineNumber": 43,
+    "lineNumber": 45,
     "type": {
       "nullable": null,
       "types": [
@@ -338,6 +356,76 @@
   {
     "__docId__": 7,
     "kind": "get",
+    "name": "classBaseName",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#classBaseName",
+    "access": "public",
+    "description": "className's prefix (e.g., \"yy-tree\"-content)",
+    "lineNumber": 67,
+    "type": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "set",
+    "name": "classBaseName",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#classBaseName",
+    "access": "public",
+    "description": null,
+    "lineNumber": 70,
+    "undocument": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "get",
+    "name": "indentation",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#indentation",
+    "access": "public",
+    "description": "indentation for tree",
+    "lineNumber": 81,
+    "type": {
+      "nullable": null,
+      "types": [
+        "number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "set",
+    "name": "indentation",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#indentation",
+    "access": "public",
+    "description": null,
+    "lineNumber": 84,
+    "undocument": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "get",
     "name": "move",
     "memberof": "src/tree.js~Tree",
     "generator": false,
@@ -346,7 +434,7 @@
     "longname": "src/tree.js~Tree#move",
     "access": "public",
     "description": "whether tree may be rearranged",
-    "lineNumber": 61,
+    "lineNumber": 96,
     "type": {
       "nullable": null,
       "types": [
@@ -357,7 +445,7 @@
     }
   },
   {
-    "__docId__": 8,
+    "__docId__": 12,
     "kind": "set",
     "name": "move",
     "memberof": "src/tree.js~Tree",
@@ -367,57 +455,23 @@
     "longname": "src/tree.js~Tree#move",
     "access": "public",
     "description": null,
-    "lineNumber": 64,
+    "lineNumber": 99,
     "undocument": true
   },
   {
-    "__docId__": 9,
+    "__docId__": 13,
     "kind": "method",
-    "name": "_createIndicator",
+    "name": "_leaf",
     "memberof": "src/tree.js~Tree",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/tree.js~Tree#_createIndicator",
+    "longname": "src/tree.js~Tree#_leaf",
     "access": "private",
     "description": null,
-    "lineNumber": 68,
+    "lineNumber": 103,
     "undocument": true,
     "ignore": true,
-    "params": [],
-    "return": null
-  },
-  {
-    "__docId__": 10,
-    "kind": "member",
-    "name": "_indicator",
-    "memberof": "src/tree.js~Tree",
-    "static": false,
-    "longname": "src/tree.js~Tree#_indicator",
-    "access": "private",
-    "description": null,
-    "lineNumber": 69,
-    "undocument": true,
-    "ignore": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 11,
-    "kind": "method",
-    "name": "leaf",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#leaf",
-    "access": "public",
-    "description": null,
-    "lineNumber": 79,
-    "undocument": true,
     "params": [
       {
         "name": "data",
@@ -439,7 +493,42 @@
     }
   },
   {
-    "__docId__": 12,
+    "__docId__": 14,
+    "kind": "method",
+    "name": "_createIndicator",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#_createIndicator",
+    "access": "private",
+    "description": null,
+    "lineNumber": 133,
+    "undocument": true,
+    "ignore": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 15,
+    "kind": "member",
+    "name": "_indicator",
+    "memberof": "src/tree.js~Tree",
+    "static": false,
+    "longname": "src/tree.js~Tree#_indicator",
+    "access": "private",
+    "description": null,
+    "lineNumber": 134,
+    "undocument": true,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 16,
     "kind": "method",
     "name": "_getChildren",
     "memberof": "src/tree.js~Tree",
@@ -449,7 +538,7 @@
     "longname": "src/tree.js~Tree#_getChildren",
     "access": "private",
     "description": null,
-    "lineNumber": 106,
+    "lineNumber": 144,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -473,7 +562,7 @@
     }
   },
   {
-    "__docId__": 13,
+    "__docId__": 17,
     "kind": "method",
     "name": "_hideIcon",
     "memberof": "src/tree.js~Tree",
@@ -483,7 +572,7 @@
     "longname": "src/tree.js~Tree#_hideIcon",
     "access": "private",
     "description": null,
-    "lineNumber": 117,
+    "lineNumber": 155,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -497,7 +586,7 @@
     "return": null
   },
   {
-    "__docId__": 14,
+    "__docId__": 18,
     "kind": "method",
     "name": "_showIcon",
     "memberof": "src/tree.js~Tree",
@@ -507,85 +596,7 @@
     "longname": "src/tree.js~Tree#_showIcon",
     "access": "private",
     "description": null,
-    "lineNumber": 124,
-    "undocument": true,
-    "ignore": true,
-    "params": [
-      {
-        "name": "leaf",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": null
-  },
-  {
-    "__docId__": 15,
-    "kind": "method",
-    "name": "expandAll",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#expandAll",
-    "access": "public",
-    "description": "Expands all leaves",
-    "lineNumber": 132,
-    "params": [],
-    "return": null
-  },
-  {
-    "__docId__": 16,
-    "kind": "method",
-    "name": "_expandChildren",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#_expandChildren",
-    "access": "private",
-    "description": null,
-    "lineNumber": 136,
-    "undocument": true,
-    "ignore": true,
-    "params": [
-      {
-        "name": "leaf",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": null
-  },
-  {
-    "__docId__": 17,
-    "kind": "method",
-    "name": "collapseAll",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#collapseAll",
-    "access": "public",
-    "description": "Collapses all leaves",
-    "lineNumber": 144,
-    "params": [],
-    "return": null
-  },
-  {
-    "__docId__": 18,
-    "kind": "method",
-    "name": "_collapseChildren",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#_collapseChildren",
-    "access": "private",
-    "description": null,
-    "lineNumber": 148,
+    "lineNumber": 162,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -601,6 +612,84 @@
   {
     "__docId__": 19,
     "kind": "method",
+    "name": "expandAll",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#expandAll",
+    "access": "public",
+    "description": "Expands all leaves",
+    "lineNumber": 170,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 20,
+    "kind": "method",
+    "name": "_expandChildren",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#_expandChildren",
+    "access": "private",
+    "description": null,
+    "lineNumber": 174,
+    "undocument": true,
+    "ignore": true,
+    "params": [
+      {
+        "name": "leaf",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 21,
+    "kind": "method",
+    "name": "collapseAll",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#collapseAll",
+    "access": "public",
+    "description": "Collapses all leaves",
+    "lineNumber": 182,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 22,
+    "kind": "method",
+    "name": "_collapseChildren",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#_collapseChildren",
+    "access": "private",
+    "description": null,
+    "lineNumber": 186,
+    "undocument": true,
+    "ignore": true,
+    "params": [
+      {
+        "name": "leaf",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 23,
+    "kind": "method",
     "name": "toggleExpand",
     "memberof": "src/tree.js~Tree",
     "generator": false,
@@ -609,7 +698,7 @@
     "longname": "src/tree.js~Tree#toggleExpand",
     "access": "public",
     "description": "Toggles a leaf",
-    "lineNumber": 159,
+    "lineNumber": 197,
     "params": [
       {
         "nullable": null,
@@ -625,7 +714,7 @@
     "return": null
   },
   {
-    "__docId__": 20,
+    "__docId__": 24,
     "kind": "method",
     "name": "expand",
     "memberof": "src/tree.js~Tree",
@@ -635,7 +724,7 @@
     "longname": "src/tree.js~Tree#expand",
     "access": "public",
     "description": "Expands a leaf",
-    "lineNumber": 173,
+    "lineNumber": 211,
     "params": [
       {
         "nullable": null,
@@ -651,7 +740,7 @@
     "return": null
   },
   {
-    "__docId__": 21,
+    "__docId__": 25,
     "kind": "method",
     "name": "collapse",
     "memberof": "src/tree.js~Tree",
@@ -661,7 +750,7 @@
     "longname": "src/tree.js~Tree#collapse",
     "access": "public",
     "description": "Collapses a leaf",
-    "lineNumber": 192,
+    "lineNumber": 230,
     "params": [
       {
         "nullable": null,
@@ -677,7 +766,7 @@
     "return": null
   },
   {
-    "__docId__": 22,
+    "__docId__": 26,
     "kind": "method",
     "name": "update",
     "memberof": "src/tree.js~Tree",
@@ -687,12 +776,12 @@
     "longname": "src/tree.js~Tree#update",
     "access": "public",
     "description": "call this after tree's data has been updated outside of this library",
-    "lineNumber": 210,
+    "lineNumber": 246,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 23,
+    "__docId__": 27,
     "kind": "method",
     "name": "_down",
     "memberof": "src/tree.js~Tree",
@@ -702,7 +791,7 @@
     "longname": "src/tree.js~Tree#_down",
     "access": "private",
     "description": null,
-    "lineNumber": 221,
+    "lineNumber": 257,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -716,7 +805,7 @@
     "return": null
   },
   {
-    "__docId__": 24,
+    "__docId__": 28,
     "kind": "member",
     "name": "_target",
     "memberof": "src/tree.js~Tree",
@@ -724,7 +813,7 @@
     "longname": "src/tree.js~Tree#_target",
     "access": "private",
     "description": null,
-    "lineNumber": 222,
+    "lineNumber": 258,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -734,7 +823,24 @@
     }
   },
   {
-    "__docId__": 25,
+    "__docId__": 29,
+    "kind": "member",
+    "name": "selection",
+    "memberof": "src/tree.js~Tree",
+    "static": false,
+    "longname": "src/tree.js~Tree#selection",
+    "access": "public",
+    "description": null,
+    "lineNumber": 266,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 30,
     "kind": "member",
     "name": "_isDown",
     "memberof": "src/tree.js~Tree",
@@ -742,17 +848,17 @@
     "longname": "src/tree.js~Tree#_isDown",
     "access": "private",
     "description": null,
-    "lineNumber": 223,
+    "lineNumber": 269,
     "undocument": true,
     "ignore": true,
     "type": {
       "types": [
-        "{\"x\": *, \"y\": *}"
+        "{\"x\": *, \"y\": *, \"alreadySelected\": *}"
       ]
     }
   },
   {
-    "__docId__": 26,
+    "__docId__": 31,
     "kind": "member",
     "name": "_offset",
     "memberof": "src/tree.js~Tree",
@@ -760,7 +866,7 @@
     "longname": "src/tree.js~Tree#_offset",
     "access": "private",
     "description": null,
-    "lineNumber": 225,
+    "lineNumber": 271,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -770,7 +876,7 @@
     }
   },
   {
-    "__docId__": 27,
+    "__docId__": 32,
     "kind": "member",
     "name": "_holdTimeout",
     "memberof": "src/tree.js~Tree",
@@ -778,7 +884,7 @@
     "longname": "src/tree.js~Tree#_holdTimeout",
     "access": "private",
     "description": null,
-    "lineNumber": 227,
+    "lineNumber": 273,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -788,7 +894,7 @@
     }
   },
   {
-    "__docId__": 28,
+    "__docId__": 33,
     "kind": "method",
     "name": "_hold",
     "memberof": "src/tree.js~Tree",
@@ -798,14 +904,14 @@
     "longname": "src/tree.js~Tree#_hold",
     "access": "private",
     "description": null,
-    "lineNumber": 233,
+    "lineNumber": 279,
     "undocument": true,
     "ignore": true,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 30,
+    "__docId__": 35,
     "kind": "method",
     "name": "editData",
     "memberof": "src/tree.js~Tree",
@@ -815,7 +921,7 @@
     "longname": "src/tree.js~Tree#editData",
     "access": "public",
     "description": "edit the name entry using the data",
-    "lineNumber": 242,
+    "lineNumber": 288,
     "params": [
       {
         "nullable": null,
@@ -831,7 +937,7 @@
     "return": null
   },
   {
-    "__docId__": 31,
+    "__docId__": 36,
     "kind": "method",
     "name": "edit",
     "memberof": "src/tree.js~Tree",
@@ -841,7 +947,7 @@
     "longname": "src/tree.js~Tree#edit",
     "access": "public",
     "description": "edit the name entry using the created element",
-    "lineNumber": 255,
+    "lineNumber": 301,
     "params": [
       {
         "nullable": null,
@@ -857,7 +963,7 @@
     "return": null
   },
   {
-    "__docId__": 32,
+    "__docId__": 37,
     "kind": "member",
     "name": "_editing",
     "memberof": "src/tree.js~Tree",
@@ -865,7 +971,7 @@
     "longname": "src/tree.js~Tree#_editing",
     "access": "private",
     "description": null,
-    "lineNumber": 256,
+    "lineNumber": 302,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -875,7 +981,7 @@
     }
   },
   {
-    "__docId__": 33,
+    "__docId__": 38,
     "kind": "member",
     "name": "_input",
     "memberof": "src/tree.js~Tree",
@@ -883,7 +989,7 @@
     "longname": "src/tree.js~Tree#_input",
     "access": "private",
     "description": null,
-    "lineNumber": 257,
+    "lineNumber": 303,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -893,7 +999,7 @@
     }
   },
   {
-    "__docId__": 35,
+    "__docId__": 40,
     "kind": "method",
     "name": "_holdClose",
     "memberof": "src/tree.js~Tree",
@@ -903,14 +1009,14 @@
     "longname": "src/tree.js~Tree#_holdClose",
     "access": "private",
     "description": null,
-    "lineNumber": 282,
+    "lineNumber": 328,
     "undocument": true,
     "ignore": true,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 37,
+    "__docId__": 42,
     "kind": "method",
     "name": "nameChange",
     "memberof": "src/tree.js~Tree",
@@ -919,44 +1025,102 @@
     "static": false,
     "longname": "src/tree.js~Tree#nameChange",
     "access": "public",
-    "description": null,
-    "lineNumber": 290,
-    "undocument": true,
+    "description": "change the name of a leaf",
+    "lineNumber": 341,
     "params": [
       {
-        "name": "leaf",
+        "nullable": null,
         "types": [
-          "*"
-        ]
+          "HTMLElement"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "leaf",
+        "description": ""
       },
       {
-        "name": "name",
+        "nullable": null,
         "types": [
-          "*"
-        ]
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "name",
+        "description": ""
       }
     ],
     "return": null
   },
   {
-    "__docId__": 38,
+    "__docId__": 43,
     "kind": "method",
-    "name": "_setIndicator",
+    "name": "getLeaf",
     "memberof": "src/tree.js~Tree",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/tree.js~Tree#_setIndicator",
-    "access": "private",
-    "description": null,
-    "lineNumber": 297,
-    "undocument": true,
-    "ignore": true,
-    "params": [],
+    "longname": "src/tree.js~Tree#getLeaf",
+    "access": "public",
+    "description": "Find a leaf based using its data",
+    "lineNumber": 353,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "leaf",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "HTMLElement"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "this.element",
+        "defaultRaw": "this.element",
+        "name": "root",
+        "description": ""
+      }
+    ],
     "return": null
   },
   {
-    "__docId__": 39,
+    "__docId__": 44,
+    "kind": "method",
+    "name": "findInTree",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#findInTree",
+    "access": "public",
+    "description": "call the callback function on each node; returns the node if callback === true",
+    "lineNumber": 361,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "callback",
+        "description": ""
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 45,
     "kind": "method",
     "name": "_pickup",
     "memberof": "src/tree.js~Tree",
@@ -966,14 +1130,14 @@
     "longname": "src/tree.js~Tree#_pickup",
     "access": "private",
     "description": null,
-    "lineNumber": 307,
+    "lineNumber": 373,
     "undocument": true,
     "ignore": true,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 41,
+    "__docId__": 47,
     "kind": "member",
     "name": "_old",
     "memberof": "src/tree.js~Tree",
@@ -981,7 +1145,7 @@
     "longname": "src/tree.js~Tree#_old",
     "access": "private",
     "description": null,
-    "lineNumber": 318,
+    "lineNumber": 383,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -991,7 +1155,7 @@
     }
   },
   {
-    "__docId__": 42,
+    "__docId__": 48,
     "kind": "method",
     "name": "_checkThreshold",
     "memberof": "src/tree.js~Tree",
@@ -1001,7 +1165,7 @@
     "longname": "src/tree.js~Tree#_checkThreshold",
     "access": "private",
     "description": null,
-    "lineNumber": 333,
+    "lineNumber": 398,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -1019,7 +1183,7 @@
     }
   },
   {
-    "__docId__": 43,
+    "__docId__": 49,
     "kind": "member",
     "name": "_moving",
     "memberof": "src/tree.js~Tree",
@@ -1027,7 +1191,7 @@
     "longname": "src/tree.js~Tree#_moving",
     "access": "private",
     "description": null,
-    "lineNumber": 340,
+    "lineNumber": 405,
     "undocument": true,
     "ignore": true,
     "type": {
@@ -1037,7 +1201,7 @@
     }
   },
   {
-    "__docId__": 44,
+    "__docId__": 50,
     "kind": "method",
     "name": "_findClosest",
     "memberof": "src/tree.js~Tree",
@@ -1047,7 +1211,7 @@
     "longname": "src/tree.js~Tree#_findClosest",
     "access": "private",
     "description": null,
-    "lineNumber": 349,
+    "lineNumber": 414,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -1067,7 +1231,7 @@
     "return": null
   },
   {
-    "__docId__": 45,
+    "__docId__": 51,
     "kind": "method",
     "name": "_getFirstChild",
     "memberof": "src/tree.js~Tree",
@@ -1077,7 +1241,7 @@
     "longname": "src/tree.js~Tree#_getFirstChild",
     "access": "private",
     "description": null,
-    "lineNumber": 381,
+    "lineNumber": 446,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -1101,7 +1265,7 @@
     }
   },
   {
-    "__docId__": 46,
+    "__docId__": 52,
     "kind": "method",
     "name": "_getLastChild",
     "memberof": "src/tree.js~Tree",
@@ -1111,7 +1275,7 @@
     "longname": "src/tree.js~Tree#_getLastChild",
     "access": "private",
     "description": null,
-    "lineNumber": 388,
+    "lineNumber": 453,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -1135,7 +1299,7 @@
     }
   },
   {
-    "__docId__": 47,
+    "__docId__": 53,
     "kind": "method",
     "name": "_getParent",
     "memberof": "src/tree.js~Tree",
@@ -1145,7 +1309,7 @@
     "longname": "src/tree.js~Tree#_getParent",
     "access": "private",
     "description": null,
-    "lineNumber": 395,
+    "lineNumber": 460,
     "undocument": true,
     "ignore": true,
     "params": [
@@ -1163,7 +1327,7 @@
     }
   },
   {
-    "__docId__": 48,
+    "__docId__": 54,
     "kind": "method",
     "name": "_move",
     "memberof": "src/tree.js~Tree",
@@ -1171,48 +1335,6 @@
     "async": false,
     "static": false,
     "longname": "src/tree.js~Tree#_move",
-    "access": "private",
-    "description": null,
-    "lineNumber": 403,
-    "undocument": true,
-    "ignore": true,
-    "params": [
-      {
-        "name": "e",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": null
-  },
-  {
-    "__docId__": 49,
-    "kind": "member",
-    "name": "_closest",
-    "memberof": "src/tree.js~Tree",
-    "static": false,
-    "longname": "src/tree.js~Tree#_closest",
-    "access": "private",
-    "description": null,
-    "lineNumber": 409,
-    "undocument": true,
-    "ignore": true,
-    "type": {
-      "types": [
-        "{\"distanceAbove\": *, \"distanceBelow\": *}"
-      ]
-    }
-  },
-  {
-    "__docId__": 50,
-    "kind": "method",
-    "name": "_up",
-    "memberof": "src/tree.js~Tree",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/tree.js~Tree#_up",
     "access": "private",
     "description": null,
     "lineNumber": 468,
@@ -1229,7 +1351,49 @@
     "return": null
   },
   {
-    "__docId__": 53,
+    "__docId__": 55,
+    "kind": "member",
+    "name": "_closest",
+    "memberof": "src/tree.js~Tree",
+    "static": false,
+    "longname": "src/tree.js~Tree#_closest",
+    "access": "private",
+    "description": null,
+    "lineNumber": 474,
+    "undocument": true,
+    "ignore": true,
+    "type": {
+      "types": [
+        "{\"distanceAbove\": *, \"distanceBelow\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 56,
+    "kind": "method",
+    "name": "_up",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#_up",
+    "access": "private",
+    "description": null,
+    "lineNumber": 532,
+    "undocument": true,
+    "ignore": true,
+    "params": [
+      {
+        "name": "e",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 59,
     "kind": "method",
     "name": "_moveData",
     "memberof": "src/tree.js~Tree",
@@ -1239,15 +1403,39 @@
     "longname": "src/tree.js~Tree#_moveData",
     "access": "private",
     "description": null,
-    "lineNumber": 496,
+    "lineNumber": 559,
     "undocument": true,
     "ignore": true,
     "params": [],
     "return": null
   },
   {
+    "__docId__": 60,
+    "kind": "method",
+    "name": "_addStyles",
+    "memberof": "src/tree.js~Tree",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tree.js~Tree#_addStyles",
+    "access": "private",
+    "description": null,
+    "lineNumber": 565,
+    "undocument": true,
+    "ignore": true,
+    "params": [
+      {
+        "name": "userStyles",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
     "kind": "index",
-    "content": "# tree\nVanilla drag-and-drop UI tree\n\n## Rationale\nI needed a tree components for my tools. Most of the available visual tree APIs require vue or react. And so yy-tree was created.\n\n## Super Simple Example\n```js\nconst data = {\n    children: [\n        { name: 'fruits', children: [\n            { name: 'apples', children: [] },\n            { name: 'oranges', children: [\n                { name: 'tangerines', children: [] },\n                { name: 'mandarins', children: [] },\n                { name: 'pomelo', children: [] },\n                { name: 'blood orange', children: [] },\n            ] }\n        ]},\n        { name: 'vegetables', children: [\n            { name: 'brocolli', children: [] },\n        ] },\n    ]\n}\n\nconst tree = new Tree('.tree-div', data)\n```\n\n## Live Examples\nhttps://davidfig.github.io/tree/\n\n## API Documentation\nhttps://davidfig.github.io/tree/jsdoc/\n\n\n## Installation\n\n    npm i yy-tree\n\n## license\nMIT License\n(c) 2021 [YOPEY YOPEY LLC](https://yopeyopey.com/) by [David Figatner](https://twitter.com/yopey_yopey/)\n",
+    "content": "# tree\nVanilla drag-and-drop UI tree\n\n## Rationale\nI needed a tree components for my tools. Most of the available visual tree APIs require vue or react. And so yy-tree was created.\n\n## Super Simple Example\n```js\nconst data = {\n    children: [\n        { name: 'fruits', children: [\n            { name: 'apples', children: [] },\n            { name: 'oranges', children: [\n                { name: 'tangerines', children: [] },\n                { name: 'mandarins', children: [] },\n                { name: 'pomelo', children: [] },\n                { name: 'blood orange', children: [] },\n            ] }\n        ]},\n        { name: 'vegetables', children: [\n            { name: 'brocolli', children: [] },\n        ] },\n    ]\n}\n\nconst tree = new Tree('.tree-div', data)\n```\n\n## Live Examples\nhttps://davidfig.github.io/tree/\n\n## API Documentation\nhttps://davidfig.github.io/tree/jsdoc/\n\n## Installation\n\n    npm i yy-tree\n\n## license\nMIT License\n(c) 2021 [YOPEY YOPEY LLC](https://yopeyopey.com/) by [David Figatner](https://twitter.com/yopey_yopey/)\n",
     "longname": "C:\\Users\\dsfig\\programming\\components\\tree\\README.md",
     "name": "./README.md",
     "static": true,

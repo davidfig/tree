@@ -94,7 +94,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>, styles: <span>object</span>)</span>
         </p>
       </div>
       <div>
@@ -120,6 +120,63 @@
     <td>
       <span class="access" data-ice="access">public</span>
       
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-get-classBaseName">classBaseName</a></span></span><span class="code" data-ice="signature">: <span>string</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>className&apos;s prefix (e.g., &quot;yy-tree&quot;-content)</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">set</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-set-classBaseName">classBaseName</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
       
       
       <span class="override" data-ice="override"></span>
@@ -138,6 +195,63 @@
         
         <div data-ice="description"><p>Main div holding tree</p>
 </div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-get-indentation">indentation</a></span></span><span class="code" data-ice="signature">: <span>number</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>indentation for tree</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">set</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-set-indentation">indentation</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
       </div>
     </td>
     <td>
@@ -189,6 +303,34 @@
           
           
           <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-set-move">move</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-member-selection">selection</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -397,13 +539,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-leaf">leaf</a></span></span><span class="code" data-ice="signature">(data: <span>*</span>, level: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-findInTree">findInTree</a></span></span><span class="code" data-ice="signature">(callback: <span>function</span>): <span>*</span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>call the callback function on each node; returns the node if callback === true</p>
+</div>
       </div>
     </td>
     <td>
@@ -425,13 +568,43 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-nameChange">nameChange</a></span></span><span class="code" data-ice="signature">(leaf: <span>*</span>, name: <span>*</span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-getLeaf">getLeaf</a></span></span><span class="code" data-ice="signature">(leaf: <span>object</span>, root: <span>HTMLElement</span>)</span>
         </p>
       </div>
       <div>
         
         
+        <div data-ice="description"><p>Find a leaf based using its data</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-nameChange">nameChange</a></span></span><span class="code" data-ice="signature">(leaf: <span>HTMLElement</span>, name: <span>string</span>)</span>
+        </p>
+      </div>
+      <div>
         
+        
+        <div data-ice="description"><p>change the name of a leaf</p>
+</div>
       </div>
     </td>
     <td>
@@ -515,11 +688,11 @@
     
     
     
-    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>)</span>
+    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>, styles: <span>object</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber37">source</a></span></span>
     </span>
   </h3>
 
@@ -550,7 +723,7 @@
       <td data-ice="name" class="code" data-depth="0">tree</td>
       <td data-ice="type" class="code"><span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>data for tree</p>
+      <td data-ice="description"><p>data for tree (see readme for description)</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -560,43 +733,19 @@
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">options.children</td>
-      <td data-ice="type" class="code"><span>string</span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: children</li></ul></td>
-      <td data-ice="description"><p>name of tree parameter containing the children</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="2">
-      <td data-ice="name" class="code" data-depth="2">options[this.options.data]</td>
-      <td data-ice="type" class="code"><span>string</span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: data</li></ul></td>
-      <td data-ice="description"><p>name of tree parameter containing the data</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">options.parent</td>
-      <td data-ice="type" class="code"><span>string</span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: parent</li></ul></td>
-      <td data-ice="description"><p>name of tree parameter containing the parent link in data</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">options.name</td>
-      <td data-ice="type" class="code"><span>string</span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: name</li></ul></td>
-      <td data-ice="description"><p>name of tree parameter containing the name in data</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">options.move</td>
       <td data-ice="type" class="code"><span>boolean</span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: true</li></ul></td>
-      <td data-ice="description"><p>allow tree to be rearranged</p>
+      <td data-ice="description"><p>drag tree to rearrange</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">options.select</td>
+      <td data-ice="type" class="code"><span>boolean</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: true</li></ul></td>
+      <td data-ice="description"><p>click to select node</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -628,7 +777,7 @@
       <td data-ice="type" class="code"><span>boolean</span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: true</li></ul></td>
-      <td data-ice="description"><p>expand and collapse node on click without drag</p>
+      <td data-ice="description"><p>expand and collapse node on click without drag except (will select before expanding if select=true)</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -640,16 +789,54 @@
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">options.nameStyles</td>
-      <td data-ice="type" class="code"><span><span>string</span><span>[]</span></span></td>
+      <td data-ice="name" class="code" data-depth="1">options.classBaseName</td>
+      <td data-ice="type" class="code"><span>string</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: yy-tree</li></ul></td>
+      <td data-ice="description"><p>first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">options.addStyles</td>
+      <td data-ice="type" class="code"><span>boolean</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: true</li></ul></td>
+      <td data-ice="description"><p>attaches a style sheet with default and overridden styles; set to false to use your own stylesheet</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">styles</td>
+      <td data-ice="type" class="code"><span>object</span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">options.indicatorStyles</td>
+      <td data-ice="name" class="code" data-depth="1">styles.nameStyles</td>
       <td data-ice="type" class="code"><span><span>string</span><span>[]</span></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>use these to override individual styles for the name (will be included in the attached stylesheet)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">styles.contentStyles</td>
+      <td data-ice="type" class="code"><span><span>string</span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>use these to override individual styles for the content (will be included in the attached stylesheet)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">styles.indicatorStyles</td>
+      <td data-ice="type" class="code"><span><span>string</span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>use these to override individual styles for the move-line indicator (will be included in the attached stylesheet)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">styles.selectedStyles</td>
+      <td data-ice="type" class="code"><span><span>string</span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>use these to override individual styles for the selected item (will be included in the attached stylesheet)</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -677,6 +864,93 @@
 <div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-get-classBaseName">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">get</span>
+    
+    
+    
+    <span class="code" data-ice="name">classBaseName</span><span class="code" data-ice="signature">: <span>string</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber67">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>className&apos;s prefix (e.g., &quot;yy-tree&quot;-content)</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-set-classBaseName">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">set</span>
+    
+    
+    
+    <span class="code" data-ice="name">classBaseName</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber70">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-member-element">
     <span class="access" data-ice="access">public</span>
     
@@ -688,7 +962,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber43">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
@@ -697,6 +971,93 @@
   
   <div data-ice="description"><p>Main div holding tree</p>
 </div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-get-indentation">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">get</span>
+    
+    
+    
+    <span class="code" data-ice="name">indentation</span><span class="code" data-ice="signature">: <span>number</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber81">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>indentation for tree</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-set-indentation">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">set</span>
+    
+    
+    
+    <span class="code" data-ice="name">indentation</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber84">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
 
   
 
@@ -732,7 +1093,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber61">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber96">source</a></span></span>
     </span>
   </h3>
 
@@ -776,7 +1137,50 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber64">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber99">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-selection">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">selection</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber266">source</a></span></span>
     </span>
   </h3>
 
@@ -822,7 +1226,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber192">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber230">source</a></span></span>
     </span>
   </h3>
 
@@ -882,7 +1286,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber144">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber182">source</a></span></span>
     </span>
   </h3>
 
@@ -926,7 +1330,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber255">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber301">source</a></span></span>
     </span>
   </h3>
 
@@ -986,7 +1390,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber242">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber288">source</a></span></span>
     </span>
   </h3>
 
@@ -1047,7 +1451,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber173">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber211">source</a></span></span>
     </span>
   </h3>
 
@@ -1107,7 +1511,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber132">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber170">source</a></span></span>
     </span>
   </h3>
 
@@ -1140,25 +1544,26 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-leaf">
+  <h3 data-ice="anchor" id="instance-method-findInTree">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">leaf</span><span class="code" data-ice="signature">(data: <span>*</span>, level: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">findInTree</span><span class="code" data-ice="signature">(callback: <span>function</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber79">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber361">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>call the callback function on each node; returns the node if callback === true</p>
+</div>
 
   
 
@@ -1171,14 +1576,8 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">data</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">level</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="name" class="code" data-depth="0">callback</td>
+      <td data-ice="type" class="code"><span>function</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1217,25 +1616,26 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-nameChange">
+  <h3 data-ice="anchor" id="instance-method-getLeaf">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">nameChange</span><span class="code" data-ice="signature">(leaf: <span>*</span>, name: <span>*</span>)</span>
+    <span class="code" data-ice="name">getLeaf</span><span class="code" data-ice="signature">(leaf: <span>object</span>, root: <span>HTMLElement</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber290">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber353">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Find a leaf based using its data</p>
+</div>
 
   
 
@@ -1249,13 +1649,80 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">leaf</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span>object</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">root</td>
+      <td data-ice="type" class="code"><span>HTMLElement</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: this.element</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-nameChange">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">nameChange</span><span class="code" data-ice="signature">(leaf: <span>HTMLElement</span>, name: <span>string</span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber341">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>change the name of a leaf</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">leaf</td>
+      <td data-ice="type" class="code"><span>HTMLElement</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">name</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span>string</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1293,7 +1760,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber159">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber197">source</a></span></span>
     </span>
   </h3>
 
@@ -1353,7 +1820,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber210">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber246">source</a></span></span>
     </span>
   </h3>
 

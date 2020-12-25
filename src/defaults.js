@@ -1,32 +1,41 @@
 export const defaults = {
-    children: 'children',
-    parent: 'parent',
-    name: 'name',
-    data: 'data',
-    expanded: 'expanded',
     move: true,
+    select: true,
     indentation: 20,
+    threshold: 10,
+    holdTime: 1000,
+    expandOnClick: true,
+    dragOpacity: 0.75,
+    classBaseName: 'yy-tree',
+    cursorName: 'grab -webkit-grab pointer',
+    cursorExpand: 'pointer'
+}
+
+export const styleDefaults = {
     nameStyles: {
         padding: '0.5em 1em',
         margin: '0.1em',
-        background: 'rgba(230,230,230)',
-        userSelect: 'none',
-        cursor: ['grab', '-webkit-grab', 'pointer'],
-        width: '100px'
+        background: 'rgb(230,230,230)',
+        'user-select': 'none',
+        cursor: 'pointer',
+        width: '100px',
     },
-    threshold: 10,
     indicatorStyles: {
         background: 'rgb(150,150,255)',
         height: '5px',
         width: '100px',
-        padding: '0 1em'
+        padding: '0 1em',
+    },
+    contentStyles: {
+        display: 'flex',
+        'align-items': 'center',
     },
     expandStyles: {
         width: '15px',
         height: '15px',
-        cursor: 'pointer'
+        // cursor: 'pointer',
     },
-    holdTime: 1000,
-    expandOnClick: true,
-    dragOpacity: 0.75
+    selectStyles: {
+        background: 'rgb(200, 200, 200)',
+    },
 }

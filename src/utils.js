@@ -140,11 +140,8 @@ export function html(options) {
     if (options.parent) {
         options.parent.appendChild(object)
     }
-    if (options.defaultStyles) {
-        styles(object, options.defaultStyles)
-    }
-    if (options.styles) {
-        styles(object, options.styles)
+    if (options.className) {
+        object.classList.add(options.className)
     }
     if (options.html) {
         object.innerHTML = options.html
@@ -153,21 +150,6 @@ export function html(options) {
         object.id = options.id
     }
     return object
-}
-
-export function styles(object, styles) {
-    for (let style in styles) {
-        if (Array.isArray(styles[style])) {
-            for (let entry of styles[style]) {
-                object.style[style] = entry
-                if (object.style[style] === entry) {
-                    break
-                }
-            }
-        } else {
-            object.style[style] = styles[style]
-        }
-    }
 }
 
 export function getChildIndex(parent, child) {
@@ -179,4 +161,10 @@ export function getChildIndex(parent, child) {
         index++
     }
     return -1
+}
+
+export function attachStyles(styles) {
+    const s = document.createElement('style')
+    s.innerHTML = styles
+    document.head.appendChild(s)
 }

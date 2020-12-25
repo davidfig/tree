@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "name": "Tree#findInTree",
+    "filePath": "src/tree.js",
+    "lines": [
+      {
+        "lineNumber": 356,
+        "line": "    /**"
+      },
+      {
+        "lineNumber": 357,
+        "line": "     * call the callback function on each node; returns the node if callback === true"
+      },
+      {
+        "lineNumber": 358,
+        "line": "     * @param {function} callback"
+      },
+      {
+        "lineNumber": 359,
+        "line": "     */"
+      },
+      {
+        "lineNumber": 360,
+        "line": "    findInTree(leaf, callback) {"
+      }
+    ],
+    "codeParams": [
+      "leaf",
+      "callback"
+    ],
+    "docParams": [
+      "callback"
+    ]
+  }
+]

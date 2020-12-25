@@ -117,7 +117,7 @@ function signalSockets() {
 
 async function serve() {
     await build()
-    const jsWatch = chokidar.watch(['docs/**/*.js', 'src/*.js'])
+    const jsWatch = chokidar.watch(['docs/code.js', 'src/*.js'])
     jsWatch.on('change', async () => {
         await build()
         signalSockets()
