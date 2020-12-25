@@ -1,6 +1,7 @@
-const Highlight = require('./highlight')
-const Tree = require('../src/tree')
-const utils = require('../src/utils')
+import forkMe from 'fork-me-github'
+
+import { Tree } from '../src/tree'
+import * as utils from '../src/utils'
 
 const data = {
     children: [
@@ -19,15 +20,13 @@ const data = {
     ]
 }
 
-function test()
-{
+function test() {
     const div = utils.html({ parent: document.body })
     const tree = new Tree(div, data)
     tree.expandAll()
 }
 
-window.onload = function ()
-{
+window.onload = function () {
     test()
-    Highlight()
+    forkMe('https://github.com/davidfig/tree')
 }

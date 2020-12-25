@@ -1,4 +1,4 @@
-module.exports = {
+export const defaults = {
     children: 'children',
     parent: 'parent',
     name: 'name',

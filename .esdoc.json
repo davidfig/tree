@@ -1,0 +1,19 @@
+{
+    "source": "./src",
+    "includes": [
+        "tree.js"
+    ],
+    "destination": "./docs/jsdoc",
+    "plugins": [
+        {
+            "name": "esdoc-standard-plugin",
+            "option": {
+                "accessor": {
+                    "access": [
+                        "public"
+                    ]
+                }
+            }
+        }
+    ]
+}
