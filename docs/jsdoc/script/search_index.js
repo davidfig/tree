@@ -42,6 +42,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/tree.js~tree#dragopacity",
+    "class/src/tree.js~Tree.html#instance-get-dragOpacity",
+    "src/tree.js~Tree#dragOpacity",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#dragopacity",
+    "class/src/tree.js~Tree.html#instance-set-dragOpacity",
+    "src/tree.js~Tree#dragOpacity",
+    "member"
+  ],
+  [
     "src/tree.js~tree#edit",
     "class/src/tree.js~Tree.html#instance-method-edit",
     "src/tree.js~Tree#edit",
@@ -72,6 +84,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/tree.js~tree#expandonclick",
+    "class/src/tree.js~Tree.html#instance-get-expandOnClick",
+    "src/tree.js~Tree#expandOnClick",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#expandonclick",
+    "class/src/tree.js~Tree.html#instance-set-expandOnClick",
+    "src/tree.js~Tree#expandOnClick",
+    "member"
+  ],
+  [
     "src/tree.js~tree#findintree",
     "class/src/tree.js~Tree.html#instance-method-findInTree",
     "src/tree.js~Tree#findInTree",
@@ -82,6 +106,18 @@ window.esdocSearchIndex = [
     "class/src/tree.js~Tree.html#instance-method-getLeaf",
     "src/tree.js~Tree#getLeaf",
     "method"
+  ],
+  [
+    "src/tree.js~tree#holdtime",
+    "class/src/tree.js~Tree.html#instance-get-holdTime",
+    "src/tree.js~Tree#holdTime",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#holdtime",
+    "class/src/tree.js~Tree.html#instance-set-holdTime",
+    "src/tree.js~Tree#holdTime",
+    "member"
   ],
   [
     "src/tree.js~tree#indentation",
@@ -114,8 +150,26 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/tree.js~tree#select",
+    "class/src/tree.js~Tree.html#instance-get-select",
+    "src/tree.js~Tree#select",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#select",
+    "class/src/tree.js~Tree.html#instance-set-select",
+    "src/tree.js~Tree#select",
+    "member"
+  ],
+  [
     "src/tree.js~tree#selection",
-    "class/src/tree.js~Tree.html#instance-member-selection",
+    "class/src/tree.js~Tree.html#instance-get-selection",
+    "src/tree.js~Tree#selection",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#selection",
+    "class/src/tree.js~Tree.html#instance-set-selection",
     "src/tree.js~Tree#selection",
     "member"
   ],

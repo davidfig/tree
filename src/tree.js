@@ -1,6 +1,7 @@
 import Events from 'eventemitter3'
 import clicked from 'clicked'
 
+import { Input } from './input'
 import { defaults, styleDefaults } from './defaults'
 import * as utils from './utils'
 import { icons } from './icons'
@@ -12,10 +13,10 @@ export class Tree extends Events {
      * @param {TreeData} tree - data for tree (see readme for description)
      * @param {TreeOptions} [options]
      * @param {boolean} [options.move=true] drag tree to rearrange
-     * @param {boolean} [options.select=true] click to select node
+     * @param {boolean} [options.select=true] click to select node (if false then nodes are not selected and tree.selection is always null)
      * @param {number} [options.indentation=20] number of pixels to indent for each level
      * @param {number} [options.threshold=10] number of pixels to move to start a drag
-     * @param {number} [options.holdTime=2000] number of milliseconds before name can be edited (set to 0 to disable)
+     * @param {number} [options.holdTime=2000] number of milliseconds to press and hold name before editing starts (set to 0 to disable)
      * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag except (will select before expanding if select=true)
      * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item
      * @param {string} [options.classBaseName=yy-tree] first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)
@@ -37,6 +38,7 @@ export class Tree extends Events {
     constructor(element, tree, options, styles) {
         super()
         this._options = utils.options(options, defaults)
+        this._input = new Input(this)
         if (typeof element === 'string') {
             /**
              * Main div holding tree
@@ -48,16 +50,20 @@ export class Tree extends Events {
         }
         this.element.classList.add(this.classBaseName)
         this.element.data = tree
-        document.body.addEventListener('mousemove', (e) => this._move(e))
-        document.body.addEventListener('touchmove', (e) => this._move(e))
-        document.body.addEventListener('mouseup', (e) => this._up(e))
-        document.body.addEventListener('touchend', (e) => this._up(e))
-        document.body.addEventListener('mouseleave', (e) => this._up(e))
-        this._createIndicator()
         if (this._options.addStyles !== false) {
             this._addStyles(styles)
         }
         this.update()
+    }
+
+    /**
+     * Selected data
+     * @type {*}
+     */
+    get selection() {
+        return this._selection.data
+    }
+    set selection(data) {
     }
 
     /**
@@ -84,8 +90,21 @@ export class Tree extends Events {
     set indentation(value) {
         if (value !== this._options.indentation) {
             this._options.indentation = value
-            this._indicator.style.marginLeft = value + 'px'
+            this._input._indicatorMarginLeft = value + 'px'
             this.update()
+        }
+    }
+
+    /**
+     * number of milliseconds to press and hold name before editing starts (set to 0 to disable)
+     * @type {number}
+     */
+    get holdTime() {
+        return this._options.holdTime
+    }
+    set holdTime(value) {
+        if (value !== this._options.holdTime) {
+            this._options.holdTime = value
         }
     }
 
@@ -100,6 +119,39 @@ export class Tree extends Events {
         this._options.move = value
     }
 
+    /**
+     * expand and collapse node on click without drag except (will select before expanding if select=true)
+     * @type {boolean}
+     */
+    get expandOnClick() {
+        return this._options.expandOnClick
+    }
+    set expandOnClick(value) {
+        this._options.expandOnClick = value
+    }
+
+    /**
+     * click to select node (if false then nodes are not selected and tree.selection is always null)
+     * @type {boolean}
+     */
+    get select() {
+        return this._options.select
+    }
+    set select(value) {
+        this._options.select = value
+    }
+
+    /**
+     * opacity setting for dragged item
+     * @type {number}
+     */
+    get dragOpacity() {
+        return this._options.dragOpacity
+    }
+    set dragOpacity(value) {
+        this._options.dragOpacity = value
+    }
+
     _leaf(data, level) {
         const leaf = utils.html({ className: `${this.classBaseName}-leaf` })
         leaf.isLeaf = true
@@ -112,8 +164,8 @@ export class Tree extends Events {
             className: `${this.classBaseName}-expand`
         })
         leaf.name = utils.html({ parent: leaf.content, html: data.name, className: `${this.classBaseName}-name` })
-        leaf.name.addEventListener('mousedown', (e) => this._down(e))
-        leaf.name.addEventListener('touchstart', (e) => this._down(e))
+        leaf.name.addEventListener('mousedown', e => this._input._down(e))
+        leaf.name.addEventListener('touchstart', e => this._input._down(e))
         for (let child of data.children) {
             const add = this._leaf(child, level + 1)
             add.data.parent = data
@@ -128,17 +180,6 @@ export class Tree extends Events {
         clicked(leaf.icon, () => this.toggleExpand(leaf))
         this.emit('render', leaf, this)
         return leaf
-    }
-
-    _createIndicator() {
-        this._indicator = utils.html()
-        this._indicator.style.marginLeft = this.indentation + 'px'
-        const content = utils.html({ parent: this._indicator })
-        content.style.display = 'flex'
-        this._indicator.indentation = utils.html({ parent: content })
-        this._indicator.icon = utils.html({ parent: content, className: `${this.classBaseName}-expand` })
-        this._indicator.icon.style.height = 0
-        this._indicator.line = utils.html({ parent: content, className: `${this.classBaseName}-indicator` })
     }
 
     _getChildren(leaf, all) {
@@ -254,33 +295,6 @@ export class Tree extends Events {
         this.element.scrollTop = scroll + 'px'
     }
 
-    _down(e) {
-        this._target = e.currentTarget.parentNode.parentNode
-        let alreadySelected
-        if (this.selection === this._target) {
-            alreadySelected = true
-        } else {
-            if (this.selection) {
-                this.selection.name.classList.remove(`${this.classBaseName}-select`)
-            }
-            this.selection = this._target
-            this.selection.name.classList.add(`${this.classBaseName}-select`)
-        }
-        this._isDown = { x: e.pageX, y: e.pageY, alreadySelected }
-        const pos = utils.toGlobal(this._target)
-        this._offset = { x: e.pageX - pos.x, y: e.pageY - pos.y }
-        if (this._options.holdTime) {
-            this._holdTimeout = window.setTimeout(() => this._hold(), this._options.holdTime)
-        }
-        e.preventDefault()
-        e.stopPropagation()
-    }
-
-    _hold() {
-        this._holdTimeout = null
-        this.edit(this._target)
-    }
-
     /**
      * edit the name entry using the data
      * @param {object} data element of leaf
@@ -300,24 +314,24 @@ export class Tree extends Events {
      */
     edit(leaf) {
         this._editing = leaf
-        this._input = utils.html({ parent: this._editing.name.parentNode, type: 'input', className: `${this.classBaseName}-name` })
+        this._editInput = utils.html({ parent: this._editing.name.parentNode, type: 'input', className: `${this.classBaseName}-name` })
         const computed = window.getComputedStyle(this._editing.name)
-        this._input.style.boxSizing = 'content-box'
-        this._input.style.fontFamily = computed.getPropertyValue('font-family')
-        this._input.style.fontSize = computed.getPropertyValue('font-size')
-        this._input.value = this._editing.name.innerText
-        this._input.setSelectionRange(0, this._input.value.length)
-        this._input.focus()
-        this._input.addEventListener('update', () => {
-            this.nameChange(this._editing, this._input.value)
+        this._editInput.style.boxSizing = 'content-box'
+        this._editInput.style.fontFamily = computed.getPropertyValue('font-family')
+        this._editInput.style.fontSize = computed.getPropertyValue('font-size')
+        this._editInput.value = this._editing.name.innerText
+        this._editInput.setSelectionRange(0, this._editInput.value.length)
+        this._editInput.focus()
+        this._editInput.addEventListener('update', () => {
+            this.nameChange(this._editing, this._editInput.value)
             this._holdClose()
         })
-        this._input.addEventListener('keyup', (e) => {
+        this._editInput.addEventListener('keyup', (e) => {
             if (e.code === 'Escape') {
                 this._holdClose()
             }
             if (e.code === 'Enter') {
-                this.nameChange(this._editing, this._input.value)
+                this.nameChange(this._editing, this._editInput.value)
                 this._holdClose()
             }
         })
@@ -327,9 +341,9 @@ export class Tree extends Events {
 
     _holdClose() {
         if (this._editing) {
-            this._input.remove()
+            this._editInput.remove()
             this._editing.name.style.display = 'block'
-            this._editing = this._input = null
+            this._editing = this._editInput = null
         }
     }
 
@@ -356,6 +370,7 @@ export class Tree extends Events {
 
     /**
      * call the callback function on each node; returns the node if callback === true
+     * @param {*} leaf data
      * @param {function} callback
      */
     findInTree(leaf, callback) {
@@ -367,79 +382,6 @@ export class Tree extends Events {
             if (find) {
                 return find
             }
-        }
-    }
-
-    _pickup() {
-        if (this._holdTimeout) {
-            window.clearTimeout(this._holdTimeout)
-            this._holdTimeout = null
-        }
-        this.emit('move-pending', this._target, this)
-        const parent = this._target.parentNode
-        parent.insertBefore(this._indicator, this._target)
-        const pos = utils.toGlobal(this._target)
-        document.body.appendChild(this._target)
-        this._old = {
-            opacity: this._target.style.opacity || 'unset',
-            position: this._target.style.position || 'unset',
-            boxShadow: this._target.name.style.boxShadow || 'unset'
-        }
-        this._target.style.position = 'absolute'
-        this._target.name.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.25)'
-        this._target.style.left = pos.x + 'px'
-        this._target.style.top = pos.y + 'px'
-        this._target.style.opacity = this._options.dragOpacity
-        if (this._getChildren(parent, true).length === 0) {
-            this._hideIcon(parent)
-        }
-    }
-
-    _checkThreshold(e) {
-        if (!this._options.move) {
-            return false
-        } else if (this._moving) {
-            return true
-        } else {
-            if (utils.distance(this._isDown.x, this._isDown.y, e.pageX, e.pageY)) {
-                this._moving = true
-                this._pickup()
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-
-    _findClosest(e, entry) {
-        const pos = utils.toGlobal(entry.name)
-        if (pos.y + entry.name.offsetHeight / 2 <= e.pageY) {
-            if (!this._closest.foundAbove) {
-                if (utils.inside(e.pageX, e.pageY, entry.name)) {
-                    this._closest.foundAbove = true
-                    this._closest.above = entry
-                } else {
-                    const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)
-                    if (distance < this._closest.distanceAbove) {
-                        this._closest.distanceAbove = distance
-                        this._closest.above = entry
-                    }
-                }
-            }
-        } else if (!this._closest.foundBelow) {
-            if (utils.inside(e.pageX, e.pageY, entry.name)) {
-                this._closest.foundBelow = true
-                this._closest.below = entry
-            } else {
-                const distance = utils.distancePointElement(e.pageX, e.pageY, entry.name)
-                if (distance < this._closest.distanceBelow) {
-                    this._closest.distanceBelow = distance
-                    this._closest.below = entry
-                }
-            }
-        }
-        for (let child of this._getChildren(entry)) {
-            this._findClosest(e, child)
         }
     }
 
@@ -463,103 +405,6 @@ export class Tree extends Events {
             element = element.parentNode
         }
         return element
-    }
-
-    _move(e) {
-        if (this._target && this._checkThreshold(e)) {
-            this._indicator.remove()
-            this._target.style.left = e.pageX - this._offset.x + 'px'
-            this._target.style.top = e.pageY - this._offset.y + 'px'
-            const x = utils.toGlobal(this._target.name).x
-            this._closest = { distanceAbove: Infinity, distanceBelow: Infinity }
-            for (let child of this._getChildren()) {
-                this._findClosest(e, child)
-            }
-            if (!this._closest.above && !this._closest.below) {
-                this.element.appendChild(this._indicator)
-            } else if (!this._closest.above)  {
-                // null [] leaf
-                this.element.insertBefore(this._indicator, this._getFirstChild(this.element))
-            } else if (!this._closest.below) {
-                // leaf [] null
-                let pos = utils.toGlobal(this._closest.above.name)
-                if (x > pos.x + this.indentation) {
-                    this._closest.above.insertBefore(this._indicator, this._getFirstChild(this._closest.above, true))
-                } else if (x > pos.x - this.indentation) {
-                    this._closest.above.parentNode.appendChild(this._indicator)
-                } else {
-                    let parent = this._closest.above
-                    while (parent !== this.element && x < pos.x) {
-                        parent = this._getParent(parent)
-                        if (parent !== this.element) {
-                            pos = utils.toGlobal(parent.name)
-                        }
-                    }
-                    parent.appendChild(this._indicator)
-                }
-            } else if (this._closest.below.parentNode === this._closest.above) {
-                // parent [] child
-                this._closest.above.insertBefore(this._indicator, this._closest.below)
-            } else if (this._closest.below.parentNode === this._closest.above.parentNode) {
-                // sibling [] sibling
-                const pos = utils.toGlobal(this._closest.above.name)
-                if (x > pos.x + this.indentation) {
-                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))
-                } else {
-                    this._closest.above.parentNode.insertBefore(this._indicator, this._closest.below)
-                }
-            } else {
-                // child [] parent^
-                let pos = utils.toGlobal(this._closest.above.name)
-                if (x > pos.x + this.indentation) {
-                    this._closest.above.insertBefore(this._indicator, this._getLastChild(this._closest.above, true))
-                } else if (x > pos.x - this.indentation) {
-                    this._closest.above.parentNode.appendChild(this._indicator)
-                } else if (x < utils.toGlobal(this._closest.below.name).x) {
-                    this._closest.below.parentNode.insertBefore(this._indicator, this._closest.below)
-                } else {
-                    let parent = this._closest.above
-                    while (parent.parentNode !== this._closest.below.parentNode && x < pos.x) {
-                        parent = this._getParent(parent)
-                        pos = utils.toGlobal(parent.name)
-                    }
-                    parent.appendChild(this._indicator)
-                }
-            }
-        }
-    }
-
-    _up(e) {
-        if (this._target) {
-            if (!this._moving) {
-                if (this._options.expandOnClick && (!this._options.select || this._isDown.alreadySelected)) {
-                    this.toggleExpand(this._target)
-                }
-                this.emit('clicked', this._target, e, this)
-            } else {
-                this._indicator.parentNode.insertBefore(this._target, this._indicator)
-                this.expand(this._indicator.parentNode)
-                this._showIcon(this._indicator.parentNode)
-                this._target.style.position = this._old.position === 'unset' ? '' : this._old.position
-                this._target.name.style.boxShadow = this._old.boxShadow === 'unset' ? '' : this._old.boxShadow
-                this._target.style.opacity = this._old.opacity === 'unset' ? '' : this._old.opacity
-                this._indicator.remove()
-                this._moveData()
-                this.emit('move', this._target, this)
-                this.emit('update', this._target, this)
-            }
-            if (this._holdTimeout) {
-                window.clearTimeout(this._holdTimeout)
-                this._holdTimeout = null
-            }
-            this._target = this._moving = null
-        }
-    }
-
-    _moveData() {
-        this._target.data.parent.children.splice(this._target.data.parent.children.indexOf(this._target.data), 1)
-        this._target.parentNode.data.children.splice(utils.getChildIndex(this._target.parentNode, this._target), 0, this._target.data)
-        this._target.data.parent = this._target.parentNode.data
     }
 
     _addStyles(userStyles) {

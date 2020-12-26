@@ -4,23 +4,23 @@
     "filePath": "src/tree.js",
     "lines": [
       {
-        "lineNumber": 356,
+        "lineNumber": 370,
         "line": "    /**"
       },
       {
-        "lineNumber": 357,
+        "lineNumber": 371,
         "line": "     * call the callback function on each node; returns the node if callback === true"
       },
       {
-        "lineNumber": 358,
+        "lineNumber": 372,
         "line": "     * @param {function} callback"
       },
       {
-        "lineNumber": 359,
+        "lineNumber": 373,
         "line": "     */"
       },
       {
-        "lineNumber": 360,
+        "lineNumber": 374,
         "line": "    findInTree(leaf, callback) {"
       }
     ],
