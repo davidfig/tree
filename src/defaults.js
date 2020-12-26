@@ -6,7 +6,7 @@ export const defaults = {
     holdTime: 1000,
     expandOnClick: true,
     dragOpacity: 0.75,
-    classBaseName: 'yy-tree',
+    prefixClassName: 'yy-tree',
     cursorName: 'grab -webkit-grab pointer',
     cursorExpand: 'pointer'
 }
