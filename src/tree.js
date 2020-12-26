@@ -20,7 +20,7 @@ export class Tree extends Events {
      * @param {number} [options.holdTime=2000] number of milliseconds to press and hold name before editing starts (set to 0 to disable)
      * @param {boolean} [options.expandOnClick=true] expand and collapse node on click without drag except (will select before expanding if select=true)
      * @param {number} [options.dragOpacity=0.75] opacity setting for dragged item
-     * @param {string} [options.classBaseName=yy-tree] first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)
+     * @param {string} [options.prefixClassName=yy-tree] first part of className for all DOM objects (e.g., yy-tree, yy-tree-indicator)
      * @param {boolean} [options.addStyles=true] attaches a style sheet with default and overridden styles; set to false to use your own stylesheet
      * @param {object} [styles]
      * @param {string[]} [styles.nameStyles] use these to override individual styles for the name (will be included in the attached stylesheet)
@@ -52,7 +52,7 @@ export class Tree extends Events {
         if (this._options.parent) {
             utils.el(this._options.parent).appendChild(this.element)
         }
-        this.element.classList.add(this.classBaseName)
+        this.element.classList.add(this.prefixClassName)
         this.element.data = tree
         if (this._options.addStyles !== false) {
             this._addStyles(styles)
@@ -74,12 +74,12 @@ export class Tree extends Events {
      * className's prefix (e.g., "yy-tree"-content)
      * @type {string}
      */
-    get classBaseName() {
-        return this._options.classBaseName
+    get prefixClassName() {
+        return this._options.prefixClassName
     }
-    set classBaseName(value) {
-        if (value !== this._options.classBaseName) {
-            this._options.classBaseName = value
+    set prefixClassName(value) {
+        if (value !== this._options.prefixClassName) {
+            this._options.prefixClassName = value
             this.update()
         }
     }
@@ -157,17 +157,17 @@ export class Tree extends Events {
     }
 
     _leaf(data, level) {
-        const leaf = utils.html({ className: `${this.classBaseName}-leaf` })
+        const leaf = utils.html({ className: `${this.prefixClassName}-leaf` })
         leaf.isLeaf = true
         leaf.data = data
-        leaf.content = utils.html({ parent: leaf, className: `${this.classBaseName}-content` })
+        leaf.content = utils.html({ parent: leaf, className: `${this.prefixClassName}-content` })
         leaf.style.marginLeft = this.indentation + 'px'
         leaf.icon = utils.html({
             parent: leaf.content,
             html: data.expanded ? icons.open : icons.closed,
-            className: `${this.classBaseName}-expand`
+            className: `${this.prefixClassName}-expand`
         })
-        leaf.name = utils.html({ parent: leaf.content, html: data.name, className: `${this.classBaseName}-name` })
+        leaf.name = utils.html({ parent: leaf.content, html: data.name, className: `${this.prefixClassName}-name` })
         leaf.name.addEventListener('mousedown', e => this._input._down(e))
         leaf.name.addEventListener('touchstart', e => this._input._down(e))
         for (let child of data.children) {
@@ -318,7 +318,7 @@ export class Tree extends Events {
      */
     edit(leaf) {
         this._editing = leaf
-        this._editInput = utils.html({ parent: this._editing.name.parentNode, type: 'input', className: `${this.classBaseName}-name` })
+        this._editInput = utils.html({ parent: this._editing.name.parentNode, type: 'input', className: `${this.prefixClassName}-name` })
         const computed = window.getComputedStyle(this._editing.name)
         this._editInput.style.boxSizing = 'content-box'
         this._editInput.style.fontFamily = computed.getPropertyValue('font-family')
@@ -413,23 +413,23 @@ export class Tree extends Events {
 
     _addStyles(userStyles) {
         const styles = utils.options(userStyles, styleDefaults)
-        let s = `.${this.classBaseName}-name{`
+        let s = `.${this.prefixClassName}-name{`
         for (const key in styles.nameStyles) {
             s += `${key}:${styles.nameStyles[key]};`
         }
-        s += `}.${this.classBaseName}-content{`
+        s += `}.${this.prefixClassName}-content{`
         for (const key in styles.contentStyles) {
             s += `${key}:${styles.contentStyles[key]};`
         }
-        s += `}.${this.classBaseName}-indicator{`
+        s += `}.${this.prefixClassName}-indicator{`
         for (const key in styles.indicatorStyles) {
             s += `${key}:${styles.indicatorStyles[key]};`
         }
-        s += `}.${this.classBaseName}-expand{`
+        s += `}.${this.prefixClassName}-expand{`
         for (const key in styles.expandStyles) {
             s += `${key}:${styles.expandStyles[key]};`
         }
-        s += `}.${this.classBaseName}-select{`
+        s += `}.${this.prefixClassName}-select{`
         for (const key in styles.selectStyles) {
             s += `${key}:${styles.selectStyles[key]};`
         }
