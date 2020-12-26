@@ -1,4 +1,16 @@
 /**
+ * converts a string to an HTMLElement if necessary
+ * @param {(HTMLElement|string)} element
+ */
+export function el(element) {
+    if (typeof element === 'string') {
+        return document.querySelector(element)
+    }
+    return element
+
+}
+
+/**
  * measure distance between two points
  * @param {number} x1
  * @param {number} y1

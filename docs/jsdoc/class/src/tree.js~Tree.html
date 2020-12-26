@@ -94,7 +94,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>, styles: <span>object</span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>object</span>, styles: <span>object</span>)</span>
         </p>
       </div>
       <div>
@@ -796,7 +796,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-findInTree">findInTree</a></span></span><span class="code" data-ice="signature">(callback: <span>function</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/tree.js~Tree.html#instance-method-findInTree">findInTree</a></span></span><span class="code" data-ice="signature">(leaf: <span>*</span>, callback: <span>function</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -945,11 +945,11 @@
     
     
     
-    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(element: <span>HTMLElement</span> | <span>string</span>, tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>TreeOptions</span>, styles: <span>object</span>)</span>
+    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(tree: <span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span>, options: <span>object</span>, styles: <span>object</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber38">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber39">source</a></span></span>
     </span>
   </h3>
 
@@ -970,13 +970,6 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">element</td>
-      <td data-ice="type" class="code"><span>HTMLElement</span> | <span>string</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>if a string is provided, it calls document.querySelector(element)</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">tree</td>
       <td data-ice="type" class="code"><span><a href="typedef/index.html#static-typedef-Tree~TreeData">Tree~TreeData</a></span></td>
       <td data-ice="appendix"></td>
@@ -985,9 +978,23 @@
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">options</td>
-      <td data-ice="type" class="code"><span>TreeOptions</span></td>
+      <td data-ice="type" class="code"><span>object</span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">options.element</td>
+      <td data-ice="type" class="code"><span>HTMLElement</span> | <span>string</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>if a string then document.querySelector(element); if empty, it creates an element</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">options.parent</td>
+      <td data-ice="type" class="code"><span>HTMLElement</span> | <span>string</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>appends the element to this parent (if string then document.querySelector(parent))</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">options.move</td>
@@ -1132,7 +1139,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber73">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber77">source</a></span></span>
     </span>
   </h3>
 
@@ -1176,7 +1183,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber76">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber80">source</a></span></span>
     </span>
   </h3>
 
@@ -1219,7 +1226,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber148">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber152">source</a></span></span>
     </span>
   </h3>
 
@@ -1263,7 +1270,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber151">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber155">source</a></span></span>
     </span>
   </h3>
 
@@ -1306,7 +1313,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber47">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber48">source</a></span></span>
     </span>
   </h3>
 
@@ -1350,7 +1357,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber126">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber130">source</a></span></span>
     </span>
   </h3>
 
@@ -1394,7 +1401,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber129">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber133">source</a></span></span>
     </span>
   </h3>
 
@@ -1437,7 +1444,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber102">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber106">source</a></span></span>
     </span>
   </h3>
 
@@ -1481,7 +1488,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber105">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber109">source</a></span></span>
     </span>
   </h3>
 
@@ -1524,7 +1531,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber87">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber91">source</a></span></span>
     </span>
   </h3>
 
@@ -1568,7 +1575,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber90">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber94">source</a></span></span>
     </span>
   </h3>
 
@@ -1611,7 +1618,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber115">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber119">source</a></span></span>
     </span>
   </h3>
 
@@ -1655,7 +1662,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber118">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber122">source</a></span></span>
     </span>
   </h3>
 
@@ -1698,7 +1705,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber137">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber141">source</a></span></span>
     </span>
   </h3>
 
@@ -1742,7 +1749,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber140">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber144">source</a></span></span>
     </span>
   </h3>
 
@@ -1785,7 +1792,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber63">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber67">source</a></span></span>
     </span>
   </h3>
 
@@ -1829,7 +1836,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber66">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber70">source</a></span></span>
     </span>
   </h3>
 
@@ -1875,7 +1882,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber271">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber275">source</a></span></span>
     </span>
   </h3>
 
@@ -1935,7 +1942,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber223">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber227">source</a></span></span>
     </span>
   </h3>
 
@@ -1979,7 +1986,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber315">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber319">source</a></span></span>
     </span>
   </h3>
 
@@ -2039,7 +2046,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber302">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber306">source</a></span></span>
     </span>
   </h3>
 
@@ -2100,7 +2107,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber252">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber256">source</a></span></span>
     </span>
   </h3>
 
@@ -2160,7 +2167,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber211">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber215">source</a></span></span>
     </span>
   </h3>
 
@@ -2200,11 +2207,11 @@
     
     
     
-    <span class="code" data-ice="name">findInTree</span><span class="code" data-ice="signature">(callback: <span>function</span>): <span>*</span></span>
+    <span class="code" data-ice="name">findInTree</span><span class="code" data-ice="signature">(leaf: <span>*</span>, callback: <span>function</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber375">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber380">source</a></span></span>
     </span>
   </h3>
 
@@ -2225,6 +2232,13 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">leaf</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>data</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">callback</td>
       <td data-ice="type" class="code"><span>function</span></td>
       <td data-ice="appendix"></td>
@@ -2276,7 +2290,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber367">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber371">source</a></span></span>
     </span>
   </h3>
 
@@ -2343,7 +2357,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber355">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber359">source</a></span></span>
     </span>
   </h3>
 
@@ -2409,7 +2423,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber238">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber242">source</a></span></span>
     </span>
   </h3>
 
@@ -2469,7 +2483,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber287">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tree.js.html#lineNumber291">source</a></span></span>
     </span>
   </h3>
 

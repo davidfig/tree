@@ -9,9 +9,10 @@ import { icons } from './icons'
 export class Tree extends Events {
     /**
      * Create Tree
-     * @param {(HTMLElement|string)} element - if a string is provided, it calls document.querySelector(element)
      * @param {TreeData} tree - data for tree (see readme for description)
-     * @param {TreeOptions} [options]
+     * @param {object} [options]
+     * @param {(HTMLElement|string)} [options.element] if a string then document.querySelector(element); if empty, it creates an element
+     * @param {(HTMLElement|string)} [options.parent] appends the element to this parent (if string then document.querySelector(parent))
      * @param {boolean} [options.move=true] drag tree to rearrange
      * @param {boolean} [options.select=true] click to select node (if false then nodes are not selected and tree.selection is always null)
      * @param {number} [options.indentation=20] number of pixels to indent for each level
@@ -35,18 +36,21 @@ export class Tree extends Events {
      * @fires move-pending
      * @fires update
      */
-    constructor(element, tree, options, styles) {
+    constructor(tree, options, styles) {
         super()
         this._options = utils.options(options, defaults)
         this._input = new Input(this)
-        if (typeof element === 'string') {
+        if (typeof this._options.element === 'undefined') {
             /**
              * Main div holding tree
              * @type {HTMLElement}
              */
-            this.element = document.querySelector(element)
+            this.element = document.createElement('div')
         } else {
-            this.element = element
+            this.element = utils.el(this._options.element)
+        }
+        if (this._options.parent) {
+            utils.el(this._options.parent).appendChild(this.element)
         }
         this.element.classList.add(this.classBaseName)
         this.element.data = tree

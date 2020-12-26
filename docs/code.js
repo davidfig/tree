@@ -21,8 +21,7 @@ const data = {
 }
 
 function test() {
-    const div = utils.html({ parent: document.body })
-    const tree = new Tree(div, data)
+    const tree = new Tree(data, { parent: document.body })
     tree.expandAll()
 }
 

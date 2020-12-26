@@ -23,7 +23,7 @@ const data = {
     ]
 }
 
-const tree = new Tree('.tree-div', data)
+const tree = new Tree(data, { parent: document.body })
 ```
 
 ## Live Examples
