@@ -12,18 +12,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/tree.js~tree#classbasename",
-    "class/src/tree.js~Tree.html#instance-get-classBaseName",
-    "src/tree.js~Tree#classBaseName",
-    "member"
-  ],
-  [
-    "src/tree.js~tree#classbasename",
-    "class/src/tree.js~Tree.html#instance-set-classBaseName",
-    "src/tree.js~Tree#classBaseName",
-    "member"
-  ],
-  [
     "src/tree.js~tree#collapse",
     "class/src/tree.js~Tree.html#instance-method-collapse",
     "src/tree.js~Tree#collapse",
@@ -148,6 +136,18 @@ window.esdocSearchIndex = [
     "class/src/tree.js~Tree.html#instance-method-nameChange",
     "src/tree.js~Tree#nameChange",
     "method"
+  ],
+  [
+    "src/tree.js~tree#prefixclassname",
+    "class/src/tree.js~Tree.html#instance-get-prefixClassName",
+    "src/tree.js~Tree#prefixClassName",
+    "member"
+  ],
+  [
+    "src/tree.js~tree#prefixclassname",
+    "class/src/tree.js~Tree.html#instance-set-prefixClassName",
+    "src/tree.js~Tree#prefixClassName",
+    "member"
   ],
   [
     "src/tree.js~tree#select",
