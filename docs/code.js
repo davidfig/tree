@@ -1,7 +1,6 @@
 import forkMe from 'fork-me-github'
 
 import { Tree } from '../src/tree'
-import * as utils from '../src/utils'
 
 const data = {
     children: [
