@@ -45,7 +45,7 @@ export class Input {
         } else if (this._moving) {
             return true
         } else {
-            if (utils.distance(this._isDown.x, this._isDown.y, e.pageX, e.pageY)) {
+            if (utils.distance(this._isDown.x, this._isDown.y, e.pageX, e.pageY) > this._tree._options.threshold) {
                 this._moving = true
                 this._pickup()
                 return true
