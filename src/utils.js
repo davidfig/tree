@@ -170,7 +170,9 @@ export function getChildIndex(parent, child) {
         if (entry === child) {
             return index
         }
-        index++
+        if (entry.isLeaf) {
+            index++
+        }
     }
     return -1
 }
