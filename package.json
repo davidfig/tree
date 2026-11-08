@@ -10,7 +10,7 @@
     "start": "node scripts/compile",
     "build-demo": "node scripts/compile --production",
     "docs": "esdoc",
-    "test-docs": "esdoc && serve docs/jsdoc",
+    "test-docs": "esdoc && npx --yes serve docs/jsdoc",
     "icons": "node scripts/images.js",
     "prepublishOnly": "npm run icons && npm run build-demo && npm run docs"
   },
@@ -21,15 +21,14 @@
     "eventemitter3": "^3.0.1"
   },
   "devDependencies": {
-    "chokidar": "^3.4.3",
-    "esbuild": "^0.8.26",
+    "chokidar": "^3.6.0",
+    "esbuild": "^0.28.2",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "express": "^4.17.1",
-    "fork-me-github": "^1.1.0",
-    "fs-extra": "^5.0.0",
-    "n-readlines": "^1.0.1",
-    "serve": "^11.3.2",
-    "ws": "^7.4.1"
+    "express": "^5.3.0",
+    "fork-me-github": "^1.2.0",
+    "fs-extra": "^11.4.1",
+    "n-readlines": "^1.0.3",
+    "ws": "^8.22.2"
   }
 }
