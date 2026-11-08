@@ -48,7 +48,8 @@ async function build(minify) {
     try {
         await esbuild({
             entryPoints: ['docs/code.js'],
-            inject: ['scripts/live.js'],
+            // live reload is only for the dev server, not the published demo
+            inject: minify ? [] : ['scripts/live.js'],
             bundle: true,
             outfile: 'docs/index.js',
             minify,
