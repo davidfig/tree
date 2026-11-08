@@ -1,6 +1,9 @@
 {
   "name": "yy-tree",
-  "version": "0.6.3",
+  "version": "0.6.4",
+  "files": [
+    "src"
+  ],
   "description": "vanilla drag-and-drop UI tree",
   "module": "src/tree.js",
   "scripts": {
